@@ -13,6 +13,7 @@ const NAV = [
   { href: "/stream", label: "Watch" },
   { href: "/programmes", label: "Programmes" },
   { href: "/safety", label: "Safety" },
+  { href: "/rights", label: "Your rights" },
   { href: "/state-commands", label: "State commands" },
   { href: "/about", label: "About" },
 ];
@@ -217,6 +218,23 @@ export function SiteFooter() {
             </li>
             <li>
               <Link href="/safety/guides/how-to-report-a-crime">Report a crime</Link>
+            </li>
+          </ul>
+        </div>
+        <div>
+          <h4>Your rights</h4>
+          <ul>
+            <li>
+              <Link href="/rights">Know your rights</Link>
+            </li>
+            <li>
+              <Link href="/rights/bail">Bail is free</Link>
+            </li>
+            <li>
+              <Link href="/rights/investigations">How investigations work</Link>
+            </li>
+            <li>
+              <Link href="/rights/complaints">Complaints about officers</Link>
             </li>
           </ul>
         </div>

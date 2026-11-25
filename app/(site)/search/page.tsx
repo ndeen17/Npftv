@@ -6,13 +6,14 @@ import { Suspense, useEffect, useMemo, useState } from "react";
 import { episodes, programmeById, programmes } from "@/data/programmes";
 import { stateSlug, states } from "@/data/places";
 import { guides } from "@/data/public";
+import { rightsTopics } from "@/data/rights";
 import { Icon } from "@/components/Icon";
 import { PageHead } from "@/components/site/bits";
 import { search, type SearchDoc } from "@/lib/ai";
 import { aiOpts, askAI } from "@/lib/ai-client";
 import { useDemo } from "@/lib/store";
 
-const KIND_LABEL: Record<SearchDoc["kind"], string> = { story: "Story", programme: "Programme", guide: "Safety guide", episode: "On demand", state: "State command" };
+const KIND_LABEL: Record<SearchDoc["kind"], string> = { story: "Story", programme: "Programme", guide: "Safety guide", episode: "On demand", state: "State command", rights: "Your rights" };
 
 function SearchInner() {
   const params = useSearchParams();
@@ -29,6 +30,9 @@ function SearchInner() {
       ...programmes.map((p) => ({ id: p.id, kind: "programme" as const, title: p.title, text: `${p.strand} ${p.description}`, href: `/programmes/${p.id}` })),
       ...guides.map((g) => ({ id: g.id, kind: "guide" as const, title: g.title, text: `${g.short} ${g.steps.join(" ")} ${g.keywords.join(" ")}`, href: `/safety/guides/${g.id}` })),
       ...episodes.map((e) => ({ id: e.id, kind: "episode" as const, title: `${programmeById(e.programmeId)?.title}: ${e.title}`, text: e.summary, href: `/stream/episode/${e.id}` })),
+      ...rightsTopics.map((t) => ({ id: t.id, kind: "rights" as const, title: t.title, text: `${t.situation}. ${t.inShort.join(" ")} ${t.keywords.join(" ")}`, href: `/rights/${t.id}` })),
+      { id: "investigations", kind: "rights" as const, title: "How investigations work", text: "report crime statement investigating police officer IPO CID case file court follow up", href: "/rights/investigations" },
+      { id: "complaints", kind: "rights" as const, title: "Complaints about officers", text: "complain complaint officer bribe extortion brutality Complaint Response Unit CRU NHRC Police Service Commission", href: "/rights/complaints" },
       ...states.map((s) => ({ id: s.id, kind: "state" as const, title: `${s.name} State Command`, text: `${s.capital} ${s.zone}`, href: `/state-commands/${stateSlug(s)}` })),
     ],
     [state.articles],

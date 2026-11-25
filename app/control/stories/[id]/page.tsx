@@ -457,7 +457,7 @@ export default function StoryEditor() {
                     {rev.altText.length > 0 && (
                       <div className="blk">
                         <h4>Photo alt text</h4>
-                        <ul style={{ display: "grid", gap: 6, fontSize: 14, paddingLeft: 18 }}>
+                        <ul className="bullets" style={{ display: "grid", gap: 6, fontSize: 14, paddingLeft: 18 }}>
                           {rev.altText.map((t) => (
                             <li key={t}>{t}</li>
                           ))}

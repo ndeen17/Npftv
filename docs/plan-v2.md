@@ -1,11 +1,14 @@
 # NPFTV demo, version 2: citizen services and a lighter look
 
-Plan written 25 November 2026. Status: **approved. Phase 1 done (25 Nov); Phase 2 next.**
+Plan written 25 November 2026. Status: **approved. Phases 1 and 2 done (25 Nov); Phase 3 next.**
 
 **Decisions (25 Nov 2026):**
 - **Stream:** a dark "theatre" band for the player only, with light pages around it.
 - **Wanted persons:** included, with the safeguards in Phase 3.
 - **Flood demo moment:** added as an optional script step. Flooding is only the example: reporting covers any event.
+- **NPFTV is the police's media arm, not the police.** It informs, educates and inspires. It doesn't take crime reports, handle complaints, investigate, or send help. Every citizen feature is public information or public reporting for news and awareness, and always points people to the body that can act. See Section 1a.
+- **Complaints:** NPFTV explains how complaints about officers are handled and points to the right bodies. No complaint form and no complaint tracking on NPFTV.
+- **Citizen reports:** sent to the NPFTV newsroom for news and public awareness, with tracking of the newsroom's progress. NPFTV does not forward or escalate them.
 - **No dead links between phases:** each phase adds its own homepage, quick-access and navigation entry points when its pages go live (Phase 1 does not link to pages that don't exist yet).
 
 ## 1. What we are changing, and why
@@ -31,12 +34,29 @@ Version 1 is strong on broadcasting (news, Stream, the Control Room). Version 2 
 
 **What must not break:** the 10-minute demo script (BVN text, Kano story, press briefing, Director's brief), cross-tab live sync, scripted fallbacks for every AI feature, the prototype banner, "not an emergency service, call 112", British English, WAT times, and responsiveness down to 360px.
 
+## 1a. What NPFTV is, and isn't
+
+NPFTV (Nigeria Police Force Television) is the **media arm** of the Nigeria Police Force: a broadcaster and publisher. Its job is to **inform, educate and inspire**.
+
+| NPFTV does | NPFTV does not |
+|---|---|
+| Report verified police news and public safety information | Take crime reports or open cases |
+| Explain citizens' rights, police powers and how processes work | Investigate, arrest, or send officers or help |
+| Publish alerts and notices issued by police commands (missing persons, wanted persons, safety alerts) | Handle complaints about officers, or decide their outcome |
+| Receive citizen reports for news coverage and public awareness | Forward, escalate or act on reports |
+| Point people to the right body: 112, the nearest station, NEMA, FRSC, the Complaint Response Unit, NHRC, the Legal Aid Council | Promise that anyone will respond |
+
+**What this means for every screen:**
+- Any form or chat that a citizen might mistake for "telling the police" says plainly: *"NPFTV is the police's television and news service. We can't send help or open a case. In an emergency, call 112."*
+- Every page ends with **who to contact** to get something done, and NPFTV's own part is limited to informing.
+- Citizen reports are framed as *"Send a report to the NPFTV newsroom"*: they help NPFTV warn and inform the public. They are never framed as a police report.
+
 ## 2. Product goals for version 2
 
 1. **A citizen can get help in under a minute**: describe a situation in plain words (or Pidgin, Hausa, Yoruba, Igbo) and get a clear next step.
-2. **Every route ends in an action**: a phone number to call, a form to send, a page to read, a reference number to keep. No dead ends.
+2. **Every route ends in an action**: a number to call, the right agency to contact, a page to read, or a report to the newsroom. No dead ends.
 3. **Trust and safety first**: never pretend to be an emergency service, never shame a victim, never expose a suspect who hasn't been charged, never invent law.
-4. **The Control Room sees what citizens send**: reports, complaints and missing-person tips land in staff queues with AI triage, and verified items can become public alerts. This adds a second "Control Room changes the public site" moment.
+4. **The newsroom sees what citizens send**: citizen reports reach the NPFTV newsroom in the Control Room with AI triage; verified ones can become public awareness alerts or stories. NPFTV doesn't forward or escalate reports. This adds a second "Control Room changes the public site" moment.
 5. **It looks and feels finished**: lighter, calmer, consistent with the approved brand.
 
 ## 3. Nigeria first: decisions that apply everywhere
@@ -83,7 +103,7 @@ Version 1 is strong on broadcasting (news, Stream, the Control Room). Version 2 
 - **One primary action per screen.** Yellow button = the thing to do next.
 - **Emergency always one tap away.** A consistent "In danger now? Call 112" strip on every help page, inside the chatbot and in report forms.
 - **No shame, no blame.** Copy is written for frightened or embarrassed people, especially romance-scam victims.
-- **Show what happens next.** Every submission gives a reference number (e.g. `NPF-RPT-26-04817`), what happens now, and how long it usually takes.
+- **Show what happens next.** A citizen report gets a reference number (e.g. `NPFTV-RPT-26-04817`) and says what the newsroom does with it. Nothing promises a police response.
 - **Accessible:** keyboard paths, visible focus, 4.5:1 contrast on all new light surfaces, labelled form fields, `aria-live` for chat messages, reduced motion respected.
 - **Consistent components:** new pages reuse the existing tokens (no new colours), Zilla Slab headings and Archivo text, plus a small set of new shared components (Section 7).
 
@@ -93,8 +113,8 @@ Version 1 is strong on broadcasting (news, Stream, the Control Room). Version 2 
 
 `News · Watch · Programmes · Safety · Your rights · State commands · About`
 
-- **Safety** (was "Public safety") becomes the hub for: scam assistant, report an incident, missing and wanted persons, alerts, safety guides.
-- **Your rights** is the hub for: rights and police powers, how investigations work, complaints about officers, track a report or complaint.
+- **Safety** (was "Public safety") becomes the hub for: scam assistant, send a report to the newsroom, missing and wanted persons (police notices), alerts, safety guides.
+- **Your rights** is the hub for: rights and police powers, how investigations work, and how complaints about officers are handled (information only).
 - The mobile menu groups these under the same two headings.
 
 **New routes**
@@ -103,7 +123,7 @@ Version 1 is strong on broadcasting (news, Stream, the Control Room). Version 2 
 |---|---|
 | `/safety` | Safety hub (replaces `/public-safety`, which redirects) |
 | `/safety/scam-check` | Conversational scam assistant |
-| `/safety/report` | Report an incident (crime or non-crime) |
+| `/safety/report` | Send a report to the NPFTV newsroom (public reporting for news and awareness) |
 | `/safety/missing` and `/safety/missing/[id]` | Missing persons, list and notice |
 | `/safety/wanted` and `/safety/wanted/[id]` | Wanted persons, list and notice |
 | `/safety/alerts` | Active alerts, including verified community alerts |
@@ -111,19 +131,18 @@ Version 1 is strong on broadcasting (news, Stream, the Control Room). Version 2 
 | `/rights` | Your rights: hub |
 | `/rights/[topic]` | Topics: when stopped, if arrested, at the station, bail, searches, your phone, detention limits, women and children, what officers must do, what officers cannot do |
 | `/rights/investigations` | How a case is investigated, step by step |
-| `/rights/complaints` | How complaints about officers are handled, plus the complaint form |
-| `/track` | Track a report or complaint by reference number |
-| `/control/reports` | Control Room: citizen reports queue |
-| `/control/complaints` | Control Room: complaints about officers |
-| `/control/notices` | Control Room: missing and wanted notices |
+| `/rights/complaints` | How complaints about officers are handled, who to contact, and how to prepare your complaint (no form: NPFTV doesn't take complaints) |
+| `/track` | Track a report you sent to the newsroom |
+| `/control/reports` | Control Room: citizen reports to the newsroom |
+| `/control/notices` | Control Room: missing and wanted notices issued by police commands, published by the newsroom |
 
 **Homepage, new order**
 
 1. Prototype banner, alert bar, header, Latest ticker (unchanged)
 2. Emblem hero (unchanged)
-3. Quick-access row, still 6 circles: **Watch live · Scam check (AI) · Report an incident · Missing & wanted · Know your rights · State commands**. Programme guide and Media centre stay in the navigation and footer.
+3. Quick-access row, still 6 circles: **Watch live · Scam check (AI) · Send a report · Missing & wanted · Know your rights · State commands**. Programme guide and Media centre stay in the navigation and footer.
 4. Live on NPFTV Stream (unchanged)
-5. **"How can we help?"**: a new strip with the chatbot entry ("Ask anything: scams, your rights, reporting, programmes…") and 4 task cards (I'm being scammed / Report something happening / Someone is missing / I want to complain about an officer).
+5. **"How can we help?"**: a new strip with the chatbot entry ("Ask anything: scams, your rights, reporting, programmes…") and 4 task cards (I'm being scammed / Something is happening near me / Someone is missing / How do I complain about an officer?).
 6. Message from the Network Director (unchanged)
 7. **News and press releases, now full width** (lead story large, plus 2 more). **"Upcoming broadcasts" removed**: what's coming up stays in the Live module and on Stream.
 8. Programmes rail (unchanged)
@@ -158,7 +177,7 @@ Each phase ends with: type check, production build, the full demo-script test, t
 
 **Acceptance:** the demo script still passes. No horizontal scroll at 360px. Lighthouse accessibility 95+ on the homepage and Stream live. Visual check against the approved design (brand and type unchanged, surfaces lighter).
 
-### Phase 2: Your rights, investigations, complaints (size: L, mostly content)
+### Phase 2: Your rights, investigations, complaints (size: M, mostly content)
 
 **2a. Your rights and police powers (`/rights`)**
 - **Hub:** "Know where you stand." Situation-first cards: *Stopped on the road · Stopped and searched · Being arrested · At the police station · Bail · Your phone and your home · Held too long · Women, children and vulnerable people.*
@@ -166,7 +185,7 @@ Each phase ends with: type check, production build, the full demo-script test, t
   1. **In short:** 3 bullets.
   2. **What the officer can do / What the officer cannot do:** two columns, green ticks and red crosses.
   3. **What to say and do:** calm, practical steps (stay calm, ask for the officer's name and number, ask why, don't resist, remember details).
-  4. **If your rights are not respected:** a link to complaints.
+  4. **If your rights are not respected:** a link to how complaints are handled and who to contact.
   5. **The law:** sources, e.g. Constitution s.35, ACJA 2015, Police Act 2020.
   6. The legal-review label.
 - **Tone:** neither anti-police nor naive. "Officers have powers to keep everyone safe. You have rights that protect you. Both are in the law."
@@ -176,31 +195,24 @@ Each phase ends with: type check, production build, the full demo-script test, t
 **2b. How investigations work (`/rights/investigations`)**
 - A vertical step timeline: **Report** (statement, reference) → **Case file** (case diary, investigating officer assigned) → **Investigation** (divisional CID, then the State CID or the Force CID for serious cases) → **Advice** (the case file may go to the Director of Public Prosecutions or the state Attorney-General) → **Charge and court**.
 - For each step: what happens, what you can expect, what you can do, and typical timelines (labelled "illustrative").
-- Plus "Your rights as a victim or witness", and "Following up on your case" (the reference number, who to ask, what to do if there's no progress).
+- Plus "Your rights as a victim or witness", and "Following up on your case" (who to ask at the station, and what to do if there's no progress). NPFTV only explains; follow-up happens with the police.
 
-**2c. Complaints about officers (`/rights/complaints`)**
-- **Explains the channels:** the NPF Complaint Response Unit (first stop: bribery, extortion, rudeness, unlawful arrest, brutality), the Police Service Commission (constitutionally responsible for police discipline), the NHRC (human rights violations), and the courts.
-- **What happens after you complain:** acknowledged, assessed, investigated, outcome; plus protection from retaliation.
-- **Complaint form**, conversational and short: what happened; when and where (state, LGA, landmark); the officer's details if known (name, force number, vehicle number, uniform/unit); evidence (photos or video: shown, not uploaded in the demo); optional contact details; an anonymous option.
-- **AI helper:** "Describe what happened in your own words" → the AI organises it into the form fields and suggests the category (extortion, unlawful arrest, assault, rudeness, other). The citizen checks and edits before sending.
-- **On submit:** a reference (`NPF-CMP-26-xxxxx`), what happens next, and "Track it at /track".
+**2c. Complaints about officers (`/rights/complaints`)**: information only
+- A clear note at the top: *"NPFTV can't take or investigate complaints. Here's how the police and other bodies handle them, and how to contact them."*
+- **Who to contact:** the NPF Complaint Response Unit (first stop: bribery, extortion, rudeness, unlawful arrest, brutality), the Police Service Commission (constitutionally responsible for police discipline), the NHRC (human rights violations), and the courts (with the Legal Aid Council). Contact details to be confirmed by NPFTV.
+- **What happens after you complain:** received, reviewed, assigned, investigated, outcome; plus protection from retaliation.
+- **Prepare your complaint:** a checklist (date, time and place; the officer's name or number; vehicle number; what happened; witnesses; photos or receipts).
+- **AI helper "Help me write it down":** the citizen describes what happened in their own words; the AI turns it into a clear, factual summary under those headings, flagging anything missing. The citizen copies or shares it (WhatsApp, email) and sends it to the channel themselves. **Nothing is sent to NPFTV, nothing is stored, and there is no tracking.**
 
-**2d. Track (`/track`):** enter a reference to see the status timeline (Received → Under review → Assigned → Resolved). In the demo this reads from the shared store, so staff updates in the Control Room show up live.
+**AI:** `complaint-helper` (free text → a structured, neutral summary + missing details + suggested channel). Scripted fallback: a template that fills the headings from the citizen's text.
 
-**Control Room**
-- New **Complaints** queue (`/control/complaints`) for the Public Information Officer and the Super Administrator: AI category, severity, "possible duplicate", a status workflow, and an internal note.
-- Status changes are written to the audit log.
-- Personal data is masked by default ("Show contact details" is logged).
-
-**AI:** `complaint-intake` (free text → structured fields + category) and `complaint-triage` (category, severity, reason).
-
-**Acceptance:** every topic page has In short, Can/Cannot, What to do, The law, and the review label. The complaint flow works end to end: submit, appears in the Control Room, staff update, visible on `/track`.
+**Acceptance:** every topic page has In short, Can/Cannot, What to do, The law, and the review label. The complaints page makes NPFTV's role clear, lists every channel, and the helper produces a copyable summary (live and scripted). No complaint data is stored anywhere.
 
 ### Phase 3: Missing and wanted persons (size: M)
 
 **Public: missing persons (`/safety/missing`)**
 - Notice cards: silhouette, name (fictional), age, sex, last seen (place and date), height and build, clothing, "missing for 3 days" counter.
-- **Have you seen them?** form (where, when, what you saw, optional contact) → reference number.
+- **Have you seen them?** NPFTV doesn't take tips. The notice shows who issued it (e.g. "Lagos State Police Command") and tells people to contact that command, their nearest police station, or 112 if it's urgent.
 - Share on WhatsApp.
 - **How to report someone missing:** you do **not** need to wait 24 hours; go to the nearest station with a recent photo and details; for children and suspected trafficking, the police and NAPTIP.
 - Filters: state, age group. Found notices show a green "Found safe" banner and drop off after 48 hours.
@@ -210,47 +222,45 @@ Each phase ends with: type check, production build, the full demo-script test, t
   - Shows only people the police have formally declared wanted, with the offence they are wanted for.
   - "Everyone is presumed innocent until proven guilty in court."
   - "Do not approach. Call 112 or your nearest police station."
-  - Tips can be anonymous.
+  - Information goes to the police, not NPFTV.
 - Cards: silhouette, name (fictional), alias, offence category, state, "declared wanted" date, case reference.
 - No reward amounts unless the client provides official ones.
 
 **Control Room**
-- **Notices** (`/control/notices`): create, edit, approve and publish missing or wanted notices. They need approval, like alerts (Editor-in-Chief or Network Director).
+- **Notices** (`/control/notices`): the newsroom enters notices received from police commands (with the issuing command recorded), then they are approved (Editor-in-Chief or Network Director) and published.
 - Mark a missing person found, withdraw a notice, set an expiry.
-- Sightings and tips arrive in the same queue.
 - The prepared "Missing person notice, Lagos" from version 1 becomes a real notice record; approving it in Approvals now publishes the notice page as well as the alert bar.
 
-**AI**
-- `tip-triage`: rates a sighting tip's urgency and flags obvious hoaxes or abuse. Staff decide.
-- No AI writes notices.
+**AI:** none. Notices are written and approved by people.
 
-**Acceptance:** a notice created in the Control Room appears publicly only after approval. A tip appears in the queue. "Found" updates the public page live.
+**Acceptance:** a notice created in the Control Room appears publicly only after approval, showing its issuing command. "Found" updates the public page live.
 
-### Phase 4: Report an incident (size: L)
+### Phase 4: Send a report to the newsroom (size: L)
 
-**Purpose:** let citizens report what's happening around them, crime or not: flood, fire, road crash, collapsed building, fallen power line, missing child, riot or unrest, suspicious activity, crime that already happened, other.
+**Purpose:** public reporting for news and awareness. Citizens tell the NPFTV newsroom what's happening around them, crime or not: flood, fire, road crash, collapsed building, fallen power line, unrest, a community event, a public safety concern, other. NPFTV uses verified reports to warn and inform the public (alerts, stories, mentions on air). **It is not a police report and NPFTV doesn't send help**; the page says so before the citizen starts, and points to 112 and the right agency first.
 
 **Flow** (`/safety/report`), designed for a stressed person on a phone:
-1. **Safety check first:** "Is anyone in danger right now?" **Yes** → a big **Call 112** button (a `tel:112` link), with "Then tell us here if you can." **No** → continue.
+1. **Safety check first:** "Is anyone in danger right now?" **Yes** → a big **Call 112** button (a `tel:112` link) and who else to call (from the table in Section 3), then "When you're safe, you can tell our newsroom so we can warn others." **No** → continue.
 2. **"What's happening?"** One big text box ("Water is entering houses on our street near the Ganaja junction, Lokoja") plus tappable category chips if they prefer.
-3. **The AI organises it** (`report-intake`): category, a short summary, state, LGA or landmark, how urgent, who usually responds (from the table in Section 3), and any follow-up question it needs ("Roughly how many homes are affected?"), asked one at a time, at most 2.
+3. **The AI organises it** (`report-intake`): category, a short summary, state, LGA or landmark, how urgent, who the citizen should contact for help (from the table in Section 3), and any follow-up question it needs ("Roughly how many homes are affected?"), asked one at a time, at most 2.
 4. **Check and edit:** a summary card with the fields, editable. Optional: photos (shown, not uploaded in the demo), when it started, contact details, report anonymously.
-5. **Sent:** a reference (`NPF-RPT-26-xxxxx`), who handles this kind of report, safety advice for this situation (e.g. for a flood: move to higher ground, avoid moving water, switch off power), "Track it", "Share with neighbours on WhatsApp".
+5. **Sent:** a reference (`NPFTV-RPT-26-xxxxx`), what the newsroom does next (reviews it, may check with the state command, may publish an alert or story), who to contact for actual help, safety advice for this situation (e.g. for a flood: move to higher ground, avoid moving water, switch off power), "Track it", "Share with neighbours on WhatsApp".
 
-**Abuse and privacy:** limit 3 reports per device per hour (demo); the AI flags likely pranks or abusive text for staff; an NDPA privacy note ("We only use this to respond. Contact details are optional."); no exact location stored unless the user gives it.
+**Abuse and privacy:** limit 3 reports per device per hour (demo); the AI flags likely pranks or abusive text for staff; an NDPA privacy note ("We only use this for news and public awareness. Contact details are optional and are never published."); no exact location stored unless the user gives it.
 
-**Control Room: Citizen reports** (`/control/reports`), for the Public Information Officer, Editor-in-Chief, Network Director and Super Administrator:
+**Control Room: Citizen reports** (`/control/reports`), the newsroom's desk, for the News Editor, Editor-in-Chief, Public Information Officer, Network Director and Super Administrator:
 - A queue sorted by AI urgency, with category icons and state.
 - **Clusters:** reports with the same category in the same LGA within 6 hours group together ("4 reports: flooding, Lokoja"), which is how real incidents show up.
-- **Actions:** Verify with the state command (status change), Forward to agency (records NEMA, SEMA, FRSC or Fire), **Create public alert** (pre-fills the existing alert form, then follows the existing approval), Mark as false or duplicate, Resolve.
+- **Actions** (newsroom actions only; NPFTV doesn't forward or escalate): Mark reviewed, Checked with the state command's PRO (verification for publishing), **Create public alert** (pre-fills the existing alert form, then follows the existing approval), Use in a story or on air (opens a story draft), Not used (false, duplicate or not newsworthy).
+- Tracking statuses the citizen sees on `/track`: Received → Reviewed by the newsroom → Verified → Published (alert, story or on air) / Not used.
 - Each action is written to the audit log and reflected on `/track`.
 - A small dashboard card on the Network Director overview: "Citizen reports today: 12 (2 urgent)".
 
-**New optional demo step (a second "Control Room changes the public site" moment):** a citizen in Lokoja reports flooding from a phone, then the report appears in the Control Room clustered with 3 seeded reports, the PIO verifies it and creates a community alert, the Network Director approves it, and the alert bar on npftv.net changes live. This fits the Nigerian reality (Kogi flooding) and takes about 90 seconds.
+**New optional demo step (a second "Control Room changes the public site" moment):** a citizen in Lokoja reports flooding from a phone, then the report appears in the Control Room clustered with 3 seeded reports, the newsroom verifies it with the Kogi command's PRO and creates a public awareness alert, the Network Director approves it, and the alert bar on npftv.net changes live. The citizen's `/track` page shows "Published". This fits the Nigerian reality (Kogi flooding) and takes about 90 seconds.
 
 **Seed data:** about 15 fictional reports across states (flooding in Kogi and Bayelsa, a fire in a Kano market, a road crash on the Lagos–Ibadan Expressway, a fallen power line in Enugu, suspicious activity in Abuja), all clearly fictional.
 
-**AI:** `report-intake` and `report-triage` (urgency, agency, possible duplicate cluster, abuse flag). Both have scripted fallbacks (rule-based keyword categoriser), as now.
+**AI:** `report-intake` and `report-triage` (newsworthiness and public-safety urgency, who the citizen should contact, possible duplicate cluster, abuse flag). Both have scripted fallbacks (rule-based keyword categoriser), as now.
 
 **Acceptance:** the full flow works on a 360px phone with one thumb. A report appears in the Control Room live and clusters correctly. Create public alert → approval → the alert bar updates. Track shows each status change.
 
@@ -265,7 +275,7 @@ Each phase ends with: type check, production build, the full demo-script test, t
   - Risk level: **High / Medium / Low**, with a coloured border.
   - Warning signs: specific to their story.
   - **Do this now:** numbered steps (stop contact, don't send money, don't share OTP/PIN/BVN, call your bank on the number on your card, keep screenshots).
-  - **If you've already paid or shared details:** bank first, then the NPF-NC3 / EFCC, plus "Report it" (links to the Phase 4 report form, pre-filled as fraud).
+  - **If you've already paid or shared details:** bank first, then report to the police (nearest station, or the NPF-NC3) or the EFCC. NPFTV can't take the report, but the card explains exactly what to bring.
   - **Talk to someone you trust:** for romance and family-pressure scams, encouragement to tell someone.
 - **Safety:** threats of violence or self-harm route to 112 and to support. The assistant never asks for passwords, PINs or full account numbers, and warns if the user types one ("Please don't share your PIN, even with us").
 - Privacy: "Nothing you type is stored."
@@ -284,19 +294,19 @@ Each phase ends with: type check, production build, the full demo-script test, t
 
 **Actionable answers:** each reply has a short answer plus up to 3 **action buttons**, chosen from an allowlist the server validates. Examples:
 - Open the scam assistant (with the chip pre-selected)
-- Report this incident (pre-filled category and summary)
+- Send a report to the newsroom (pre-filled category and summary)
 - Read "If you're arrested"
-- Track a reference
+- Track a report sent to the newsroom
 - Watch live / See tonight's guide / Open episode X
 - Find your state command (pre-selected state)
-- Make a complaint about an officer
+- How to complain about an officer
 - Call 112 (a `tel:` link) / Call FRSC 122
 
 **Behaviour rules:**
 - Emergency first: always lead with "Call 112 now" and a call button, then help.
 - Answer only from platform content and general safety knowledge; say "I'm not sure" rather than invent.
 - Never give legal advice for a specific case; it explains rights and points to the Legal Aid Council or a lawyer.
-- Never claim to be the police or to have sent help. Never collect PINs or passwords.
+- Never claim to be the police, to have sent help, or that NPFTV will act on, forward or escalate anything. NPFTV informs; it points to who can act. Never collect PINs or passwords.
 - Short replies (2 to 5 sentences), in the user's language.
 - On Stream, it also understands "what's on now", "when is Cyber Sense", "catch me up".
 
@@ -308,17 +318,17 @@ Each phase ends with: type check, production build, the full demo-script test, t
 
 ### Phase 7: Control Room integration, roles and the demo script (size: M)
 
-- **Sidebar:** a new "Citizen services" group with Reports, Complaints and Notices (with count badges), shown to the PIO, Editor-in-Chief, Network Director and Super Administrator.
-- **Role change:** the Public Information Officer (Ngozi Eze) becomes the owner of citizen services. No new roles are needed.
+- **Sidebar:** a new "Citizen reporting" group with Reports and Notices (with count badges), shown to the News Editor, Editor-in-Chief, PIO, Network Director and Super Administrator.
+- **Roles:** the newsroom (News Editor, Editor-in-Chief) owns citizen reports; the Public Information Officer owns notices and alerts. No new roles are needed.
 - **Approvals:** the inbox also shows notices and report-based alerts waiting for approval.
-- **Network Director overview:** a "Citizen services today" card (reports, urgent, complaints open, notices live), and the daily brief can mention a significant cluster.
+- **Network Director overview:** a "Citizen reporting today" card (reports received, verified, published; notices live), and the daily brief can mention a significant cluster.
 - **Audit log:** new action types, with filters for "Citizen services".
 - **Presenter panel:** a "Seed a flood cluster in Lokoja" button and "Reset citizen services", plus the new optional demo steps in the script list.
-- **Documentation:** update `docs/demo-plan.md` (the new screens and the optional steps 9 to 11), `docs/mock-data.md` (reports, complaints, notices), `docs/ai-features.md` (the new features), `docs/design-system.md` (the light Stream and the white footer), and `CLAUDE.md`.
+- **Documentation:** update `docs/demo-plan.md` (the new screens and the optional steps 9 to 11), `docs/mock-data.md` (reports, notices), `docs/ai-features.md` (the new features), `docs/design-system.md` (the light Stream and the white footer), and `CLAUDE.md`.
 
 ### Phase 8: Quality, AI evaluation and launch (size: M)
 
-- **Automated end-to-end tests:** the existing demo script, plus a script per new flow (report, complaint, notice, scam chat, assistant), run in both live (mock) and scripted modes.
+- **Automated end-to-end tests:** the existing demo script, plus a script per new flow (report, complaint helper, notice, scam chat, assistant), run in both live (mock) and scripted modes.
 - **AI evaluation with the real key:** `scripts/test-ai.mjs` grows into an evaluation set of about 80 prompts across all features, with pass rules. That includes safety cases (emergency, self-harm, an officer threatening someone, someone typing a PIN, prompt-injection attempts, abusive reports) and Nigerian-language prompts. Prompts are fixed until the set passes, then latency and cost per conversation are recorded.
 - **Accessibility pass:** keyboard-only run-through, screen reader spot check, contrast audit of every new light surface.
 - **Performance on a slow 3G profile** for the homepage, report form and assistant.
@@ -328,17 +338,15 @@ Each phase ends with: type check, production build, the full demo-script test, t
 ## 7. Technical design
 
 **New data** (`data/`, typed like today):
-- `rights.ts`: topics with in-short, can, cannot, what to do and sources
-- `processes.ts`: investigation steps and complaint channels
+- `rights.ts`: topics with in-short, can, cannot, what to do and sources; investigation steps; complaint channels
 - `agencies.ts`: the responder table
 - `lgas.ts`: LGAs for the demo states
 - `notices.ts`: fictional missing and wanted persons
 - `reports.ts`: seed citizen reports
-- `complaints.ts`: seed complaints
 
 **Store additions** (`lib/store.tsx`, version bumped to 3):
-- `reports`, `complaints`, `notices`, `tips`, `chat` (assistant history per tab, in sessionStorage, not shared)
-- Actions: `submitReport`, `updateReport`, `clusterOf`, `submitComplaint`, `updateComplaint`, `createNotice`, `publishNotice`, `markFound`, `submitTip`
+- `reports`, `notices`, `chat` (assistant history per tab, in sessionStorage, not shared). No complaints or tips are stored: NPFTV does not take them.
+- Actions: `submitReport`, `updateReport`, `clusterOf`, `createNotice`, `publishNotice`, `markFound`
 - Each action writes to the audit log, and everything syncs across tabs as today.
 
 **New shared components:**
@@ -347,7 +355,7 @@ Each phase ends with: type check, production build, the full demo-script test, t
 - `CanCannot` (the two-column panel), `ReferenceCard`, `StatusTimeline`, `PersonCard` (silhouette), `EmergencyStrip`, `LocationPicker` (state, LGA, landmark), `TaskCard`
 
 **AI features** (`lib/server/features.ts`):
-- New: `scam-chat`, `report-intake`, `report-triage`, `complaint-intake`, `complaint-triage`, `tip-triage`, `assistant`.
+- New: `scam-chat`, `report-intake`, `report-triage`, `complaint-helper`, `assistant`.
 - They follow the same pattern as today: fixed prompts, strict schemas, output checks, scripted fallbacks.
 - Multi-turn features accept a bounded history: at most 8 turns and 4,000 characters, user and assistant roles only. The server rebuilds the prompt; the client never sends instructions.
 - Rate limits per IP stay. The assistant gets its own lower limit (e.g. 20 messages per 10 minutes).
@@ -360,6 +368,7 @@ Each phase ends with: type check, production build, the full demo-script test, t
 
 | Risk | Mitigation |
 |---|---|
+| Citizens assume NPFTV will act on what they send (like the police would) | Every form, chat and confirmation says plainly that NPFTV is the police's media service and can't send help, open a case or handle complaints; 112 and the right agency always come first; reports are framed as "to the newsroom, for public awareness" |
 | Legal statements are wrong or overstated | Cite sources; only confident section numbers; "To be reviewed by NPF Legal" label; a client review list in Phase 8 |
 | Invented helpline numbers mislead people | No numbers except 112 and FRSC 122 until NPFTV supplies verified ones |
 | Wanted-person pages harm someone real | All fictional; silhouettes only; presumption-of-innocence notice; approval needed to publish |

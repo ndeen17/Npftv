@@ -430,6 +430,15 @@
     margin-top: 2px;
   }
 
+  /* Bulleted lists (Tailwind's reset removes list markers) */
+  .bullets,
+  .in-short ul {
+    list-style: disc;
+  }
+  .bullets li::marker {
+    color: var(--yellow-deep);
+  }
+
   /* Skeleton for "Checking…" states (never a blank panel) */
   .skel {
     display: block;

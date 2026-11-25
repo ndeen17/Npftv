@@ -67,7 +67,7 @@ export default function AboutPage() {
         <div className="wrap grid grid-cols-1 gap-12 lg:grid-cols-2">
           <div>
             <h2 style={{ color: "var(--indigo)", marginBottom: 14 }}>Editorial standards</h2>
-            <ul style={{ display: "grid", gap: 10, paddingLeft: 20, color: "#3b3452", fontSize: 16.5 }}>
+            <ul className="bullets" style={{ display: "grid", gap: 10, paddingLeft: 20, color: "#3b3452", fontSize: 16.5 }}>
               <li>We report only what has been verified with the relevant command.</li>
               <li>We never reveal the location or timing of an ongoing operation.</li>
               <li>We describe suspects who have not been charged; we don&apos;t name them.</li>

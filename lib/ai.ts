@@ -180,7 +180,7 @@ export function translate(text: string, lang: Lang): string | null {
 
 export interface SearchDoc {
   id: string;
-  kind: "story" | "programme" | "guide" | "episode" | "state";
+  kind: "story" | "programme" | "guide" | "episode" | "state" | "rights";
   title: string;
   text: string;
   href: string;
@@ -273,4 +273,64 @@ export function askData(question: string): AskDataResult {
     return { answer: "Stream uptime in November is 99.6%, with 2 short outages, both under 4 minutes.", figuresUsed: ["Uptime: 99.6%"] };
   }
   return { answer: "I can't find that in today's data snapshot. I can answer questions about audiences, budgets, assets, approvals and the correspondent network.", figuresUsed: [] };
+}
+
+// ---------------------------------------------------------------------------
+// Complaint helper (information only: nothing is stored or sent to NPFTV)
+
+export type ComplaintSectionId = "when" | "where" | "officer" | "what" | "evidence" | "witnesses" | "outcome";
+export type ComplaintChannel = "cru" | "psc" | "nhrc" | "courts";
+
+export interface ComplaintDraft {
+  sections: Record<ComplaintSectionId, string>;
+  missing: ComplaintSectionId[];
+  channel: ComplaintChannel;
+  channelReason: string;
+  isEmergency: boolean;
+}
+
+export const COMPLAINT_EXAMPLE =
+  "Yesterday evening around 7pm at the checkpoint near Berger junction in Abuja, an officer stopped our bus. He said our papers were not complete and asked the driver for N5,000. When I asked his name he covered his name tag. The patrol van number was ABC-123XY. Two other passengers saw it.";
+
+const NG_STATES = ["Abia", "Adamawa", "Akwa Ibom", "Anambra", "Bauchi", "Bayelsa", "Benue", "Borno", "Cross River", "Delta", "Ebonyi", "Edo", "Ekiti", "Enugu", "Gombe", "Imo", "Jigawa", "Kaduna", "Kano", "Katsina", "Kebbi", "Kogi", "Kwara", "Lagos", "Nasarawa", "Niger", "Ogun", "Ondo", "Osun", "Oyo", "Plateau", "Rivers", "Sokoto", "Taraba", "Yobe", "Zamfara", "Abuja", "FCT"];
+
+/** Scripted fallback: pulls obvious details out of the citizen's words and keeps the full account. */
+export function complaintHelper(text: string): ComplaintDraft {
+  const t = text.trim();
+  const sentences = t.split(/(?<=[.!?])\s+/);
+  const pick = (re: RegExp) => sentences.filter((s) => re.test(s)).join(" ");
+  const when = (t.match(/\b(yesterday|today|last night|this morning|last week|on (mon|tues|wednes|thurs|fri|satur|sun)day|(mon|tues|wednes|thurs|fri|satur|sun)day|\d{1,2}(st|nd|rd|th)? (of )?(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]*|(around|at|about) \d{1,2}([:.]\d{2})? ?(am|pm)?|\d{1,2}([:.]\d{2})? ?(am|pm)|morning|afternoon|evening|night)\b/gi) ?? []).join(", ");
+  const state = NG_STATES.find((s) => new RegExp(`\\b${s}\\b`, "i").test(t));
+  // Place phrases: "at the checkpoint near Berger junction", "along the Lagos-Ibadan Expressway".
+  const places = Array.from(
+    new Set(
+      (t.match(/\b(?:at|near|along|around|opposite|beside|by|in front of)\s+(?:the\s+)?[^,.;]{3,60}?(?=[,.;]| an? | the | when | and | where |$)/gi) ?? [])
+        .map((p) => p.trim())
+        .filter((p) => /junction|road|street|expressway|market|checkpoint|motor park|station|bus stop|roundabout|bridge|estate|park|garage|[A-Z][a-z]+/.test(p)),
+    ),
+  );
+  const where = [places.join(", "), state && !places.join(" ").includes(state) ? state : ""].filter(Boolean).join(", ");
+  const plate = t.match(/\b[A-Z]{2,3}[- ]?\d{2,3}[- ]?[A-Z]{2}\b/);
+  // Force numbers look like "54321" or "AP/12345". Case-sensitive so words like "was" aren't taken as a prefix.
+  const number = t.match(/\b(?:[Ff]orce )?(?:[Nn]o\.?|[Nn]umber)(?: was| is)?\s*[:#]?\s*((?:[A-Z]{1,3}\/)?\d{3,})\b/);
+  const plain = t.replace(/(\d),(\d{3})/g, "$1$2"); // "N20,000" -> "N20000", so commas only split clauses
+  const officerClauses = (plain.match(/[^.,;]*\b(officer|policeman|policewoman|inspector|sergeant|corporal|constable|dpo|ipo|name tag|uniform)\b[^.,;]*/gi) ?? [])
+    .map((c) => c.trim())
+    .filter((c) => /name tag|uniform|inspector|sergeant|corporal|constable|rank|wore|wearing|tall|short|covered/i.test(c));
+  const officerBits = [...officerClauses, plate ? `Vehicle number: ${plate[0]}` : "", number ? `Number: ${number[1]}` : ""];
+  const officer = Array.from(new Set(officerBits.filter(Boolean))).join(". ");
+  const evidence = pick(/\b(photos?|pictures?|videos?|recordings?|recorded|receipts?|screenshots?|transfers?|bank alert|medical (report|records?))\b/i);
+  const witnesses = pick(/\b(witness|saw it|passengers?|friend|neighbou?r|people (saw|were there))\b/i);
+  const sections: ComplaintDraft["sections"] = { when, where, officer, what: t, evidence, witnesses, outcome: "" };
+  const missing = (Object.keys(sections) as ComplaintSectionId[]).filter((k) => !sections[k]);
+  const abuse = /\b(beat|beaten|hit|slap|tortur|shot|injur|wound|stripped|sexual|rape)/i.test(t);
+  return {
+    sections,
+    missing,
+    channel: "cru",
+    channelReason: abuse
+      ? "The NPF Complaint Response Unit is the first stop. Because this involves violence, you can also take it to the National Human Rights Commission."
+      : "The NPF Complaint Response Unit is the first stop for complaints like this.",
+    isEmergency: EMERGENCY.test(t),
+  };
 }

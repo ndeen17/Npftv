@@ -15,8 +15,8 @@ const QUICK: { href: string; label: string; icon: IconName; fill?: boolean; ai?:
   { href: "/stream/guide", label: "Programme guide", icon: "calendar" },
   { href: "/safety#scam-checker", label: "Scam checker", icon: "shield", ai: true },
   { href: "/safety/guides/how-to-report-a-crime", label: "Report a crime", icon: "phone" },
+  { href: "/rights", label: "Know your rights", icon: "scale" },
   { href: "/state-commands", label: "State commands", icon: "map" },
-  { href: "/media-centre", label: "Media centre", icon: "image" },
 ];
 
 export default function HomePage() {

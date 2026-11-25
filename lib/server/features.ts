@@ -246,6 +246,33 @@ State ids: ${states.map((s) => `${s.id} (${s.name})`).join(", ")}.`,
     },
   },
 
+  "complaint-helper": {
+    effort: "low",
+    maxTokens: 3000,
+    instructions: `${RULES}
+${EMERGENCY_RULE}
+Context: NPFTV is the Nigeria Police Force's television and news service. It does NOT take or investigate complaints. This tool only helps a citizen write down their complaint clearly so THEY can send it to the right body themselves.
+Task: turn the citizen's account into a clear, factual complaint, in the first person, under these headings:
+- when: date and time (as given; don't guess)
+- where: state, LGA, and the nearest landmark or junction
+- officer: anything that identifies the officer(s): name, number, rank, unit, uniform, vehicle or plate number
+- what: what happened, in order, plainly and calmly (keep their facts; remove insults and speculation; never add facts)
+- evidence: photos, videos, receipts, transfer records, medical reports they mention
+- witnesses: people who saw it
+- outcome: what they want (only if they said it)
+Use "" for any heading the account doesn't cover, and list those heading ids in "missing".
+channel: where they should send it: "cru" (NPF Complaint Response Unit, the first stop for most complaints: extortion, bribery, unlawful arrest or detention, rudeness, brutality, refusal to take a report), "nhrc" (National Human Rights Commission, for serious human rights abuse such as torture), "psc" (Police Service Commission, officer discipline), "courts" (when they want damages or release from unlawful detention, through a lawyer or the Legal Aid Council). channelReason: one sentence.
+Write in the language the citizen used (English, Pidgin, Hausa, Yoruba or Igbo).`,
+    schema: O({
+      sections: O({ when: S(), where: S(), officer: S(), what: S(), evidence: S(), witnesses: S(), outcome: S() }),
+      missing: A({ type: "string", enum: ["when", "where", "officer", "what", "evidence", "witnesses", "outcome"] }),
+      channel: { type: "string", enum: ["cru", "psc", "nhrc", "courts"] },
+      channelReason: S(),
+      isEmergency: { type: "boolean" },
+    }),
+    input: (raw) => ({ text: `The citizen's account:\n${wrap(str(obj(raw).text, "text", 3000, 20))}` }),
+  },
+
   "ask-data": {
     effort: "low",
     maxTokens: 2000,
