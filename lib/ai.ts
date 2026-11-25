@@ -17,6 +17,7 @@ export interface ScamResult {
   verdict: ScamVerdict;
   signs: string[];
   whatToDo: string;
+  isEmergency?: boolean;
 }
 
 export interface AskResult {
@@ -164,8 +165,8 @@ export const LANGS: { id: Lang; name: string; ready: boolean }[] = [
   { id: "en", name: "English", ready: true },
   { id: "ha", name: "Hausa", ready: true },
   { id: "pcm", name: "Pidgin", ready: true },
-  { id: "yo", name: "Yoruba", ready: false },
-  { id: "ig", name: "Igbo", ready: false },
+  { id: "yo", name: "Yoruba", ready: true },
+  { id: "ig", name: "Igbo", ready: true },
 ];
 
 export function translate(text: string, lang: Lang): string | null {

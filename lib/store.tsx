@@ -6,6 +6,7 @@ import { approvals as seedApprovals, kanoTriage, pressBriefingProduction, procur
 import { defaultAlert, preparedAlert, seedTicker } from "@/data/public";
 import { buildSchedule, insertSlot, pressBriefingTemplate } from "@/data/schedule";
 import { DEFAULT_CLOCK_ISO, fromWat, watParts } from "@/lib/time";
+import type { Review } from "@/lib/copydesk";
 import type {
   Alert,
   ApprovalItem,
@@ -20,7 +21,7 @@ import type {
   Submission,
 } from "@/lib/types";
 
-const STORAGE_KEY = "npftv-demo-state-v1";
+const STORAGE_KEY = "npftv-demo-state-v2";
 const ROLE_KEY = "npftv-demo-role";
 const CHANNEL = "npftv-demo";
 
@@ -31,15 +32,15 @@ export interface TickerItem {
   breaking?: boolean;
 }
 
+/** The editor's decisions on an AI copy-desk review (keyed by issue id). */
 export interface CopyDeskState {
-  op: "fixed" | "ignored" | null; // paragraph 3: active operation location
-  suspect: "fixed" | "ignored" | null; // paragraph 4: uncharged suspect named
-  style: boolean; // "have been been"
+  decisions: Record<string, "fixed" | "ignored">; // sensitivity issues
+  styleDone: Record<string, boolean>; // style fixes applied
   headline: number; // chosen headline option
 }
 
 export interface DemoState {
-  version: 1;
+  version: 2;
   articles: Article[];
   submissions: Submission[];
   schedule: ScheduleSlot[];
@@ -56,9 +57,11 @@ export interface DemoState {
   live: LiveState;
   clock: { pinned: boolean; iso: string };
   aiInstant: boolean;
+  aiScripted: boolean; // presenter switch: use scripted answers instead of the live model
   audit: AuditEntry[];
   reminders: string[];
   copyDesk: Record<string, CopyDeskState>;
+  reviews: Record<string, Review>; // saved AI copy-desk reviews, so every tab sees the same one
   checkedOut: Record<string, string>; // assetId -> who
 }
 
@@ -78,7 +81,7 @@ function seedAudit(): AuditEntry[] {
 
 export function seedState(): DemoState {
   return {
-    version: 1,
+    version: 2,
     articles: [...seedArticles, ...seedSubmissionArticles],
     submissions: seedSubmissions,
     schedule: buildSchedule(),
@@ -95,14 +98,16 @@ export function seedState(): DemoState {
     live: "live",
     clock: { pinned: true, iso: DEFAULT_CLOCK_ISO },
     aiInstant: false,
+    aiScripted: false,
     audit: seedAudit(),
     reminders: [],
     copyDesk: {},
+    reviews: {},
     checkedOut: {},
   };
 }
 
-export const defaultCopyDesk: CopyDeskState = { op: null, suspect: null, style: false, headline: 0 };
+export const defaultCopyDesk: CopyDeskState = { decisions: {}, styleDone: {}, headline: 0 };
 
 // ---------------------------------------------------------------------------
 
@@ -130,7 +135,7 @@ function load(): DemoState | null {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (!raw) return null;
     const parsed = JSON.parse(raw) as DemoState;
-    return parsed.version === 1 ? parsed : null;
+    return parsed.version === 2 ? parsed : null;
   } catch {
     return null;
   }
@@ -262,26 +267,83 @@ export function useActions() {
 
   return useMemo(
     () => ({
-      submitStory(id: string, title: string) {
+      /** Reporter submits. Kano gets its scripted triage; other stories get a placeholder until AI triage returns. */
+      submitStory(id: string, title: string, photos: number) {
         update(
           (s) => {
+            const art = s.articles.find((a) => a.id === id);
+            const triage: Submission["triage"] = id === KANO_ID ? kanoTriage : { category: art?.category ?? "state-commands", state: art?.state ?? "KN", urgency: "routine", pending: true };
             const exists = s.submissions.some((x) => x.articleId === id);
             return {
               ...s,
               articles: s.articles.map((a) => (a.id === id ? { ...a, status: "submitted", date: now.toISOString() } : a)),
+              // A resubmitted story gets a fresh AI review.
+              reviews: Object.fromEntries(Object.entries(s.reviews).filter(([k]) => k !== id || id === KANO_ID)),
+              copyDesk: Object.fromEntries(Object.entries(s.copyDesk).filter(([k]) => k !== id)),
               submissions: exists
-                ? s.submissions.map((x) => (x.articleId === id ? { ...x, at: hhmm } : x))
-                : [{ id: `sub-${id}`, articleId: id, from: "Musa Ibrahim", desk: "Kano", at: hhmm, triage: kanoTriage }, ...s.submissions],
+                ? s.submissions.map((x) => (x.articleId === id ? { ...x, at: hhmm, triage } : x))
+                : [{ id: `sub-${id}`, articleId: id, from: "Musa Ibrahim", desk: "Kano", at: hhmm, triage }, ...s.submissions],
             };
           },
-          { action: "Submitted a story with 3 photos from the Kano desk", target: title },
+          { action: `Submitted a story${photos ? ` with ${photos} photo${photos === 1 ? "" : "s"}` : ""} from the Kano desk`, target: title },
         );
-        update((s) => s, {
-          action: id === KANO_ID ? "AI review finished: 2 sensitivity issues, 1 style fix" : "AI review finished",
+        if (id === KANO_ID) {
+          update((s) => s, { action: "AI review finished: 2 sensitivity issues, 1 style fix", target: title, ai: true, as: { who: "AI copy desk", role: "System" } });
+        }
+      },
+      setTriage(articleId: string, triage: Submission["triage"], title: string) {
+        update(
+          (s) => ({ ...s, submissions: s.submissions.map((x) => (x.articleId === articleId ? { ...x, triage } : x)) }),
+          { action: `AI triage: ${triage.urgency === "priority" ? "priority" : "routine"}`, target: title, ai: true, as: { who: "AI triage", role: "System" } },
+        );
+      },
+      /** Reporter starts a brand-new story (to show the live copy desk on any text). */
+      newStory(): string {
+        const id = `story-${Date.now().toString(36)}`;
+        update((s) => ({
+          ...s,
+          articles: [
+            {
+              id,
+              slug: id,
+              title: "",
+              summary: "",
+              body: [""],
+              category: "state-commands",
+              state: "KN",
+              date: now.toISOString(),
+              author: "Musa Ibrahim",
+              status: "draft",
+              thumb: "graphic",
+              graphicIcon: "file",
+            },
+            ...s.articles,
+          ],
+        }));
+        return id;
+      },
+      saveReview(id: string, review: Review, live: boolean, title: string) {
+        const n = review.sensitivity.length;
+        const st = review.style.length;
+        update((s) => ({ ...s, reviews: { ...s.reviews, [id]: review } }), {
+          action: `AI review finished: ${n} sensitivity issue${n === 1 ? "" : "s"}, ${st} style fix${st === 1 ? "" : "es"}${live ? "" : " (scripted)"}`,
           target: title,
           ai: true,
           as: { who: "AI copy desk", role: "System" },
         });
+      },
+      clearReview(id: string, title: string) {
+        update(
+          (s) => ({
+            ...s,
+            reviews: Object.fromEntries(Object.entries(s.reviews).filter(([k]) => k !== id)),
+            copyDesk: Object.fromEntries(Object.entries(s.copyDesk).filter(([k]) => k !== id)),
+          }),
+          { action: "Asked the AI copy desk to check again", target: title },
+        );
+      },
+      setAiScripted(v: boolean) {
+        update((s) => ({ ...s, aiScripted: v }));
       },
       saveStory(id: string, patch: Partial<Article>, title: string) {
         update((s) => ({ ...s, articles: s.articles.map((a) => (a.id === id ? { ...a, ...patch } : a)) }), { action: "Saved changes", target: title });
@@ -298,7 +360,10 @@ export function useActions() {
             const art = s.articles.find((a) => a.id === id);
             if (!art) return s;
             const title = patch.title ?? art.title;
-            const published: Article = { ...art, ...patch, status: "published", date: now.toISOString() };
+            const slug = art.id.startsWith("story-")
+              ? `${title.toLowerCase().replace(/[’']/g, "").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 70)}-${art.id.slice(-4)}`
+              : art.slug;
+            const published: Article = { ...art, ...patch, slug, status: "published", date: now.toISOString() };
             return {
               ...s,
               articles: s.articles.map((a) => (a.id === id ? published : a)),

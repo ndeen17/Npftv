@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { preparedAlert } from "@/data/public";
+import { aiStatus, type AiStatus } from "@/lib/ai-client";
 import { useActions, useDemo } from "@/lib/store";
 import { watParts } from "@/lib/time";
 import type { LiveState } from "@/lib/types";
@@ -29,6 +30,11 @@ export function PresenterPanel() {
   const parts = watParts(now);
   const [date, setDate] = useState(parts.date);
   const [time, setTime] = useState(parts.hhmm);
+  const [status, setStatus] = useState<AiStatus | null | undefined>(undefined);
+
+  useEffect(() => {
+    if (open) aiStatus().then(setStatus);
+  }, [open]);
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -153,13 +159,26 @@ export function PresenterPanel() {
       </div>
 
       <div className="pp-sec">
+        <b>AI</b>
+        <p style={{ display: "flex", gap: 8, alignItems: "center", fontSize: 13, marginBottom: 10 }}>
+          <span className="dot" style={{ width: 9, height: 9, borderRadius: "50%", background: status === undefined ? "#8f86ad" : status?.configured ? "var(--green-2)" : "var(--yellow-deep)", flex: "none" }} />
+          {status === undefined ? "Checking the AI service…" : status?.configured ? `Live AI connected (${status.model})` : "No OpenAI key on this deployment: scripted answers"}
+        </p>
         <div className="pp-toggle">
           <span>
-            <b style={{ color: "#fff", fontWeight: 600 }}>Instant AI answers</b>
+            <b style={{ color: "#fff", fontWeight: 600 }}>Scripted AI only</b>
             <br />
-            <small>All AI is scripted in this build. Off = a short, realistic “Checking…” pause.</small>
+            <small>Safety net: pre-written answers instead of the live model. The demo-script inputs always use their reviewed answers.</small>
           </span>
-          <button className="pp-switch" role="switch" aria-checked={state.aiInstant} aria-label="Instant AI answers" onClick={() => act.setAiInstant(!state.aiInstant)} />
+          <button className="pp-switch" role="switch" aria-checked={!!state.aiScripted} aria-label="Scripted AI only" onClick={() => act.setAiScripted(!state.aiScripted)} />
+        </div>
+        <div className="pp-toggle" style={{ marginTop: 10 }}>
+          <span>
+            <b style={{ color: "#fff", fontWeight: 600 }}>Instant scripted answers</b>
+            <br />
+            <small>Off = a short, realistic “Checking…” pause for scripted answers.</small>
+          </span>
+          <button className="pp-switch" role="switch" aria-checked={state.aiInstant} aria-label="Instant scripted answers" onClick={() => act.setAiInstant(!state.aiInstant)} />
         </div>
       </div>
 

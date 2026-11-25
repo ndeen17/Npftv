@@ -4,7 +4,8 @@ import Link from "next/link";
 import { useState } from "react";
 import { budget, fmtNaira } from "@/data/ops";
 import { CORRESPONDENT_DESKS, CORRESPONDENT_TOTAL, states, tier } from "@/data/places";
-import { askData, DIRECTOR_CHIPS, runAI, type AskDataResult } from "@/lib/ai";
+import { askData, DIRECTOR_CHIPS, type AskDataResult } from "@/lib/ai";
+import { aiOpts, askAI } from "@/lib/ai-client";
 import { useActions, useDemo } from "@/lib/store";
 import type { ApprovalItem } from "@/lib/types";
 import { Icon, type IconName } from "../Icon";
@@ -50,7 +51,9 @@ export function DailyBrief() {
     if (!question.trim()) return;
     setBusy(true);
     setAns(null);
-    const a = await runAI(() => askData(question), state.aiInstant);
+    const q = question.trim().slice(0, 300);
+    // The three suggested questions keep their reviewed answers; free questions go to the live model.
+    const { data: a } = await askAI<AskDataResult>("ask-data", { question: q, briefingBooked }, () => askData(q), { ...aiOpts(state), forceScripted: DIRECTOR_CHIPS.includes(q) });
     setAns({ q: question, a });
     setBusy(false);
     setQ("");

@@ -26,7 +26,7 @@ One Next.js app with three areas that share one fake dataset:
 
 Plus an **AI layer** used across all three, and a hidden **presenter panel** (Shift + P) to drive the demo live.
 
-> **Decision (24 Nov 2026): no backend at all.** The demo is front end only, hosted on Vercel. There is **no `/api/ai` route and no OpenAI key**: every AI feature runs on scripted, rule-based answers in the browser (`lib/ai.ts`, `lib/copydesk.ts`), with exact answers for the demo-script inputs. All AI calls go through `runAI()` in `lib/ai.ts`, so a real server route can be added later without touching the UI. Where the docs below mention the OpenAI proxy, read them as "the future real build".
+> **Decision (25 Nov 2026): live AI with gpt-5-mini, no other backend.** No database and no other server code. One Vercel function, `app/api/ai/route.ts`, holds `OPENAI_API_KEY` and calls OpenAI (Responses API, strict JSON schemas). Feature prompts, input checks and output checks live in `lib/server/features.ts`. The browser calls `askAI()` in `lib/ai-client.ts`, which falls back to the scripted answers in `lib/ai.ts` / `lib/copydesk.ts` on any error or after 15 seconds, or when the presenter turns on "Scripted AI only". The exact demo-script inputs (the BVN SMS, the Kano story, the three Director question chips) always use their reviewed scripted answers. Live features: scam checker, Ask NPFTV, search, article and headline translation (Hausa, Pidgin, Yoruba, Igbo), Catch me up, copy desk for any story other than Kano (reporters can write new stories), submission triage, ask-the-data. Check them with `node scripts/test-ai.mjs` while the app runs.
 
 ### NPFTV Stream: separate, yet combined
 
@@ -43,7 +43,7 @@ The core demo moment: **an action in the Control Room visibly changes the public
 - Design tokens live in Tailwind config / CSS variables, named as in `docs/design-system.md`. Do not invent new colours.
 - Mock data lives in `data/*.json` (or typed `data/*.ts`). Read it through one small store module, never import JSON directly into pages.
 - Runtime changes (approved stories, new schedule items, live/off-air state) are kept in **localStorage** and synced across tabs with **BroadcastChannel** (fallback: the `storage` event). A **Reset demo** button restores the seed data.
-- **No server code.** AI is scripted in the browser (see the decision above). The presenter panel's "Instant AI answers" switch removes the simulated "Checking…" pause.
+- **Only server code:** `app/api/ai/route.ts` (see the decision above). Never import `lib/server/*` from a client component.
 - Code map: `data/` (seed data), `lib/store.tsx` (state, cross-tab sync, actions + audit log), `lib/broadcast.ts` (on air / up next), `lib/time.ts` (WAT clock), `lib/ai.ts` (scripted AI), `styles/` (design CSS ported from `design/src`, scoped `.site`, `.strm`, `.ctl`), `components/`, `app/(site)`, `app/(stream)/stream`, `app/control`.
 - Keep components small and reusable: `LiveBadge`, `LowerThird`, `ProgrammeCard`, `StoryRow`, `DateBlock`, `QuickAction`, `KpiTile`, `ApprovalItem`, and so on.
 - Responsive down to 360px. Visible keyboard focus. Respect `prefers-reduced-motion` (the pulsing live dot is the only ambient animation).
@@ -78,7 +78,7 @@ The core demo moment: **an action in the Control Room visibly changes the public
 3. **NPFTV Stream:** its own layout and top bar, Stream home, live page (player, TV graphics, captions, live/off-air states), EPG, on-demand library, episode page.
 4. **Control Room CMS:** role dashboards, submissions inbox, story editor with AI copy-desk panel, approval workflow, homepage curator, alerts, broadcast control, schedule manager, audit log.
 5. **Control Room ERP:** Network Director overview, production calendar, assets, people, finance + procurement, sponsorship, correspondents, approvals inbox.
-6. **AI:** each feature, scripted in the browser (no proxy; see the decision above).
+6. **AI:** `/api/ai` proxy (gpt-5-mini), then each feature with its scripted fallback.
 7. **Polish and rehearse:** mobile pass, run the demo script end to end, deploy.
 
 The folder already contains `docs/` and `design/`, so `create-next-app .` may refuse to run here. Scaffold into a temporary folder and move the files in, or set the project up by hand. Keep `docs/` and `design/` where they are.
@@ -93,4 +93,4 @@ npm run build    # production build check
 npm run typecheck
 ```
 
-No environment variables are needed. Deploy: import the repo in Vercel (framework preset Next.js, no settings to change).
+Environment: `.env.local` with `OPENAI_API_KEY` (optional: `OPENAI_MODEL`, default `gpt-5-mini`; `AI_DAILY_REQUEST_LIMIT`, default 2000). On Vercel, add the same under Settings, Environment Variables, then redeploy. Without a key everything still works on scripted answers.

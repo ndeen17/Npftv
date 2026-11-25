@@ -2,10 +2,11 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { programmeById } from "@/data/programmes";
+import { captionCues, programmeById } from "@/data/programmes";
 import { addDays, fmt, toHHMM, toMin } from "@/lib/time";
 import { GUIDE_DAYS, WEEK_START } from "@/data/schedule";
-import { catchMeUp, runAI } from "@/lib/ai";
+import { catchMeUp } from "@/lib/ai";
+import { aiOpts, askAI } from "@/lib/ai-client";
 import { onAir } from "@/lib/broadcast";
 import { useActions, useDemo } from "@/lib/store";
 import type { Episode, ScheduleSlot } from "@/lib/types";
@@ -67,6 +68,9 @@ export function OnNowCard() {
   );
 }
 
+// Shared across the Stream home and live pages so a summary is generated once per minute of programme.
+const catchUpCache = new Map<string, { time: string; text: string }[]>();
+
 export function CatchMeUpCard() {
   const { state, now } = useDemo();
   const air = onAir(state.schedule, now, state.live);
@@ -75,9 +79,24 @@ export function CatchMeUpCard() {
   const isBeat = air.current?.title === "The Beat" && air.state === "live";
 
   async function run() {
+    const key = `${air.date}|${air.nowHHMM}|${state.aiScripted ? "s" : "l"}`;
+    const start = air.current?.start ?? "19:00";
+    const minutes = toMin(air.nowHHMM) - toMin(start);
+    const hit = catchUpCache.get(key);
+    if (hit) {
+      setRes({ bullets: hit, minutes });
+      return;
+    }
     setBusy(true);
-    const r = await runAI(() => catchMeUp(air.nowHHMM, air.current?.start), state.aiInstant);
-    setRes(r);
+    const cues = captionCues.filter((c) => toMin(c.time) >= toMin(start) && toMin(c.time) <= toMin(air.nowHHMM));
+    const { data } = await askAI<{ bullets: { time: string; text: string }[] }>(
+      "catch-me-up",
+      { programme: "The Beat (national news)", cues },
+      () => ({ bullets: catchMeUp(air.nowHHMM, start).bullets }),
+      aiOpts(state),
+    );
+    catchUpCache.set(key, data.bullets);
+    setRes({ bullets: data.bullets, minutes });
     setBusy(false);
   }
 

@@ -8,7 +8,8 @@ import { stateSlug, states } from "@/data/places";
 import { guides } from "@/data/public";
 import { Icon } from "@/components/Icon";
 import { PageHead } from "@/components/site/bits";
-import { runAI, search, type SearchDoc } from "@/lib/ai";
+import { search, type SearchDoc } from "@/lib/ai";
+import { aiOpts, askAI } from "@/lib/ai-client";
 import { useDemo } from "@/lib/store";
 
 const KIND_LABEL: Record<SearchDoc["kind"], string> = { story: "Story", programme: "Programme", guide: "Safety guide", episode: "On demand", state: "State command" };
@@ -37,9 +38,12 @@ function SearchInner() {
     if (!initial) return;
     let live = true;
     setBusy(true);
-    runAI(() => search(initial, docs), state.aiInstant).then((r) => {
+    const q = initial.slice(0, 200);
+    const index = docs.map((d) => ({ id: `${d.kind}:${d.id}`, kind: d.kind, title: d.title.slice(0, 200), text: d.text.replace(/\s+/g, " ").slice(0, 160) }));
+    askAI<{ results: string[] }>("search", { query: q, index }, () => ({ results: search(q, docs).map((d) => `${d.kind}:${d.id}`) }), aiOpts(state)).then(({ data }) => {
       if (!live) return;
-      setResults(r);
+      const byKey = new Map(docs.map((d) => [`${d.kind}:${d.id}`, d]));
+      setResults(data.results.map((k) => byKey.get(k)).filter((d): d is SearchDoc => !!d));
       setBusy(false);
     });
     return () => {

@@ -3,7 +3,8 @@
 import Link from "next/link";
 import { useState } from "react";
 import { guideById } from "@/data/public";
-import { askNpftv, runAI, type AskResult } from "@/lib/ai";
+import { askNpftv, type AskResult } from "@/lib/ai";
+import { aiOpts, askAI } from "@/lib/ai-client";
 import { useDemo } from "@/lib/store";
 import { Icon } from "./Icon";
 
@@ -21,7 +22,7 @@ export function AskNpftv({ dark }: { dark?: boolean }) {
     if (!text) return;
     setBusy(true);
     setQ("");
-    const a = await runAI(() => askNpftv(text), state.aiInstant);
+    const { data: a } = await askAI<AskResult>("ask-npftv", { question: text }, () => askNpftv(text), aiOpts(state));
     setThread((t) => [...t, { q: text, a }]);
     setBusy(false);
   }

@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { DEMO_SCAM_SMS, runAI, scamCheck, type ScamResult } from "@/lib/ai";
+import { DEMO_SCAM_SMS, scamCheck, type ScamResult } from "@/lib/ai";
+import { aiOpts, askAI } from "@/lib/ai-client";
 import { useDemo } from "@/lib/store";
 import { Icon } from "../Icon";
 
@@ -21,7 +22,9 @@ export function ScamChecker({ id }: { id?: string }) {
     if (!text.trim()) return;
     setBusy(true);
     setRes(null);
-    const r = await runAI(() => scamCheck(text.slice(0, 1000)), state.aiInstant);
+    const msg = text.trim().slice(0, 1000);
+    // The demo-script SMS always gets the reviewed scripted answer; anything else goes to the live model.
+    const { data: r } = await askAI<ScamResult>("scam-check", { message: msg }, () => scamCheck(msg), { ...aiOpts(state), forceScripted: msg === DEMO_SCAM_SMS });
     setRes(r);
     setBusy(false);
   }

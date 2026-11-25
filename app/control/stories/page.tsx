@@ -1,7 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
+import { Icon } from "@/components/Icon";
 import { Suspense, useState } from "react";
 import { categoryById } from "@/data/articles";
 import { TopBar } from "@/components/control/Shell";
@@ -23,6 +24,7 @@ const BADGE: Record<string, string> = { draft: "st-draft", submitted: "st", retu
 function Stories() {
   const { state, role } = useDemo();
   const act = useActions();
+  const router = useRouter();
   const q = (useSearchParams().get("q") ?? "").toLowerCase();
   const [f, setF] = useState<(typeof FILTERS)[number]["id"]>(role === "reporter" ? "all" : "all");
   const mine = role === "reporter";
@@ -41,6 +43,11 @@ function Stories() {
             <h1>{mine ? "My stories" : "Stories"}</h1>
             <p>{mine ? "Kano desk. Drafts stay on your device until you submit them." : `${state.articles.filter((a) => a.status === "published").length} published, ${state.submissions.length} waiting for review.`}</p>
           </div>
+          {mine && (
+            <button className="btn btn-indigo btn-sm" onClick={() => router.push(`/control/stories/${act.newStory()}`)}>
+              <Icon name="plus" /> New story
+            </button>
+          )}
           <div className="seg">
             {FILTERS.map((x) => (
               <button key={x.id} className={f === x.id ? "on" : ""} onClick={() => setF(x.id)}>
@@ -66,7 +73,7 @@ function Stories() {
                 <tr key={a.id}>
                   <td style={{ maxWidth: 420 }}>
                     <Link href={`/control/stories/${a.id}`} style={{ fontWeight: 600, color: "var(--indigo)" }}>
-                      {a.title}
+                      {a.title || "Untitled story"}
                     </Link>
                   </td>
                   <td>{categoryById(a.category)?.short}</td>

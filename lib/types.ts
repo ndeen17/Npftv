@@ -219,7 +219,7 @@ export interface Submission {
   from: string;
   desk: string;
   at: string; // HH:MM
-  triage: { category: string; state: string; urgency: "routine" | "priority"; possibleDuplicateOf?: string };
+  triage: { category: string; state: string; urgency: "routine" | "priority"; possibleDuplicateOf?: string; reason?: string; pending?: boolean };
 }
 
 export interface AuditEntry {

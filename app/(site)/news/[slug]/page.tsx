@@ -8,6 +8,13 @@ import { stateById, stateSlug } from "@/data/places";
 import { Icon } from "@/components/Icon";
 import { ArticleThumb, EmergencyNote, StoryRow } from "@/components/site/bits";
 import { LANGS, translate, type Lang } from "@/lib/ai";
+import { aiOpts, askAI } from "@/lib/ai-client";
+
+interface Translation {
+  title: string;
+  summary: string;
+  body: string[];
+}
 import { useDemo } from "@/lib/store";
 import { fmt, isoDate, isoTime } from "@/lib/time";
 
@@ -17,8 +24,35 @@ export default function ArticlePage() {
   const a = state.articles.find((x) => x.slug === slug && x.status === "published");
   const [lang, setLang] = useState<Lang>("en");
   const [speaking, setSpeaking] = useState(false);
+  const [tr, setTr] = useState<Record<string, Translation | null>>({});
+  const [trBusy, setTrBusy] = useState(false);
 
   useEffect(() => () => window.speechSynthesis?.cancel(), []);
+
+  // Live AI translation of the whole story, cached per language.
+  useEffect(() => {
+    if (!a || lang === "en") return;
+    const key = `${a.id}|${lang}`;
+    if (key in tr) return;
+    let live = true;
+    setTrBusy(true);
+    const art = a;
+    askAI<Translation | null>(
+      "translate",
+      { lang, title: art.title, summary: art.summary, body: art.body },
+      () => {
+        const t = translate(art.title, lang);
+        return t ? { title: t, summary: "", body: [] } : null;
+      },
+      aiOpts(state),
+    )
+      .then(({ data }) => live && setTr((m) => ({ ...m, [key]: data })))
+      .finally(() => live && setTrBusy(false));
+    return () => {
+      live = false;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [a?.id, lang]);
 
   if (!a) {
     return (
@@ -46,7 +80,7 @@ export default function ArticlePage() {
 
   const cat = categoryById(a.category);
   const st = stateById(a.state);
-  const translated = translate(a.title, lang);
+  const current = lang === "en" ? null : (tr[`${a.id}|${lang}`] ?? null);
   const related = state.articles.filter((x) => x.status === "published" && x.id !== a.id && (x.category === a.category || (a.state && x.state === a.state))).slice(0, 3);
 
   function listen() {
@@ -75,7 +109,7 @@ export default function ArticlePage() {
             <Icon name="chev" />
             <Link href={`/news?cat=${a.category}`}>{cat?.name}</Link>
           </nav>
-          <h1 style={{ fontSize: "clamp(34px, 5vw, 52px)" }}>{lang !== "en" && translated ? translated : a.title}</h1>
+          <h1 style={{ fontSize: "clamp(34px, 5vw, 52px)" }}>{a.title}</h1>
           <p>{a.summary}</p>
           <div className="meta" style={{ color: "#bdb3da", marginTop: 18 }}>
             <span>{a.author}</span>
@@ -121,11 +155,34 @@ export default function ArticlePage() {
               <span className="tag tag-feat">
                 <Icon name="spark" style={{ width: 13, height: 13 }} /> AI draft, needs review
               </span>
-              <p style={{ marginTop: 10, fontFamily: "var(--slab)", fontSize: 20, color: "var(--indigo)" }}>
-                {translated ?? `A ${LANGS.find((l) => l.id === lang)?.name} draft of this story hasn't been prepared in the demo yet.`}
-              </p>
+              <div aria-live="polite" lang={lang === "pcm" ? "pcm" : lang}>
+                {trBusy && !current ? (
+                  <div style={{ display: "grid", gap: 10, marginTop: 14 }}>
+                    <span className="skel" style={{ height: 22, width: "75%" }} />
+                    <span className="skel" />
+                    <span className="skel" style={{ width: "90%" }} />
+                    <span className="skel" style={{ width: "60%" }} />
+                  </div>
+                ) : current ? (
+                  <>
+                    <p style={{ marginTop: 10, fontFamily: "var(--slab)", fontSize: 24, fontWeight: 700, color: "var(--indigo)", lineHeight: 1.2 }}>{current.title}</p>
+                    {current.summary && <p style={{ marginTop: 8, fontSize: 17, color: "#3b3452" }}>{current.summary}</p>}
+                    {current.body.length > 0 && (
+                      <div className="prose" style={{ marginTop: 14 }}>
+                        {current.body.map((p, i) => (
+                          <p key={i} style={{ fontSize: 16.5 }}>
+                            {p}
+                          </p>
+                        ))}
+                      </div>
+                    )}
+                  </>
+                ) : (
+                  <p style={{ marginTop: 10, color: "var(--muted)" }}>The {LANGS.find((l) => l.id === lang)?.name} translation isn&apos;t available right now. Please try again in a moment.</p>
+                )}
+              </div>
               <p style={{ marginTop: 8, fontSize: 13.5, color: "var(--muted)" }}>
-                Machine translations are drafts. Official and sensitive messages are always checked by a fluent speaker before they are published. The full story is below in English.
+                Machine translation by AI. Official and sensitive messages are always checked by a fluent speaker before they are published. The original English story is below.
               </p>
             </div>
           )}
