@@ -2288,9 +2288,8 @@
     }
     .person-line {
       display: flex;
-      align-items: center;
+      align-items: flex-start;
       gap: 6px;
-      flex-wrap: wrap;
       font-size: 14px;
       color: #3b3452;
     }
@@ -2298,11 +2297,13 @@
       width: 15px;
       height: 15px;
       color: var(--muted);
+      margin-top: 3px;
     }
     .person.wanted .person-line .ico {
       color: var(--red);
     }
     .person-line em {
+      display: inline-block;
       font-style: normal;
       font-weight: 700;
       font-size: 12px;
@@ -2376,8 +2377,9 @@
       font-weight: 600;
       background: #faf9fc;
     }
-    .facts dt:first-of-type,
-    .facts dd:first-of-type {
+    /* Each dt/dd pair is wrapped in a display:contents div, so target the first pair by its wrapper. */
+    .facts dl > div:first-child > dt,
+    .facts dl > div:first-child > dd {
       border-top: 0;
     }
     .seen-box {

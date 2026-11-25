@@ -51,12 +51,15 @@ export function PersonCard({ n, now }: { n: Notice; now: Date }) {
         </span>
         {n.kind === "missing" ? (
           <span className="person-line">
-            <Icon name="pin" /> Last seen {n.lastSeenPlace.split(",")[0]}
-            {n.status === "published" && <em>{days === 0 ? "today" : `${days} day${days === 1 ? "" : "s"} ago`}</em>}
+            <Icon name="pin" />
+            <span>
+              Last seen {n.lastSeenPlace.split(",")[0]} {n.status === "published" && <em>{days === 0 ? "today" : `${days} day${days === 1 ? "" : "s"} ago`}</em>}
+            </span>
           </span>
         ) : (
           <span className="person-line">
-            <Icon name="alert" /> Wanted for {n.offence?.toLowerCase()}
+            <Icon name="alert" />
+            <span>Wanted for {n.offence?.toLowerCase()}</span>
           </span>
         )}
         <span className="person-src">Issued by {n.issuedBy}</span>

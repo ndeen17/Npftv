@@ -1,6 +1,6 @@
 # NPFTV demo, version 2: citizen services and a lighter look
 
-Plan written 25 November 2026. Status: **approved. Phases 1 and 2 done (25 Nov); Phase 3 next.**
+Plan written 25 November 2026. Status: **approved. Phases 1 to 3 done (25 Nov); Phase 4 next.**
 
 **Decisions (25 Nov 2026):**
 - **Stream:** a dark "theatre" band for the player only, with light pages around it.
