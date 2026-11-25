@@ -45,7 +45,11 @@ function useNav(role: RoleId) {
     { href: "/control/media", label: "Media library", icon: "image" },
   ];
   // Citizen reporting: notices from police commands (and, in Phase 4, citizen reports to the newsroom).
-  const citizen: NavItem[] = [{ href: "/control/notices", label: "Notices", icon: "users", badge: pendingNotices || undefined }];
+  const newReports = state.reports.filter((r) => r.status === "received").length;
+  const citizen: NavItem[] = [
+    { href: "/control/reports", label: "Citizen reports", icon: "inbox", badge: newReports || undefined },
+    { href: "/control/notices", label: "Notices", icon: "users", badge: pendingNotices || undefined },
+  ];
   const ops: NavItem[] = [
     { href: "/control/ops", label: "Overview", icon: "layout" },
     { href: "/control/ops/production", label: "Production", icon: "truck" },

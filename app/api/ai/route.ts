@@ -95,7 +95,7 @@ export async function POST(req: Request) {
     let data = JSON.parse(res.output_text);
     if (feature.check) data = feature.check(data, prepared.ctx);
     // Guardrail: never rely on the model alone to spot an emergency.
-    if (["ask-npftv", "scam-check", "complaint-helper"].includes(String(body.feature)) && EMERGENCY_RE.test(JSON.stringify(body.input))) data.isEmergency = true;
+    if (["ask-npftv", "scam-check", "complaint-helper", "report-intake"].includes(String(body.feature)) && EMERGENCY_RE.test(JSON.stringify(body.input))) data.isEmergency = true;
     if (data.isEmergency && body.feature === "ask-npftv" && !/112/.test(data.answer)) {
       data.answer = `If you or someone else is in danger now, call 112 straight away. It's free on every network. ${data.answer}`;
     }

@@ -8,6 +8,7 @@ import { buildSchedule, insertSlot, pressBriefingTemplate } from "@/data/schedul
 import { DEFAULT_CLOCK_ISO, fromWat, watParts } from "@/lib/time";
 import type { Review } from "@/lib/copydesk";
 import { seedNotices, type Notice } from "@/data/notices";
+import { seedReports, type CitizenReport, type ReportStatus } from "@/data/reports";
 import type {
   Alert,
   ApprovalItem,
@@ -22,7 +23,7 @@ import type {
   Submission,
 } from "@/lib/types";
 
-const STORAGE_KEY = "npftv-demo-state-v3";
+const STORAGE_KEY = "npftv-demo-state-v4";
 const ROLE_KEY = "npftv-demo-role";
 const CHANNEL = "npftv-demo";
 
@@ -41,7 +42,7 @@ export interface CopyDeskState {
 }
 
 export interface DemoState {
-  version: 3;
+  version: 4;
   articles: Article[];
   submissions: Submission[];
   schedule: ScheduleSlot[];
@@ -64,6 +65,7 @@ export interface DemoState {
   copyDesk: Record<string, CopyDeskState>;
   reviews: Record<string, Review>; // saved AI copy-desk reviews, so every tab sees the same one
   notices: Notice[]; // missing and wanted persons notices (issued by commands, published by NPFTV)
+  reports: CitizenReport[]; // citizen reports to the newsroom (news and public awareness only)
   checkedOut: Record<string, string>; // assetId -> who
 }
 
@@ -83,7 +85,7 @@ function seedAudit(): AuditEntry[] {
 
 export function seedState(): DemoState {
   return {
-    version: 3,
+    version: 4,
     articles: [...seedArticles, ...seedSubmissionArticles],
     submissions: seedSubmissions,
     schedule: buildSchedule(),
@@ -106,6 +108,7 @@ export function seedState(): DemoState {
     copyDesk: {},
     reviews: {},
     notices: seedNotices,
+    reports: seedReports,
     checkedOut: {},
   };
 }
@@ -120,6 +123,11 @@ function publishAlertState(s: DemoState, alert: Alert, date: string): DemoState 
     draftAlerts: s.draftAlerts.filter((a) => a.id !== alert.id),
     notices: s.notices.map((n) => (linked && n.id === linked.id && n.status === "pending" ? { ...n, status: "published", issuedOn: n.issuedOn || date } : n)),
     approvals: s.approvals.map((ap) => (linked?.approvalId === ap.id ? { ...ap, status: "approved" } : ap)),
+    reports: s.reports.map((rp) =>
+      alert.reportRefs?.includes(rp.ref) && rp.status !== "published"
+        ? { ...rp, status: "published", publishedAs: "alert", history: [...rp.history, { status: "published", at: new Date().toISOString(), publicNote: "Used in a public safety alert on npftv.net." }] }
+        : rp,
+    ),
   };
 }
 
@@ -164,7 +172,7 @@ function load(): DemoState | null {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (!raw) return null;
     const parsed = JSON.parse(raw) as DemoState;
-    return parsed.version === 3 ? parsed : null;
+    return parsed.version === 4 ? parsed : null;
   } catch {
     return null;
   }
@@ -412,6 +420,38 @@ export function useActions() {
           (s) => ({ ...s, notices: s.notices.map((x) => (x.id === id ? { ...x, status: "withdrawn", closedOn: today } : x)) }),
           { action: "Withdrew a notice", target: name },
         );
+      },
+      /** Citizen sends a report to the newsroom. Returns the reference. */
+      submitReport(rp: Omit<CitizenReport, "ref" | "createdAt" | "status" | "history">): string {
+        const ref = `NPFTV-RPT-26-${String(Math.floor(10000 + Math.random() * 89999))}`;
+        const createdAt = now.toISOString(); // demo clock, so new reports cluster with the seeded ones
+        update(
+          (s) => ({
+            ...s,
+            reports: [{ ...rp, ref, createdAt, status: "received", history: [{ status: "received", at: createdAt, publicNote: "Your report reached the NPFTV newsroom." }] }, ...s.reports],
+          }),
+          { action: "Citizen report received by the newsroom", target: rp.summary, as: { who: rp.anonymous || !rp.contact?.name ? "A member of the public" : rp.contact.name, role: "Citizen" } },
+        );
+        return ref;
+      },
+      setReportTriage(ref: string, triage: NonNullable<CitizenReport["triage"]>, summary: string) {
+        update(
+          (s) => ({ ...s, reports: s.reports.map((r) => (r.ref === ref ? { ...r, triage } : r)) }),
+          { action: `AI triage: ${triage.urgency} urgency${triage.abuse ? ", possible abuse" : ""}`, target: summary, ai: true, as: { who: "AI triage", role: "System" } },
+        );
+      },
+      /** Newsroom moves a report on. publicNote is what the citizen sees on /track. */
+      updateReport(ref: string, summary: string, status: ReportStatus, publicNote: string, extra: Partial<CitizenReport> = {}, action?: string) {
+        update(
+          (s) => ({
+            ...s,
+            reports: s.reports.map((r) => (r.ref === ref ? { ...r, ...extra, status, history: [...r.history, { status, at: now.toISOString(), publicNote }] } : r)),
+          }),
+          { action: action ?? `Citizen report marked ${status.replace("-", " ")}`, target: summary },
+        );
+      },
+      revealContact(ref: string) {
+        update((s) => s, { action: "Viewed a citizen's contact details", target: ref });
       },
       setAiScripted(v: boolean) {
         update((s) => ({ ...s, aiScripted: v }));

@@ -110,6 +110,7 @@ export interface Alert {
   verifiedBy?: string;
   expires?: string;
   href?: string; // where "Read the alert" goes, e.g. a missing-person notice
+  reportRefs?: string[]; // citizen reports this alert was based on (marked published when it goes live)
 }
 
 export interface StaffMember {

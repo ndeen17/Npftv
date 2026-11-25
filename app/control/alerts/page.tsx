@@ -42,6 +42,11 @@ export default function AlertsPage() {
                       {a.title} {a.level === "urgent" && <span className="tag tag-red">Urgent</span>}
                     </h4>
                     <p>{a.body}</p>
+                    {a.reportRefs && a.reportRefs.length > 0 && (
+                      <p>
+                        <Icon name="inbox" style={{ width: 13, height: 13, display: "inline", verticalAlign: -2 }} /> Based on {a.reportRefs.length} citizen report{a.reportRefs.length === 1 ? "" : "s"}. They show as published once this alert goes live.
+                      </p>
+                    )}
                     {a.verifiedBy && (
                       <p>
                         <Icon name="check" style={{ width: 13, height: 13, display: "inline", color: "var(--green)" }} /> Verified by {a.verifiedBy} · expires {a.expires}

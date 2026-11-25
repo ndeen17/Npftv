@@ -246,6 +246,47 @@ State ids: ${states.map((s) => `${s.id} (${s.name})`).join(", ")}.`,
     },
   },
 
+  "report-intake": {
+    effort: "low",
+    maxTokens: 2000,
+    instructions: `${RULES}
+${EMERGENCY_RULE}
+Context: NPFTV is the Nigeria Police Force's television and news service. Citizens send reports to the NPFTV newsroom for news and public awareness. NPFTV does NOT send help, open cases or forward reports.
+Task: organise the citizen's description of something happening near them.
+- category: flood, fire, road-crash, building-collapse, power-line (fallen lines, electrical danger), unrest (protest, crowd trouble), crime (a crime that already happened), suspicious, community (positive community news or events), other.
+- summary: one plain sentence (max 25 words) a newsroom editor can scan.
+- state: the state id from the list, or "none" if unclear. lga: the local government area if stated or obvious from a well-known place (e.g. Ganaja is in Lokoja LGA, Kogi), else "". landmark: the nearest landmark or junction they mention, else "". when: when it happened or started, as they said it, else "".
+- urgency: high (danger to life or homes now), medium, low (community news).
+- followUp: ONE short question that would most help the newsroom (e.g. "Roughly how many homes are affected?"), or "" if not needed.
+State ids: ${states.map((s) => `${s.id} (${s.name})`).join(", ")}.`,
+    schema: O({
+      category: { type: "string", enum: ["flood", "fire", "road-crash", "building-collapse", "power-line", "unrest", "crime", "suspicious", "community", "other"] },
+      summary: S(),
+      state: { type: "string", enum: [...STATE_IDS, "none"] },
+      lga: S(),
+      landmark: S(),
+      when: S(),
+      urgency: { type: "string", enum: ["low", "medium", "high"] },
+      followUp: S(),
+      isEmergency: { type: "boolean" },
+    }),
+    input: (raw) => ({ text: `The citizen's description:\n${wrap(str(obj(raw).text, "text", 2000, 10))}` }),
+    check: (out) => ({ ...out, state: out.state === "none" ? "" : out.state }),
+  },
+
+  "report-triage": {
+    effort: "minimal",
+    maxTokens: 1000,
+    instructions: `${RULES}
+Context: you help the NPFTV newsroom triage citizen reports (news and public awareness only; NPFTV doesn't forward or act on them).
+Return: urgency (high = danger to life or homes now; medium; low), newsworthy (would informing the public help?), abuse (prank, test, insults or targeting a private person), reason (one short sentence for the editor).`,
+    schema: O({ urgency: { type: "string", enum: ["low", "medium", "high"] }, newsworthy: { type: "boolean" }, abuse: { type: "boolean" }, reason: S() }),
+    input: (raw) => {
+      const o = obj(raw);
+      return { text: wrap(`Category: ${str(o.category, "category", 40)}\nSummary: ${str(o.summary, "summary", 300)}\nDetails: ${str(o.details, "details", 2500, 0)}\nPlace: ${typeof o.place === "string" ? o.place.slice(0, 200) : ""}`) };
+    },
+  },
+
   "complaint-helper": {
     effort: "low",
     maxTokens: 3000,

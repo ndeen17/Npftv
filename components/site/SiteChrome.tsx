@@ -217,7 +217,13 @@ export function SiteFooter() {
               <Link href="/safety#alerts">Alerts</Link>
             </li>
             <li>
-              <Link href="/safety/guides/how-to-report-a-crime">Report a crime</Link>
+              <Link href="/safety/report">Send a report</Link>
+            </li>
+            <li>
+              <Link href="/track">Track a report</Link>
+            </li>
+            <li>
+              <Link href="/safety/missing">Missing persons</Link>
             </li>
           </ul>
         </div>

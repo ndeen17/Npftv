@@ -40,6 +40,28 @@ export default function PublicSafetyPage() {
         </div>
       </section>
 
+      <section className="sec" id="send-a-report" style={{ paddingTop: 36, paddingBottom: 0 }}>
+        <div className="wrap">
+          <div className="report-cta">
+            <div>
+              <span className="tag tag-ai">
+                <Icon name="spark" style={{ width: 13, height: 13 }} /> New
+              </span>
+              <h2>Seen something happening near you?</h2>
+              <p>A flood, a fire, a crash, a community event: tell our newsroom. Verified reports help us warn and inform the public. This isn&apos;t a police report, and NPFTV can&apos;t send help. In an emergency, call 112.</p>
+            </div>
+            <div className="report-cta-acts">
+              <Link className="btn btn-yellow" href="/safety/report">
+                <Icon name="send" /> Send a report
+              </Link>
+              <Link className="btn btn-ghost" href="/track">
+                Track a report
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <section className="sec ps" id="scam-checker">
         <div className="wrap">
           <ScamChecker />
