@@ -180,7 +180,7 @@ export function translate(text: string, lang: Lang): string | null {
 
 export interface SearchDoc {
   id: string;
-  kind: "story" | "programme" | "guide" | "episode" | "state" | "rights";
+  kind: "story" | "programme" | "guide" | "episode" | "state" | "rights" | "notice";
   title: string;
   text: string;
   href: string;

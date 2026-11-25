@@ -109,6 +109,7 @@ export interface Alert {
   state?: string;
   verifiedBy?: string;
   expires?: string;
+  href?: string; // where "Read the alert" goes, e.g. a missing-person notice
 }
 
 export interface StaffMember {
@@ -182,7 +183,7 @@ export interface BudgetLine {
   budget: number;
 }
 
-export type ApprovalKind = "procurement" | "alert" | "sponsorship" | "leave" | "overtime" | "travel" | "article";
+export type ApprovalKind = "procurement" | "alert" | "sponsorship" | "leave" | "overtime" | "travel" | "article" | "notice";
 
 export interface ApprovalItem {
   id: string;

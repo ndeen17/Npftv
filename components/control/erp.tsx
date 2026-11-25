@@ -19,6 +19,7 @@ export const APPROVAL_ICON: Record<ApprovalItem["kind"], IconName> = {
   overtime: "clock",
   travel: "truck",
   article: "file",
+  notice: "users",
 };
 
 export function KpiTile({ icon, label, value, note, up, meter }: { icon: IconName; label: string; value: string; note: string; up?: boolean; meter?: number }) {

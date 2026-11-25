@@ -50,7 +50,7 @@ export function SiteHeader() {
             <span>
               <b>{a.level === "urgent" ? `${a.title}:` : "Public safety alert:"}</b> {a.body}
             </span>{" "}
-            <Link href={a.level === "urgent" ? "/safety#alerts" : "/safety#scam-checker"}>{a.level === "urgent" ? "Read the alert" : "How to spot a scam"}</Link>
+            <Link href={a.href ?? (a.level === "urgent" ? "/safety#alerts" : "/safety#scam-checker")}>{a.level === "urgent" ? "Read the alert" : "How to spot a scam"}</Link>
           </div>
           <div className={`alert-side${air.state === "live" ? "" : " off"}`}>
             <span className="live-dot" />

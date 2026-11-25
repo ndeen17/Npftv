@@ -22,6 +22,7 @@ function useNav(role: RoleId) {
   const waitingSubs = state.submissions.length;
   const waitingAppr = state.approvals.filter((a) => a.status === "waiting").length;
   const draftAlerts = state.draftAlerts.length;
+  const pendingNotices = state.notices.filter((n) => n.status === "pending").length;
   const myDrafts = state.articles.filter((a) => a.author === "Musa Ibrahim" && (a.status === "draft" || a.status === "returned")).length;
 
   const newsroom: NavItem[] =
@@ -43,6 +44,8 @@ function useNav(role: RoleId) {
     { href: "/control/programmes", label: "Programmes", icon: "film" },
     { href: "/control/media", label: "Media library", icon: "image" },
   ];
+  // Citizen reporting: notices from police commands (and, in Phase 4, citizen reports to the newsroom).
+  const citizen: NavItem[] = [{ href: "/control/notices", label: "Notices", icon: "users", badge: pendingNotices || undefined }];
   const ops: NavItem[] = [
     { href: "/control/ops", label: "Overview", icon: "layout" },
     { href: "/control/ops/production", label: "Production", icon: "truck" },
@@ -67,11 +70,13 @@ function useNav(role: RoleId) {
           { href: "/control/alerts", label: "Safety alerts", icon: "alert" as IconName },
         ],
       },
+      { title: "Citizen reporting", items: citizen },
     ];
   }
   if (role === "super-admin") {
     return [
       { title: "Newsroom", items: newsroom },
+      { title: "Citizen reporting", items: citizen },
       { title: "Broadcast", items: broadcast },
       { title: "Operations", items: ops },
     ];
@@ -94,12 +99,14 @@ function useNav(role: RoleId) {
   if (role === "pio") {
     return [
       { title: "Newsroom", items: newsroom },
+      { title: "Citizen reporting", items: citizen },
       { title: "Broadcast", items: broadcast.slice(0, 2) },
     ];
   }
   // News Editor, Editor-in-Chief (as designed)
   return [
     { title: "Newsroom", items: newsroom },
+    { title: "Citizen reporting", items: citizen },
     { title: "Broadcast", items: broadcast },
     {
       title: "Operations",

@@ -8,13 +8,14 @@ import { LiveModule } from "@/components/site/LiveModule";
 import { ScamChecker } from "@/components/site/ScamChecker";
 import { EmergencyNote, LeadStory, Poster, StoryRow } from "@/components/site/bits";
 import { onAir } from "@/lib/broadcast";
+import { PersonCard } from "@/components/site/notices";
 import { useDemo } from "@/lib/store";
 
 const QUICK: { href: string; label: string; icon: IconName; fill?: boolean; ai?: boolean }[] = [
   { href: "/stream/live", label: "Watch live", icon: "play", fill: true },
-  { href: "/stream/guide", label: "Programme guide", icon: "calendar" },
   { href: "/safety#scam-checker", label: "Scam checker", icon: "shield", ai: true },
   { href: "/safety/guides/how-to-report-a-crime", label: "Report a crime", icon: "phone" },
+  { href: "/safety/missing", label: "Missing & wanted", icon: "users" },
   { href: "/rights", label: "Know your rights", icon: "scale" },
   { href: "/state-commands", label: "State commands", icon: "map" },
 ];
@@ -24,6 +25,7 @@ export default function HomePage() {
   const air = onAir(state.schedule, now, state.live, 1);
   const stories = state.featuredIds.map((id) => state.articles.find((a) => a.id === id)).filter((a): a is NonNullable<typeof a> => !!a && a.status === "published");
   const [lead, ...rest] = stories;
+  const missingNow = state.notices.filter((n) => n.kind === "missing" && n.status === "published").sort((a, b) => (a.issuedOn < b.issuedOn ? 1 : -1)).slice(0, 4);
   // Three more recent headlines that aren't already featured.
   const more = state.articles
     .filter((a) => a.status === "published" && !state.featuredIds.includes(a.id))
@@ -200,6 +202,27 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+
+      {missingNow.length > 0 && (
+        <section className="sec" style={{ paddingTop: 0 }}>
+          <div className="wrap">
+            <div className="sec-hd">
+              <div>
+                <h2>Have you seen them?</h2>
+                <p>Missing person notices from police commands. If you have information, contact the police.</p>
+              </div>
+              <Link className="link" href="/safety/missing">
+                All missing persons <Icon name="arrow" />
+              </Link>
+            </div>
+            <div className="people">
+              {missingNow.map((n) => (
+                <PersonCard key={n.id} n={n} now={now} />
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
 
       <section className="band">
         <img src="/images/parade.webp" alt="Police officers on parade" />

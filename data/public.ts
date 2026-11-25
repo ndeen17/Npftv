@@ -72,11 +72,12 @@ export const defaultAlert: Alert = {
 export const preparedAlert: Alert = {
   id: "alert-missing-lagos",
   title: "Missing person notice, Lagos",
-  body: "A 67-year-old man was last seen in Surulere, Lagos, on Sunday 22 November. If you have information, contact your nearest police station.",
+  body: "Babatunde Coker, 67, was last seen in Surulere, Lagos, on Sunday 22 November. If you have information, contact your nearest police station.",
   level: "urgent",
   state: "LA",
   verifiedBy: "Lagos State Police Command",
   expires: "in 7 days",
+  href: "/safety/missing/missing-lagos-coker",
 };
 
 export const seedTicker = [

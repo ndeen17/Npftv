@@ -7,6 +7,7 @@ import { defaultAlert, preparedAlert, seedTicker } from "@/data/public";
 import { buildSchedule, insertSlot, pressBriefingTemplate } from "@/data/schedule";
 import { DEFAULT_CLOCK_ISO, fromWat, watParts } from "@/lib/time";
 import type { Review } from "@/lib/copydesk";
+import { seedNotices, type Notice } from "@/data/notices";
 import type {
   Alert,
   ApprovalItem,
@@ -21,7 +22,7 @@ import type {
   Submission,
 } from "@/lib/types";
 
-const STORAGE_KEY = "npftv-demo-state-v2";
+const STORAGE_KEY = "npftv-demo-state-v3";
 const ROLE_KEY = "npftv-demo-role";
 const CHANNEL = "npftv-demo";
 
@@ -40,7 +41,7 @@ export interface CopyDeskState {
 }
 
 export interface DemoState {
-  version: 2;
+  version: 3;
   articles: Article[];
   submissions: Submission[];
   schedule: ScheduleSlot[];
@@ -62,6 +63,7 @@ export interface DemoState {
   reminders: string[];
   copyDesk: Record<string, CopyDeskState>;
   reviews: Record<string, Review>; // saved AI copy-desk reviews, so every tab sees the same one
+  notices: Notice[]; // missing and wanted persons notices (issued by commands, published by NPFTV)
   checkedOut: Record<string, string>; // assetId -> who
 }
 
@@ -81,7 +83,7 @@ function seedAudit(): AuditEntry[] {
 
 export function seedState(): DemoState {
   return {
-    version: 2,
+    version: 3,
     articles: [...seedArticles, ...seedSubmissionArticles],
     submissions: seedSubmissions,
     schedule: buildSchedule(),
@@ -103,8 +105,35 @@ export function seedState(): DemoState {
     reminders: [],
     copyDesk: {},
     reviews: {},
+    notices: seedNotices,
     checkedOut: {},
   };
+}
+
+// Publishing an alert and its linked notice go together (e.g. the Lagos missing-person notice).
+function publishAlertState(s: DemoState, alert: Alert, date: string): DemoState {
+  const linked = s.notices.find((n) => n.alertId === alert.id);
+  return {
+    ...s,
+    alertBar: alert,
+    activeAlerts: [alert, ...s.activeAlerts.filter((a) => a.id !== alert.id)],
+    draftAlerts: s.draftAlerts.filter((a) => a.id !== alert.id),
+    notices: s.notices.map((n) => (linked && n.id === linked.id && n.status === "pending" ? { ...n, status: "published", issuedOn: n.issuedOn || date } : n)),
+    approvals: s.approvals.map((ap) => (linked?.approvalId === ap.id ? { ...ap, status: "approved" } : ap)),
+  };
+}
+
+function publishNoticeState(s: DemoState, id: string, date: string): DemoState {
+  const n = s.notices.find((x) => x.id === id);
+  if (!n) return s;
+  let next: DemoState = {
+    ...s,
+    notices: s.notices.map((x) => (x.id === id ? { ...x, status: "published" } : x)),
+    approvals: s.approvals.map((ap) => (ap.id === n.approvalId ? { ...ap, status: "approved" } : ap)),
+  };
+  const alert = n.alertId ? s.draftAlerts.find((a) => a.id === n.alertId) : undefined;
+  if (alert) next = publishAlertState(next, alert, date);
+  return next;
 }
 
 export const defaultCopyDesk: CopyDeskState = { decisions: {}, styleDone: {}, headline: 0 };
@@ -135,7 +164,7 @@ function load(): DemoState | null {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (!raw) return null;
     const parsed = JSON.parse(raw) as DemoState;
-    return parsed.version === 2 ? parsed : null;
+    return parsed.version === 3 ? parsed : null;
   } catch {
     return null;
   }
@@ -264,6 +293,7 @@ export function useDemo() {
 export function useActions() {
   const { update, now } = useDemo();
   const hhmm = watParts(now).hhmm;
+  const today = watParts(now).date;
 
   return useMemo(
     () => ({
@@ -342,6 +372,47 @@ export function useActions() {
           { action: "Asked the AI copy desk to check again", target: title },
         );
       },
+      /** Newsroom enters a notice received from a police command. It waits for approval. */
+      createNotice(n: Omit<Notice, "id" | "status" | "approvalId" | "issuedOn">): string {
+        const id = `${n.kind}-${Date.now().toString(36)}`;
+        const approvalId = `ap-${id}`;
+        update(
+          (s) => ({
+            ...s,
+            notices: [{ ...n, id, status: "pending", approvalId, issuedOn: today }, ...s.notices],
+            approvals: [
+              { id: approvalId, kind: "notice", title: `${n.kind === "missing" ? "Missing person" : "Wanted person"} notice: ${n.name}`, detail: `Issued by ${n.issuedBy}`, amount: n.kind === "missing" ? "Missing" : "Wanted", status: "waiting" },
+              ...s.approvals,
+            ],
+          }),
+          { action: `Entered a ${n.kind} person notice from ${n.issuedBy} (needs approval)`, target: n.name },
+        );
+        return id;
+      },
+      publishNotice(id: string, name: string) {
+        update((s) => publishNoticeState(s, id, today), { action: "Approved and published a notice", target: name });
+      },
+      markFound(id: string, name: string) {
+        update(
+          (s) => {
+            const n = s.notices.find((x) => x.id === id);
+            const remaining = n?.alertId ? s.activeAlerts.filter((a) => a.id !== n.alertId) : s.activeAlerts;
+            return {
+              ...s,
+              notices: s.notices.map((x) => (x.id === id ? { ...x, status: "found", closedOn: today } : x)),
+              activeAlerts: remaining,
+              alertBar: n?.alertId && s.alertBar.id === n.alertId ? (remaining[0] ?? seedState().alertBar) : s.alertBar,
+            };
+          },
+          { action: "Marked as found safe", target: name },
+        );
+      },
+      withdrawNotice(id: string, name: string) {
+        update(
+          (s) => ({ ...s, notices: s.notices.map((x) => (x.id === id ? { ...x, status: "withdrawn", closedOn: today } : x)) }),
+          { action: "Withdrew a notice", target: name },
+        );
+      },
       setAiScripted(v: boolean) {
         update((s) => ({ ...s, aiScripted: v }));
       },
@@ -414,13 +485,7 @@ export function useActions() {
       },
       publishAlert(alert: Alert) {
         update(
-          (s) => ({
-            ...s,
-            alertBar: alert,
-            activeAlerts: [alert, ...s.activeAlerts.filter((a) => a.id !== alert.id)],
-            draftAlerts: s.draftAlerts.filter((a) => a.id !== alert.id),
-            approvals: s.approvals.map((ap) => (ap.id === "ap-missing-lagos" && alert.id === "alert-missing-lagos" ? { ...ap, status: "approved" } : ap)),
-          }),
+          (s) => publishAlertState(s, alert, today),
           { action: "Approved and published a public safety alert", target: alert.title },
         );
       },
@@ -438,11 +503,16 @@ export function useActions() {
       },
       decide(id: string, status: "approved" | "declined", title: string) {
         update(
-          (s) => ({
+          (s) => {
+            const notice = s.notices.find((n) => n.approvalId === id);
+            if (notice && status === "approved") return publishNoticeState(s, notice.id, today);
+            return {
             ...s,
+            notices: s.notices.map((n) => (notice && n.id === notice.id ? { ...n, status: "withdrawn", closedOn: today } : n)),
             approvals: s.approvals.map((a) => (a.id === id ? { ...a, status } : a)),
             procurement: s.procurement.map((p) => (p.item === title ? { ...p, status, chain: p.chain.map((c) => ({ ...c, done: true })) } : p)),
-          }),
+            };
+          },
           { action: status === "approved" ? "Approved" : "Declined", target: title },
         );
       },
@@ -484,7 +554,7 @@ export function useActions() {
         update((s) => s, { action, target, ai });
       },
     }),
-    [update, now, hhmm],
+    [update, now, hhmm, today],
   );
 }
 

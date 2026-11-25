@@ -6,10 +6,12 @@ import { AskNpftv } from "@/components/AskNpftv";
 import { Icon, type IconName } from "@/components/Icon";
 import { ScamChecker } from "@/components/site/ScamChecker";
 import { EmergencyNote, PageHead } from "@/components/site/bits";
+import { PersonCard } from "@/components/site/notices";
 import { useDemo } from "@/lib/store";
 
 export default function PublicSafetyPage() {
-  const { state } = useDemo();
+  const { state, now } = useDemo();
+  const missing = state.notices.filter((n) => n.kind === "missing" && n.status === "published").sort((a, b) => (a.issuedOn < b.issuedOn ? 1 : -1)).slice(0, 4);
   const alerts = [...state.activeAlerts, state.alertBar].filter((a, i, arr) => arr.findIndex((x) => x.id === a.id) === i);
 
   return (
@@ -57,6 +59,30 @@ export default function PublicSafetyPage() {
               </Link>
             ))}
             <EmergencyNote />
+          </div>
+        </div>
+      </section>
+
+      <section className="sec" style={{ paddingTop: 0 }} id="missing-wanted">
+        <div className="wrap">
+          <div className="sec-hd">
+            <div>
+              <h2>Missing and wanted persons</h2>
+              <p>Notices issued by police commands, published by NPFTV. If you have information, contact the police, not NPFTV.</p>
+            </div>
+            <div style={{ display: "flex", gap: 16, flexWrap: "wrap" }}>
+              <Link className="link" href="/safety/missing">
+                Missing persons <Icon name="arrow" />
+              </Link>
+              <Link className="link" href="/safety/wanted">
+                Wanted persons <Icon name="arrow" />
+              </Link>
+            </div>
+          </div>
+          <div className="people">
+            {missing.map((n) => (
+              <PersonCard key={n.id} n={n} now={now} />
+            ))}
           </div>
         </div>
       </section>
