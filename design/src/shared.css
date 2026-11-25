@@ -1,0 +1,42 @@
+:root{
+  --indigo:#1c0d37; --indigo-deep:#130826; --indigo-2:#2a1752; --indigo-3:#3d2873; --violet:#5b44b0;
+  --yellow:#f5c518; --yellow-deep:#d9a90a; --green:#0f7a3e; --green-2:#13a356; --red:#d01f2e;
+  --paper:#f4f2f9; --white:#ffffff; --ink:#1a1430; --muted:#5d5674; --line:#e1dcec; --line-dark:rgba(255,255,255,.12);
+  --slab:"Zilla Slab", Rockwell, "Roboto Slab", Georgia, serif;
+  --sans:"Archivo", "Helvetica Neue", Arial, sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%}
+body{font-family:var(--sans);color:var(--ink);background:var(--paper);font-size:16px;line-height:1.55}
+img{display:block;max-width:100%}
+a{color:inherit;text-decoration:none}
+button,input,textarea,select{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--yellow);outline-offset:2px}
+.ico{width:20px;height:20px;flex:none;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.ico.fill{fill:currentColor;stroke:none}
+.wrap{max-width:1200px;margin:0 auto;padding:0 40px}
+.slab{font-family:var(--slab)}
+.cond{font-stretch:75%}
+h1,h2,h3,h4{font-family:var(--slab);font-weight:700;line-height:1.1;letter-spacing:-.01em}
+h2{font-size:36px}
+h3{font-size:22px}
+.btn{display:inline-flex;align-items:center;gap:10px;height:48px;padding:0 22px;border-radius:6px;font-weight:600;font-size:15px;border:0;cursor:pointer;white-space:nowrap}
+.btn-yellow{background:var(--yellow);color:var(--indigo)}
+.btn-yellow:hover{background:#ffd43b}
+.btn-red{background:var(--red);color:#fff}
+.btn-ghost{background:transparent;color:#fff;box-shadow:inset 0 0 0 1.5px rgba(255,255,255,.55)}
+.btn-line{background:transparent;color:var(--indigo);box-shadow:inset 0 0 0 1.5px var(--indigo)}
+.btn-indigo{background:var(--indigo);color:#fff}
+.btn-sm{height:36px;padding:0 14px;font-size:13.5px;border-radius:5px}
+.live-dot{width:8px;height:8px;border-radius:50%;background:currentColor;display:inline-block;animation:pulse 1.6s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.25}}
+@media (prefers-reduced-motion:reduce){.live-dot{animation:none}}
+.tag{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:700;padding:3px 8px;border-radius:4px;line-height:1.4}
+.tag-live{background:var(--red);color:#fff}
+.tag-ai{background:var(--yellow);color:var(--indigo)}
+.flag-stripe{height:4px;background:linear-gradient(90deg,var(--green) 0 34%,var(--yellow) 34% 66%,var(--green) 66%)}
+.proto{background:#fff6cf;color:#4a3c00;font-size:12.5px;text-align:center;padding:5px 12px;font-weight:500}
+.proto b{font-weight:700}
+.link{display:inline-flex;align-items:center;gap:6px;font-weight:600;font-size:14.5px;color:var(--indigo)}
+.link .ico{width:16px;height:16px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}

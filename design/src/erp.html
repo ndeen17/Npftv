@@ -1,0 +1,210 @@
+<style>
+.main{display:flex;flex-direction:column}
+.dash{padding:24px 28px 32px;display:grid;gap:20px}
+.hello{display:flex;align-items:flex-end;justify-content:space-between}
+.hello h1{font-size:30px;color:var(--indigo)}
+.hello p{color:var(--muted);margin-top:2px}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.kpi{padding:16px 18px}
+.kpi span{font-size:13.5px;color:var(--muted);display:flex;align-items:center;gap:8px}
+.kpi span .ico{width:16px;height:16px}
+.kpi b{display:block;font-family:var(--slab);font-size:32px;color:var(--indigo);margin:6px 0 2px;line-height:1.1}
+.kpi small{font-size:12.5px;color:var(--muted)}
+.kpi small.up{color:var(--green);font-weight:600}
+.kpi .meter{height:6px;border-radius:3px;background:#ece8f5;margin-top:8px;overflow:hidden}
+.kpi .meter i{display:block;height:100%;width:68%;background:var(--indigo)}
+.row2{display:grid;grid-template-columns:1.45fr 1fr;gap:20px;align-items:start}
+.brief{background:var(--indigo);color:#e4def5;border-radius:10px;padding:22px 24px;position:relative;overflow:hidden}
+.brief::after{content:"";position:absolute;right:-60px;top:-60px;width:200px;height:200px;border-radius:50%;border:26px solid rgba(245,197,24,.08)}
+.brief-hd{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.brief-hd h2{font-size:22px;color:#fff}
+.brief-hd .ico{color:var(--yellow)}
+.brief-hd small{margin-left:auto;font-size:12.5px;color:#a79dc7}
+.brief ul{list-style:none;display:grid;gap:10px;font-size:15px;line-height:1.5}
+.brief li{display:grid;grid-template-columns:18px 1fr;gap:8px}
+.brief li::before{content:"";width:8px;height:8px;border-radius:2px;background:var(--yellow);margin-top:8px}
+.brief li b{color:#fff;font-weight:600}
+.ask{margin-top:18px;display:flex;align-items:center;gap:10px;background:rgba(255,255,255,.08);border-radius:8px;padding:6px 6px 6px 14px;position:relative;z-index:1}
+.ask span{flex:1;font-size:14.5px;color:#cfc6ea}
+.ask .btn{height:36px}
+.chips{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;position:relative;z-index:1}
+.chips a{font-size:12.5px;padding:4px 10px;border-radius:14px;background:rgba(255,255,255,.07);color:#cfc6ea}
+.p-hd{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--line)}
+.p-hd h3{font-size:17px;color:var(--indigo)}
+.p-hd a{font-size:13px;font-weight:600;color:var(--indigo)}
+.appr li{list-style:none;display:grid;grid-template-columns:34px 1fr auto;gap:12px;align-items:center;padding:11px 18px;border-bottom:1px solid var(--line);font-size:14px}
+.appr li:last-child{border-bottom:0}
+.appr .ic{width:34px;height:34px;border-radius:8px;display:grid;place-items:center;background:#f3f1f8;color:var(--indigo)}
+.appr .ic .ico{width:17px;height:17px}
+.appr b{font-weight:600;display:block}
+.appr small{color:var(--muted);font-size:12.5px}
+.appr .amt{font-weight:600;font-stretch:85%;text-align:right}
+.appr .amt small{display:block;font-weight:400}
+.row3{display:grid;grid-template-columns:1.1fr 1fr 0.9fr;gap:20px;align-items:start}
+.cal li{list-style:none;display:grid;grid-template-columns:56px 1fr;gap:12px;padding:12px 18px;border-bottom:1px solid var(--line)}
+.cal li:last-child{border-bottom:0}
+.cal .d{text-align:center;line-height:1.1}
+.cal .d small{display:block;font-size:12px;color:var(--green);font-weight:600}
+.cal .d b{font-family:var(--slab);font-size:24px;color:var(--indigo)}
+.cal h4{font-family:var(--sans);font-size:14.5px;font-weight:600;color:var(--ink)}
+.cal p{font-size:13px;color:var(--muted);margin:2px 0 6px}
+.res{display:flex;gap:6px;flex-wrap:wrap}
+.res span{font-size:12px;padding:2px 8px;border-radius:4px;background:#f3f1f8;color:var(--indigo);font-weight:600;display:inline-flex;gap:5px;align-items:center}
+.res span .ico{width:13px;height:13px}
+.res span.warn{background:#fff1bf;color:#6b4e00}
+.bud{padding:14px 18px;display:grid;gap:12px}
+.bud div{font-size:13.5px}
+.bud .lbl{display:flex;justify-content:space-between;margin-bottom:5px}
+.bud .lbl b{font-weight:600}
+.bud .lbl span{color:var(--muted);font-stretch:85%}
+.bud .trk{height:10px;border-radius:5px;background:#ece8f5;overflow:hidden}
+.bud .trk i{display:block;height:100%;background:var(--indigo);border-radius:5px}
+.bud .trk i.hi{background:var(--yellow-deep)}
+.bud .note{font-size:12.5px;color:var(--muted);border-top:1px solid var(--line);padding-top:10px}
+.assets li{list-style:none;display:flex;align-items:center;gap:10px;padding:10px 18px;border-bottom:1px solid var(--line);font-size:14px}
+.assets li:last-child{border-bottom:0}
+.assets .dot{width:9px;height:9px;border-radius:50%;flex:none}
+.assets b{font-weight:600;flex:1}
+.assets small{color:var(--muted);font-size:12.5px}
+.g{background:var(--green-2)} .y{background:var(--yellow-deep)} .r{background:var(--red)}
+.corr{padding:14px 18px;display:grid;grid-template-columns:auto 1fr 1fr;gap:32px;align-items:center}
+.top li{list-style:none;display:grid;grid-template-columns:28px 1fr auto;gap:8px;align-items:center;padding:9px 0;border-bottom:1px solid var(--line);font-size:14px}
+.top li:last-child{border-bottom:0}
+.top li span{font-weight:700;color:var(--muted);font-stretch:80%}
+.top li b{font-weight:600}
+.top li i{font-style:normal;font-weight:600;color:var(--indigo)}
+.top h4{font-family:var(--sans);font-size:13.5px;color:var(--muted);font-weight:600;margin-bottom:4px}
+.tm{display:grid;grid-template-columns:repeat(8,30px);grid-template-rows:repeat(8,30px);gap:3px}
+.tm span{border-radius:4px;display:grid;place-items:center;font-size:10px;font-weight:700;color:var(--indigo);background:#e6e1f2}
+.tm span.l2{background:#c9bfe6}.tm span.l3{background:#9a87d1;color:#fff}.tm span.l4{background:var(--indigo-3);color:#fff}
+.tm span.me{background:var(--yellow);color:var(--indigo);box-shadow:0 0 0 2px var(--indigo)}
+.legend{font-size:13px;color:var(--muted);display:grid;gap:8px}
+.legend b{display:block;font-family:var(--slab);font-size:26px;color:var(--indigo);line-height:1}
+.scale{display:flex;gap:3px;align-items:center;margin-top:4px}
+.scale i{width:18px;height:10px;border-radius:2px}
+</style>
+
+<div class="proto"><b>Prototype with demo data.</b> Figures, staff and budgets are fictional.</div>
+<div class="cr">
+  <aside class="sb">
+    <div class="sb-brand"><img src="https://npftv.net/brand/npftv-logo.png" alt=""><span>NPFTV<small>Control Room</small></span></div>
+    <div class="role"><span class="av">ND</span><div>Network Director<small>All areas, read and approve</small></div><svg class="ico"><use href="#i-down"/></svg></div>
+    <div class="sb-grp"><b>Operations</b>
+      <a class="on" href="#"><svg class="ico"><use href="#i-layout"/></svg>Overview</a>
+      <a href="#"><svg class="ico"><use href="#i-truck"/></svg>Production</a>
+      <a href="#"><svg class="ico"><use href="#i-box"/></svg>Assets</a>
+      <a href="#"><svg class="ico"><use href="#i-users"/></svg>People</a>
+      <a href="#"><svg class="ico"><use href="#i-wallet"/></svg>Finance</a>
+      <a href="#"><svg class="ico"><use href="#i-file"/></svg>Procurement</a>
+      <a href="#"><svg class="ico"><use href="#i-radio"/></svg>Sponsorship</a>
+      <a href="#"><svg class="ico"><use href="#i-map"/></svg>Correspondents</a>
+      <a href="#"><svg class="ico"><use href="#i-stamp"/></svg>Approvals<em>9</em></a></div>
+    <div class="sb-grp"><b>Newsroom and broadcast</b>
+      <a href="#"><svg class="ico"><use href="#i-file"/></svg>Stories</a>
+      <a href="#"><svg class="ico"><use href="#i-calendar"/></svg>Schedule</a></div>
+    <div class="sb-grp"><a href="#"><svg class="ico"><use href="#i-log"/></svg>Audit log</a></div>
+    <div class="sb-foot">Demo build. Switch roles from the menu above.</div>
+  </aside>
+
+  <div class="main">
+    <div class="tb">
+      <div class="crumb">Operations <svg class="ico"><use href="#i-chev"/></svg> <b>Overview</b></div>
+      <div class="tb-r"><div class="tb-search"><svg class="ico"><use href="#i-search"/></svg>Search assets, staff, requests</div><span class="ibtn"><svg class="ico"><use href="#i-bell"/></svg><i></i></span></div>
+    </div>
+
+    <div class="dash">
+      <div class="hello"><div><h1>Good evening. Here's the network today.</h1><p>Monday 23 November 2026, 19:12 WAT</p></div><a class="btn btn-line btn-sm" href="#">Export report</a></div>
+
+      <div class="kpis">
+        <div class="pnl kpi"><span><svg class="ico"><use href="#i-play"/></svg>Watching live now</span><b>12,480</b><small class="up">18% more than last Monday</small></div>
+        <div class="pnl kpi"><span><svg class="ico"><use href="#i-radio"/></svg>Stream uptime, November</span><b>99.6%</b><small>2 short outages, both under 4 minutes</small></div>
+        <div class="pnl kpi"><span><svg class="ico"><use href="#i-wallet"/></svg>Q4 budget used</span><b>₦184.2m</b><small>of ₦270m</small><div class="meter"><i></i></div></div>
+        <div class="pnl kpi"><span><svg class="ico"><use href="#i-stamp"/></svg>Waiting for your approval</span><b>9</b><small>3 are purchases over ₦5m</small></div>
+      </div>
+
+      <div class="row2">
+        <div class="brief">
+          <div class="brief-hd"><svg class="ico"><use href="#i-spark"/></svg><h2>Your daily brief</h2><small>Written by AI at 18:00 from today's data</small></div>
+          <ul>
+            <li><span><b>The Beat had its biggest audience this month</b> last night, peaking at 31,200, led by the festive travel story.</span></li>
+            <li><span><b>Thursday's press briefing is fully staffed:</b> 4 crew, OB Van 1 and camera kits 3 and 7. Estimated cost ₦1.85m, inside the broadcast operations budget.</span></li>
+            <li><span><b>Drone 2 is in repair until 30 November.</b> The Air Wing premiere will use archive aerial footage instead.</span></li>
+            <li><span><b>Programmes has used 63% of its quarter budget</b> with five weeks left, so it's on track.</span></li>
+          </ul>
+          <div class="ask"><span>Ask about the network…</span><a class="btn btn-yellow btn-sm" href="#"><svg class="ico"><use href="#i-send"/></svg>Ask</a></div>
+          <div class="chips"><a href="#">How often was OB Van 1 used in November?</a><a href="#">Which states sent the fewest stories?</a><a href="#">What's left in the Digital budget?</a></div>
+        </div>
+        <div class="pnl">
+          <div class="p-hd"><h3>Waiting for your approval</h3><a href="#">All 9</a></div>
+          <ul class="appr">
+            <li><span class="ic"><svg class="ico"><use href="#i-box"/></svg></span><span><b>Two broadcast cameras</b><small>Procurement, requested by Engineering</small></span><span class="amt">₦7.4m<small>Over ₦5m</small></span></li>
+            <li><span class="ic"><svg class="ico"><use href="#i-alert"/></svg></span><span><b>Missing person notice, Lagos</b><small>Public safety alert, verified by Lagos command</small></span><span class="amt">Alert</span></li>
+            <li><span class="ic"><svg class="ico"><use href="#i-radio"/></svg></span><span><b>Sponsored road safety segment</b><small>Sponsorship, 8 weeks on Safe Nigeria</small></span><span class="amt">₦12m<small>Income</small></span></li>
+            <li><span class="ic"><svg class="ico"><use href="#i-users"/></svg></span><span><b>Leave: field producer</b><small>People, 1 to 5 December</small></span><span class="amt">5 days</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="row3">
+        <div class="pnl">
+          <div class="p-hd"><h3>Production this week</h3><a href="#">Calendar</a></div>
+          <ul class="cal">
+            <li><div class="d"><small>Thu</small><b>26</b></div><div><h4>Press briefing, live from Force Headquarters</h4><p>11:00 to 12:00. Live on TV and Stream.</p><div class="res"><span><svg class="ico"><use href="#i-users"/></svg>4 crew</span><span><svg class="ico"><use href="#i-truck"/></svg>OB Van 1</span><span><svg class="ico"><use href="#i-wallet"/></svg>₦1.85m</span></div></div></li>
+            <li><div class="d"><small>Sat</small><b>28</b></div><div><h4>Safe Nigeria: festive travel special</h4><p>Recorded Friday in Studio A.</p><div class="res"><span><svg class="ico"><use href="#i-users"/></svg>6 crew</span><span><svg class="ico"><use href="#i-home"/></svg>Studio A</span></div></div></li>
+            <li><div class="d"><small>Tue</small><b>01</b></div><div><h4>Premiere: The Force in Focus, Air Wing</h4><p>Final edit due Friday.</p><div class="res"><span class="warn"><svg class="ico"><use href="#i-alert"/></svg>Drone 2 unavailable</span></div></div></li>
+          </ul>
+        </div>
+        <div class="pnl">
+          <div class="p-hd"><h3>Q4 budget by department</h3><a href="#">Finance</a></div>
+          <div class="bud">
+            <div><div class="lbl"><b>Broadcast operations</b><span>₦61m of ₦80m</span></div><div class="trk"><i style="width:76%"></i></div></div>
+            <div><div class="lbl"><b>News</b><span>₦52m of ₦70m</span></div><div class="trk"><i style="width:74%"></i></div></div>
+            <div><div class="lbl"><b>Programmes</b><span>₦38m of ₦60m</span></div><div class="trk"><i style="width:63%"></i></div></div>
+            <div><div class="lbl"><b>Digital</b><span>₦21m of ₦35m</span></div><div class="trk"><i style="width:60%"></i></div></div>
+            <div><div class="lbl"><b>Administration</b><span>₦12.2m of ₦25m</span></div><div class="trk"><i style="width:49%"></i></div></div>
+            <p class="note">Five weeks left in the quarter. No department is over 80%.</p>
+          </div>
+        </div>
+        <div class="pnl">
+          <div class="p-hd"><h3>Assets</h3><a href="#">All assets</a></div>
+          <ul class="assets">
+            <li><span class="dot y"></span><b>OB Van 1</b><small>Booked Thursday</small></li>
+            <li><span class="dot g"></span><b>OB Van 2</b><small>Available</small></li>
+            <li><span class="dot g"></span><b>Camera kits</b><small>14 of 18 available</small></li>
+            <li><span class="dot r"></span><b>Drones</b><small>2 of 3, Drone 2 in repair</small></li>
+            <li><span class="dot y"></span><b>Vehicles</b><small>6 of 9 out today</small></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="pnl">
+        <div class="p-hd"><h3>Correspondent network: stories sent in November</h3><a href="#">Correspondents</a></div>
+        <div class="corr">
+          <div class="tm">
+            <span class="l3" style="grid-column:2;grid-row:1">SO</span><span class="l2" style="grid-column:3;grid-row:1">ZA</span><span class="l3" style="grid-column:4;grid-row:1">KT</span><span class="me" style="grid-column:5;grid-row:1">KN</span><span class="l2" style="grid-column:6;grid-row:1">JI</span><span style="grid-column:7;grid-row:1">YO</span><span class="l3" style="grid-column:8;grid-row:1">BO</span>
+            <span class="l2" style="grid-column:2;grid-row:2">KE</span><span class="l4" style="grid-column:4;grid-row:2">KD</span><span class="l3" style="grid-column:6;grid-row:2">BA</span><span class="l2" style="grid-column:7;grid-row:2">GO</span><span class="l2" style="grid-column:8;grid-row:2">AD</span>
+            <span class="l2" style="grid-column:2;grid-row:3">KW</span><span class="l2" style="grid-column:3;grid-row:3">NI</span><span class="l4" style="grid-column:4;grid-row:3">FC</span><span class="l2" style="grid-column:5;grid-row:3">NA</span><span class="l3" style="grid-column:6;grid-row:3">PL</span><span style="grid-column:7;grid-row:3">TA</span>
+            <span class="l3" style="grid-column:1;grid-row:4">OY</span><span class="l2" style="grid-column:2;grid-row:4">OS</span><span style="grid-column:3;grid-row:4">EK</span><span class="l2" style="grid-column:4;grid-row:4">KO</span><span class="l3" style="grid-column:5;grid-row:4">BE</span>
+            <span class="l3" style="grid-column:1;grid-row:5">OG</span><span class="l2" style="grid-column:2;grid-row:5">ON</span><span class="l3" style="grid-column:3;grid-row:5">ED</span><span class="l3" style="grid-column:4;grid-row:5">EN</span><span style="grid-column:5;grid-row:5">EB</span><span class="l2" style="grid-column:6;grid-row:5">CR</span>
+            <span class="l4" style="grid-column:1;grid-row:6">LA</span><span class="l3" style="grid-column:3;grid-row:6">DE</span><span class="l3" style="grid-column:4;grid-row:6">AN</span><span class="l2" style="grid-column:5;grid-row:6">AB</span><span class="l2" style="grid-column:6;grid-row:6">AK</span>
+            <span class="l2" style="grid-column:4;grid-row:7">IM</span>
+            <span class="l2" style="grid-column:3;grid-row:8">BY</span><span class="l4" style="grid-column:4;grid-row:8">RI</span>
+          </div>
+          <div class="legend">
+            <div><b>412</b>stories from 37 desks this month</div>
+            <div><b>Kano</b>sent today's top submission</div>
+            <div>Fewest: Yobe, Taraba, Ekiti and Ebonyi
+              <div class="scale">Fewer <i style="background:#e6e1f2"></i><i style="background:#c9bfe6"></i><i style="background:#9a87d1"></i><i style="background:var(--indigo-3)"></i> More</div></div>
+            <a class="btn btn-line btn-sm" href="#" style="justify-self:start">Message the four desks</a>
+          </div>
+          <div class="top"><h4>Most stories this month</h4><ul>
+            <li><span>1</span><b>Lagos</b><i>34</i></li>
+            <li><span>2</span><b>Federal Capital Territory</b><i>31</i></li>
+            <li><span>3</span><b>Kaduna</b><i>27</i></li>
+            <li><span>4</span><b>Rivers</b><i>26</i></li>
+            <li><span>5</span><b>Kano</b><i>19</i></li></ul></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

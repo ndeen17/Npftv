@@ -1,0 +1,153 @@
+<style>
+.main{display:flex;flex-direction:column}
+.cnt{display:grid;grid-template-columns:1fr 392px;gap:24px;padding:24px 28px 32px;align-items:start}
+.ed{padding:28px 32px}
+.ed-top{display:flex;align-items:center;gap:10px;flex-wrap:wrap;font-size:13.5px;color:var(--muted)}
+.st{background:#fff3c2;color:#6b4e00}
+.ed-title{font-family:var(--slab);font-size:32px;line-height:1.15;color:var(--indigo);margin:16px 0 6px;padding:6px 8px;margin-left:-8px;border-radius:6px;box-shadow:inset 0 0 0 1.5px transparent}
+.ed-title:hover{box-shadow:inset 0 0 0 1.5px var(--line)}
+.fields{display:flex;gap:10px;margin:10px 0 20px;flex-wrap:wrap}
+.fld{display:flex;align-items:center;gap:8px;height:34px;border:1px solid var(--line);border-radius:6px;padding:0 10px;font-size:13.5px;background:#faf9fc}
+.fld span{color:var(--muted)}
+.fld .ico{width:14px;height:14px;color:var(--muted)}
+.photos{display:flex;gap:10px;margin-bottom:22px}
+.ph{width:118px;height:78px;border-radius:6px;background:repeating-linear-gradient(135deg,#ece8f5 0 10px,#e3def0 10px 20px);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;font-size:11px;color:var(--muted)}
+.ph .ico{width:20px;height:20px}
+.body p{font-size:16.5px;line-height:1.75;margin-bottom:14px;color:#2b2442}
+.body .pn{display:inline-block;width:22px;font-size:12px;color:#a49dbb;font-weight:600}
+mark{background:transparent;padding:1px 0;border-radius:2px}
+mark.sens{background:#fde3e5;box-shadow:inset 0 -2px 0 var(--red)}
+mark.sty{background:#fff1bf;box-shadow:inset 0 -2px 0 var(--yellow-deep)}
+.log{margin-top:22px;padding-top:16px;border-top:1px solid var(--line)}
+.log h4{font-family:var(--sans);font-size:13.5px;color:var(--muted);font-weight:600;margin-bottom:8px}
+.log li{list-style:none;display:grid;grid-template-columns:52px 1fr;font-size:13.5px;padding:3px 0;color:#3b3452}
+.log li b{font-weight:600;color:var(--muted);font-stretch:80%}
+/* AI panel */
+.ai{overflow:hidden}
+.ai-hd{display:flex;align-items:center;gap:10px;padding:16px 18px;background:var(--indigo);color:#fff}
+.ai-hd .ico{color:var(--yellow)}
+.ai-hd h3{font-size:19px;flex:1}
+.ai-hd small{font-size:12.5px;color:#bdb3da}
+.tabs{display:flex;border-bottom:1px solid var(--line);padding:0 10px}
+.tabs a{padding:11px 10px;font-size:14px;color:var(--muted);border-bottom:2px solid transparent}
+.tabs a.on{color:var(--indigo);font-weight:600;border-color:var(--yellow)}
+.blk{padding:16px 18px;border-bottom:1px solid var(--line)}
+.blk h4{font-family:var(--sans);font-size:13.5px;font-weight:700;color:var(--ink);display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.blk h4 .n{margin-left:auto;font-size:12px;font-weight:700;padding:1px 8px;border-radius:10px}
+.n.red{background:#fde3e5;color:var(--red)} .n.yel{background:#fff1bf;color:#6b4e00} .n.ok{background:#dff3e7;color:var(--green)}
+.blk > p{font-size:14.5px;color:#3b3452;line-height:1.5}
+.iss{border:1px solid #f3c4c8;background:#fffafa;border-radius:8px;padding:10px 12px;margin-top:8px}
+.iss b{display:flex;gap:8px;align-items:flex-start;font-size:14px;color:var(--ink)}
+.iss b .ico{width:16px;height:16px;color:var(--red);margin-top:2px}
+.iss p{font-size:13px;color:var(--muted);margin:4px 0 8px 24px}
+.iss .acts{margin-left:24px;display:flex;gap:6px}
+.mini{height:28px;padding:0 10px;border-radius:5px;font-size:12.5px;font-weight:600;border:1px solid var(--line);background:#fff;display:inline-flex;align-items:center;gap:6px}
+.mini.pri{background:var(--indigo);color:#fff;border-color:var(--indigo)}
+.fix{display:flex;align-items:center;gap:8px;font-size:14px}
+.fix s{color:var(--red)} .fix ins{text-decoration:none;color:var(--green);font-weight:600}
+.fix .mini{margin-left:auto}
+.hl{display:grid;gap:6px}
+.hl label{display:flex;gap:10px;align-items:flex-start;font-size:14px;padding:8px 10px;border-radius:6px;border:1px solid var(--line)}
+.hl label.on{border-color:var(--indigo);background:#f6f4fb}
+.hl .rd{width:16px;height:16px;border-radius:50%;border:2px solid #b9b2cc;flex:none;margin-top:2px}
+.hl label.on .rd{border:5px solid var(--indigo)}
+.hl small{display:block;color:var(--muted);font-size:12px}
+.tr{background:#faf9fc;border:1px dashed #cfc8e2;border-radius:8px;padding:10px 12px;font-size:14.5px;font-family:var(--slab);color:var(--indigo);line-height:1.4}
+.langs{display:flex;gap:6px;margin-top:10px;flex-wrap:wrap}
+.langs span{font-size:12.5px;padding:3px 9px;border-radius:12px;background:#f3f1f8;color:var(--muted);font-weight:600}
+.langs span.on{background:var(--indigo);color:#fff}
+.ai-ft{padding:16px 18px;background:#faf9fc}
+.ai-ft p{font-size:12.5px;color:var(--muted);display:flex;gap:6px;align-items:flex-start;margin-bottom:12px}
+.ai-ft p .ico{width:14px;height:14px;flex:none;margin-top:2px}
+.ai-ft .row{display:flex;gap:8px}
+.ai-ft .btn{flex:1;justify-content:center;height:42px}
+.btn[disabled]{background:#d9d4e6;color:#7d7698;cursor:not-allowed}
+.hint{font-size:12.5px;color:var(--red);margin-top:8px;text-align:right}
+</style>
+
+<div class="proto"><b>Prototype with demo data.</b> Staff, stories and suspects are fictional.</div>
+<div class="cr">
+  <aside class="sb">
+    <div class="sb-brand"><img src="https://npftv.net/brand/npftv-logo.png" alt=""><span>NPFTV<small>Control Room</small></span></div>
+    <div class="role"><span class="av">AB</span><div>Amina Bello<small>Editor-in-Chief</small></div><svg class="ico"><use href="#i-down"/></svg></div>
+    <div class="sb-grp"><b>Newsroom</b>
+      <a href="#"><svg class="ico"><use href="#i-layout"/></svg>Dashboard</a>
+      <a href="#"><svg class="ico"><use href="#i-file"/></svg>Stories</a>
+      <a class="on" href="#"><svg class="ico"><use href="#i-inbox"/></svg>Submissions<em>4</em></a>
+      <a href="#"><svg class="ico"><use href="#i-alert"/></svg>Safety alerts</a>
+      <a href="#"><svg class="ico"><use href="#i-home"/></svg>Homepage</a></div>
+    <div class="sb-grp"><b>Broadcast</b>
+      <a href="#"><svg class="ico"><use href="#i-radio"/></svg>Live control</a>
+      <a href="#"><svg class="ico"><use href="#i-calendar"/></svg>Schedule</a>
+      <a href="#"><svg class="ico"><use href="#i-film"/></svg>Programmes</a>
+      <a href="#"><svg class="ico"><use href="#i-image"/></svg>Media library</a></div>
+    <div class="sb-grp"><b>Operations</b>
+      <a href="#"><svg class="ico"><use href="#i-truck"/></svg>Production</a>
+      <a href="#"><svg class="ico"><use href="#i-box"/></svg>Assets</a>
+      <a href="#"><svg class="ico"><use href="#i-wallet"/></svg>Finance</a>
+      <a href="#"><svg class="ico"><use href="#i-stamp"/></svg>Approvals<em>9</em></a></div>
+    <div class="sb-grp"><a href="#"><svg class="ico"><use href="#i-log"/></svg>Audit log</a></div>
+    <div class="sb-foot">Demo build. Switch roles from the menu above.</div>
+  </aside>
+
+  <div class="main">
+    <div class="tb">
+      <div class="crumb">Submissions <svg class="ico"><use href="#i-chev"/></svg> Kano State Command <svg class="ico"><use href="#i-chev"/></svg> <b>Neighbourhood safety forums</b></div>
+      <div class="tb-r"><div class="tb-search"><svg class="ico"><use href="#i-search"/></svg>Search stories, media, staff</div><span class="ibtn"><svg class="ico"><use href="#i-bell"/></svg><i></i></span></div>
+    </div>
+
+    <div class="cnt">
+      <div class="pnl ed">
+        <div class="ed-top"><span class="tag st">Submitted for review</span><span>Musa Ibrahim, Kano correspondent, today at 16:40</span></div>
+        <div class="ed-title">Kano command launches neighbourhood safety forums in 44 LGAs</div>
+        <div class="fields">
+          <span class="fld"><span>Category</span>State commands<svg class="ico"><use href="#i-down"/></svg></span>
+          <span class="fld"><span>State</span>Kano<svg class="ico"><use href="#i-down"/></svg></span>
+          <span class="fld"><span>Publish</span>When approved<svg class="ico"><use href="#i-down"/></svg></span>
+        </div>
+        <div class="photos">
+          <div class="ph"><svg class="ico"><use href="#i-image"/></svg>forum-launch-01.jpg</div>
+          <div class="ph"><svg class="ico"><use href="#i-image"/></svg>forum-launch-02.jpg</div>
+          <div class="ph"><svg class="ico"><use href="#i-image"/></svg>residents-03.jpg</div>
+        </div>
+        <div class="body">
+          <p><span class="pn">1</span>The Kano State Police Command has launched neighbourhood safety forums across all 44 local government areas, bringing residents, traditional leaders and divisional officers together every month.</p>
+          <p><span class="pn">2</span>Speaking at the launch in Nassarawa, the Commissioner of Police said the forums would help officers respond faster to concerns raised by communities.</p>
+          <p><span class="pn">3</span>Separately, officers <mark class="sty">have been been</mark> deployed to <mark class="sens">the Sabon Gari market axis, where a team is currently tracking a suspected kidnapping gang</mark>.</p>
+          <p><span class="pn">4</span><mark class="sens">A suspect, Sani G., 34, was arrested on Friday</mark> and is assisting with enquiries.</p>
+          <p><span class="pn">5</span>Residents can find their nearest forum at their divisional police station.</p>
+        </div>
+        <div class="log"><h4>Activity</h4><ul>
+          <li><b>16:40</b>Submitted by Musa Ibrahim from the Kano desk</li>
+          <li><b>16:41</b>AI review finished: 2 sensitivity issues, 1 style fix</li>
+          <li><b>18:52</b>Opened by Amina Bello</li></ul></div>
+      </div>
+
+      <div class="pnl ai">
+        <div class="ai-hd"><svg class="ico"><use href="#i-spark"/></svg><h3>AI copy desk</h3><small>Checked 2 min ago</small></div>
+        <div class="tabs"><a class="on" href="#">Review</a><a href="#">Headlines</a><a href="#">Translate</a><a href="#">SEO</a></div>
+        <div class="blk"><h4>Summary</h4><p>Kano opens monthly safety forums in all 44 local government areas so residents and officers can meet regularly.</p></div>
+        <div class="blk"><h4><svg class="ico" style="width:16px;height:16px;color:var(--red)"><use href="#i-shield"/></svg>Sensitivity check<span class="n red">2 to fix</span></h4>
+          <div class="iss"><b><svg class="ico"><use href="#i-alert"/></svg>Reveals where an operation is under way</b><p>Paragraph 3 names the location of an active team.</p><div class="acts"><span class="mini pri">Remove that clause</span><span class="mini">Ignore</span></div></div>
+          <div class="iss"><b><svg class="ico"><use href="#i-alert"/></svg>Names a suspect who hasn't been charged</b><p>Paragraph 4. House style: describe, don't name.</p><div class="acts"><span class="mini pri">Use "a 34-year-old man"</span><span class="mini">Ignore</span></div></div>
+        </div>
+        <div class="blk"><h4>House style<span class="n yel">1 fix</span></h4>
+          <div class="fix"><s>have been been</s><svg class="ico" style="width:14px;height:14px"><use href="#i-arrow"/></svg><ins>have been</ins><span class="mini">Apply</span></div></div>
+        <div class="blk"><h4>Headline options</h4>
+          <div class="hl">
+            <label class="on"><span class="rd"></span><span>Kano opens safety forums in all 44 local government areas<small>Clearest for search, 57 characters</small></span></label>
+            <label><span class="rd"></span><span>Residents and police to meet monthly under new Kano forums</span></label>
+            <label><span class="rd"></span><span>Kano command launches neighbourhood safety forums in 44 LGAs<small>Reporter's original</small></span></label>
+          </div></div>
+        <div class="blk"><h4><svg class="ico" style="width:16px;height:16px;color:var(--green)"><use href="#i-globe"/></svg>Hausa headline<span class="n yel">Needs review</span></h4>
+          <div class="tr">Rundunar 'yan sandan Jihar Kano ta ƙaddamar da tarukan tsaron unguwanni a ƙananan hukumomi 44</div>
+          <div class="langs"><span class="on">Hausa</span><span>Yoruba</span><span>Igbo</span><span>Pidgin</span></div></div>
+        <div class="ai-ft">
+          <p><svg class="ico"><use href="#i-spark"/></svg>These are AI suggestions. Nothing is published until an editor approves it.</p>
+          <div class="row"><button class="btn btn-line btn-sm">Return to reporter</button><button class="btn btn-sm" disabled>Approve and publish</button></div>
+          <div class="hint">Fix the 2 sensitivity issues to approve.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

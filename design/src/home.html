@@ -1,0 +1,519 @@
+<style>
+/* ---------- header ---------- */
+.alert{background:var(--indigo-deep);color:#d9d3ea;font-size:13.5px}
+.alert .wrap{display:flex;align-items:center;justify-content:space-between;gap:24px;min-height:42px}
+.alert-msg{display:flex;align-items:center;gap:10px}
+.alert-msg .ico{color:var(--yellow);width:18px;height:18px}
+.alert-msg b{color:#fff;font-weight:600}
+.alert-msg a{color:var(--yellow);font-weight:600;white-space:nowrap}
+.alert-side{display:flex;align-items:center;gap:8px;white-space:nowrap;color:#b9b0d3}
+.alert-side .live-dot{color:var(--green-2)}
+.hdr{background:#fff;position:relative;z-index:5;box-shadow:0 1px 0 var(--line)}
+.hdr .wrap{display:flex;align-items:center;gap:28px;height:84px}
+.brand{display:flex;align-items:center;gap:12px;flex:none}
+.brand img{width:56px;height:56px;border-radius:50%;background:var(--indigo)}
+.brand-txt{line-height:1.05}
+.brand-txt small{display:block;font-size:11.5px;font-weight:600;color:var(--green);letter-spacing:.02em}
+.brand-txt strong{font-family:var(--slab);font-size:21px;color:var(--indigo)}
+.nav{display:flex;gap:22px;margin-left:auto;font-weight:500;font-size:15px;color:#3a3352}
+.nav a{padding:6px 0;border-bottom:2px solid transparent}
+.nav a.on{color:var(--indigo);border-color:var(--yellow);font-weight:600}
+.hdr-act{display:flex;align-items:center;gap:10px}
+.icon-btn{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;background:transparent;border:0;color:var(--indigo);cursor:pointer}
+.icon-btn:hover{background:var(--paper)}
+.menu-btn{display:none}
+.latest{background:var(--indigo);color:#fff;font-size:14px}
+.latest .wrap{display:flex;align-items:center;gap:18px;height:44px;overflow:hidden}
+.latest-lbl{background:var(--yellow);color:var(--indigo);font-weight:700;font-size:12.5px;padding:3px 9px;border-radius:3px;flex:none}
+.latest-items{display:flex;gap:32px;white-space:nowrap;color:#e4def5}
+.latest-items span{display:flex;gap:10px;align-items:center}
+.latest-items i{font-style:normal;color:var(--yellow);font-weight:600;font-stretch:75%;font-size:13px}
+/* ---------- hero ---------- */
+.hero{position:relative;color:#fff;background:var(--indigo);overflow:hidden}
+.hero-img{position:absolute;top:0;bottom:0;right:0;left:36%;background:var(--indigo-2)}
+.hero-img img{width:100%;height:100%;object-fit:cover;object-position:60% 18%}
+.hero::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,var(--indigo) 0%,var(--indigo) 36%,rgba(28,13,55,.55) 46%,rgba(28,13,55,0) 64%),linear-gradient(0deg,rgba(19,8,38,.8) 0%,rgba(19,8,38,0) 38%)}
+.hero .wrap{position:relative;z-index:2;min-height:640px;display:flex;flex-direction:column;justify-content:center;padding-top:40px;padding-bottom:120px}
+.kicker{display:flex;align-items:center;gap:12px;font-weight:600;font-size:15px;color:#e8e2f8}
+.kicker::before{content:"";width:36px;height:4px;background:linear-gradient(90deg,var(--green) 50%,var(--yellow) 50%)}
+.hero h1{font-size:104px;line-height:.92;margin:22px 0 26px;letter-spacing:-.025em}
+.hero h1 span{display:block}
+.hero h1 em{font-style:normal;color:var(--yellow)}
+.hero p{max-width:440px;font-size:18px;color:#ddd6ef;margin-bottom:30px}
+.hero-ctas{display:flex;gap:14px;flex-wrap:wrap}
+.lower3{position:absolute;right:40px;bottom:96px;z-index:3;width:400px;background:rgba(19,8,38,.82);backdrop-filter:blur(8px);border-left:5px solid var(--yellow);border-radius:0 8px 8px 0;padding:18px 20px}
+.l3-top{display:flex;justify-content:space-between;align-items:center;font-size:13px;color:#c9c0e4}
+.l3-title{display:flex;align-items:baseline;gap:12px;margin:10px 0 2px}
+.l3-title h3{font-size:30px}
+.l3-title span{color:#c9c0e4;font-size:14.5px}
+.l3-bar{height:4px;background:rgba(255,255,255,.15);border-radius:2px;margin:14px 0 8px;overflow:hidden}
+.l3-bar i{display:block;height:100%;width:42%;background:var(--yellow)}
+.l3-meta{display:flex;justify-content:space-between;font-size:13px;color:#c9c0e4;font-stretch:80%}
+.l3-next{margin-top:12px;padding-top:12px;border-top:1px solid var(--line-dark);font-size:14px;display:flex;justify-content:space-between;align-items:center}
+.l3-next b{font-weight:600;color:#fff}
+/* hero option A: the live screen */
+.hero-live{background:radial-gradient(760px 460px at 76% 46%,rgba(91,68,176,.42),rgba(91,68,176,0) 70%),var(--indigo)}
+.hero-live::after{display:none}
+.hero.hero-live .wrap{display:grid;grid-template-columns:minmax(0,1fr) 620px;gap:56px;align-items:center;min-height:640px;padding-top:48px;padding-bottom:116px}
+.hero-live h1{font-size:96px}
+.screen{display:block;position:relative;aspect-ratio:16/9;border-radius:10px;overflow:hidden;background:#000;box-shadow:0 30px 60px rgba(0,0,0,.45),0 0 0 1px rgba(255,255,255,.1)}
+.screen .still{width:100%;height:100%;object-fit:cover;object-position:50% 28%}
+.screen .shade{position:absolute;inset:0;background:linear-gradient(0deg,rgba(0,0,0,.6),rgba(0,0,0,0) 45%)}
+.screen .s-live{position:absolute;left:14px;top:12px}
+.screen .bug{position:absolute;right:14px;top:10px;width:42px;height:42px;opacity:.92}
+.screen .play{position:absolute;left:50%;top:44%;transform:translate(-50%,-50%);width:76px;height:76px;border-radius:50%;background:var(--yellow);color:var(--indigo);display:grid;place-items:center;box-shadow:0 0 0 8px rgba(245,197,24,.25)}
+.screen .play .ico{width:30px;height:30px;margin-left:4px}
+.screen .g{position:absolute;left:20px;right:20px;bottom:18px;display:flex;align-items:stretch}
+.screen .g b{background:var(--yellow);color:var(--indigo);font-family:var(--slab);font-size:15px;padding:7px 10px;display:flex;align-items:center;white-space:nowrap}
+.screen .g span{background:var(--indigo);color:#fff;font-family:var(--slab);font-weight:600;font-size:16px;padding:7px 12px;line-height:1.25}
+.lower3.static{position:relative;right:auto;bottom:auto;width:auto;margin-top:14px;background:rgba(255,255,255,.06);backdrop-filter:none;border-radius:0 8px 8px 0}
+.lower3.static .l3-title h3{font-size:26px}
+/* hero option B: real photo */
+.hero-photo .hero-img img{object-position:66% 30%}
+/* hero option C: emblem */
+.hero-emblem{background:radial-gradient(620px 520px at 74% 46%,rgba(91,68,176,.5),rgba(91,68,176,0) 70%),var(--indigo)}
+.hero-emblem::after{display:none}
+.hero-emblem .hero-img{left:auto;right:4%;top:50%;bottom:auto;width:640px;height:480px;transform:translateY(-58%);background:transparent;-webkit-mask-image:radial-gradient(closest-side,#000 74%,transparent 100%);mask-image:radial-gradient(closest-side,#000 74%,transparent 100%)}
+.hero-emblem .hero-img img{object-fit:cover;object-position:50% 40%}
+.onair{display:flex;align-items:center;gap:10px;margin-top:26px;font-size:15px;color:#c9c0e4}
+.onair b{font-family:var(--slab);font-size:19px;color:#fff}
+/* ---------- quick access ---------- */
+.quick{position:relative;z-index:4;margin-top:-62px}
+.quick .wrap{display:grid;grid-template-columns:repeat(6,1fr);gap:12px}
+.q{display:flex;flex-direction:column;align-items:center;gap:12px;text-align:center;font-weight:600;font-size:14.5px;color:var(--indigo)}
+.q-ic{width:96px;height:96px;border-radius:50%;background:var(--indigo);display:grid;place-items:center;color:var(--yellow);box-shadow:0 0 0 6px var(--paper),0 10px 24px rgba(28,13,55,.25);position:relative}
+.q-ic .ico{width:36px;height:36px;stroke-width:1.6}
+.q-ic .tag{position:absolute;top:-2px;right:-6px;font-size:11px;padding:2px 6px}
+.q:hover .q-ic{background:var(--indigo-3)}
+/* ---------- sections ---------- */
+.sec{padding:88px 0}
+.sec-hd{display:flex;align-items:end;justify-content:space-between;gap:20px;margin-bottom:32px}
+.sec-hd p{color:var(--muted);margin-top:8px;max-width:520px}
+.sec-hd .link{white-space:nowrap}
+.nu h2{font-size:30px}
+/* embedded Stream module */
+.live-mod{padding-bottom:0}
+.lm-panel{background:var(--indigo);color:#fff;border-radius:12px;padding:28px;display:grid;grid-template-columns:minmax(0,1.55fr) minmax(0,1fr);gap:28px;align-items:start;position:relative;overflow:hidden}
+.lm-panel::before{content:"";position:absolute;left:0;right:0;top:0;height:4px;background:linear-gradient(90deg,var(--green) 0 34%,var(--yellow) 34% 66%,var(--green) 66%)}
+.lm-side .lower3.static{margin-top:0}
+.lm-next{list-style:none;margin-top:14px}
+.lm-next li{display:grid;grid-template-columns:56px 1fr;gap:10px;padding:10px 0;border-top:1px solid var(--line-dark);font-size:15px;font-weight:600}
+.lm-next li b{font-stretch:75%;color:#bdb3da;font-weight:600;font-size:14px;padding-top:1px}
+.lm-next li small{display:block;font-weight:400;font-size:13px;color:#bdb3da}
+.lm-cta{display:flex;align-items:center;gap:14px;margin-top:16px;flex-wrap:wrap}
+.lm-cta small{color:#bdb3da;font-size:13px}
+/* director */
+.dir .wrap{display:grid;grid-template-columns:420px 1fr;gap:72px;align-items:center}
+.dir-fig{background:#fff;padding:14px;border-radius:4px;box-shadow:0 20px 40px rgba(28,13,55,.12)}
+.dir-fig .ph{aspect-ratio:4/3.4;background:var(--indigo);overflow:hidden}
+.dir-fig .ph img{width:100%;height:100%;object-fit:cover}
+.dir-fig figcaption{text-align:center;padding:16px 0 6px;font-family:var(--slab);font-weight:600;font-size:18px;color:var(--indigo)}
+.dir-fig figcaption small{display:block;font-family:var(--sans);font-weight:500;font-size:13px;color:var(--muted);margin-top:2px}
+.dir-txt h2{font-size:40px;color:var(--indigo);margin-bottom:22px}
+.dir-txt p{font-size:18px;line-height:1.7;color:#3b3452;max-width:560px;margin-bottom:16px}
+.dir-txt .sig{font-family:var(--slab);font-size:18px;color:var(--indigo);margin:8px 0 28px}
+/* news + upcoming */
+.nu{background:#fff;border-top:1px solid var(--line)}
+.nu .wrap{display:grid;grid-template-columns:1.55fr 1fr;gap:64px}
+.story{display:grid;grid-template-columns:220px 1fr;gap:24px;padding:22px 0;border-top:1px solid var(--line)}
+.story:first-of-type{border-top:0;padding-top:0}
+.story .th{aspect-ratio:16/10.5;border-radius:4px;overflow:hidden;background:var(--indigo-2)}
+.story .th img{width:100%;height:100%;object-fit:cover}
+.th-graphic{width:100%;height:100%;display:grid;place-items:center;background:var(--indigo);color:var(--yellow);position:relative}
+.th-graphic .ico{width:56px;height:56px;stroke-width:1.4}
+.th-graphic::after{content:"";position:absolute;left:0;right:0;bottom:0;height:5px;background:linear-gradient(90deg,var(--green) 50%,var(--yellow) 50%)}
+.meta{font-size:13px;color:var(--muted);display:flex;gap:10px;align-items:center}
+.meta .cat{color:var(--green);font-weight:700}
+.story h3{font-size:22px;margin:6px 0 8px;color:var(--indigo)}
+.story p{font-size:15px;color:var(--muted);margin-bottom:10px}
+.up{display:grid;grid-template-columns:72px 1fr;gap:20px;padding:20px 0;border-top:1px solid var(--line)}
+.up:first-of-type{border-top:0;padding-top:0}
+.date{text-align:center;border-right:2px solid var(--yellow);padding-right:14px;align-self:start}
+.date small{display:block;font-weight:600;font-size:14px;color:var(--green)}
+.date b{font-family:var(--slab);font-size:42px;line-height:1;color:var(--indigo)}
+.up h4{font-size:19px;color:var(--indigo);margin:6px 0 8px}
+.up ul{list-style:none;font-size:14px;color:var(--muted);display:grid;gap:4px;margin-bottom:12px}
+.up li{display:flex;gap:8px;align-items:center}
+.up li .ico{width:16px;height:16px}
+.up-tags{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.tag-soft{background:var(--paper);color:var(--indigo);font-weight:600}
+.tag-feat{background:#fff3c2;color:#6b4e00}
+/* programmes */
+.progs{display:grid;grid-auto-flow:column;grid-auto-columns:232px;gap:20px;overflow-x:auto;margin-right:calc(50% - 50vw);padding:0 40px 8px 0;scrollbar-width:thin}
+.prog .art{aspect-ratio:3/4;border-radius:6px;padding:18px;display:flex;flex-direction:column;justify-content:space-between;position:relative;overflow:hidden}
+.prog .art h3{font-size:30px;line-height:.95;position:relative}
+.prog .art small{font-size:12.5px;font-weight:600;position:relative}
+.prog .art .mk{position:absolute}
+.prog p{margin-top:12px;font-weight:600;font-size:15px;color:var(--indigo)}
+.prog p span{display:block;font-weight:400;font-size:13.5px;color:var(--muted)}
+.a1{background:var(--yellow);color:var(--indigo)}
+.a1 .mk{right:-40px;top:-40px;width:150px;height:150px;border-radius:50%;border:22px solid var(--indigo)}
+.a2{background:var(--green);color:#fff}
+.a2 .mk{left:0;right:0;bottom:42px;height:46px;background:repeating-linear-gradient(90deg,rgba(255,255,255,.22) 0 14px,transparent 14px 28px)}
+.a3{background:var(--indigo);color:#fff}
+.a3 .mk{right:16px;top:16px;width:60px;height:60px;border-radius:50%;background:var(--yellow);box-shadow:-30px 40px 0 -10px var(--green)}
+.a4{background:#140a26;color:#fff}
+.a4 img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.55}
+.a4::after{content:"";position:absolute;inset:0;background:linear-gradient(0deg,rgba(19,8,38,.95),rgba(19,8,38,.1) 60%)}
+.a4 > *{z-index:1}
+.a5{background:var(--indigo-3);color:#fff}
+.a5 .mk{inset:0;background-image:linear-gradient(rgba(245,197,24,.18) 1px,transparent 1px),linear-gradient(90deg,rgba(245,197,24,.18) 1px,transparent 1px);background-size:18px 18px}
+.a6{background:#fff;color:var(--indigo);box-shadow:inset 0 0 0 1.5px var(--line)}
+.a6 .mk{left:18px;bottom:52px;width:54px;height:40px;border-radius:20px 20px 20px 4px;background:var(--yellow);box-shadow:30px -26px 0 -4px var(--green)}
+/* public safety */
+.ps .wrap{display:grid;grid-template-columns:1.35fr 1fr;gap:40px;align-items:start}
+.scam{background:var(--indigo);color:#fff;border-radius:12px;padding:36px;position:relative;overflow:hidden}
+.scam::before{content:"";position:absolute;right:-80px;top:-80px;width:240px;height:240px;border-radius:50%;border:30px solid rgba(245,197,24,.08)}
+.scam h2{font-size:34px;margin:12px 0 10px}
+.scam > p{color:#d4cce9;max-width:520px;margin-bottom:22px}
+.scam textarea{width:100%;min-height:96px;border-radius:8px;border:1.5px solid rgba(255,255,255,.2);background:rgba(255,255,255,.06);padding:14px 16px;color:#fff;font-size:15px;resize:none;line-height:1.5}
+.scam-row{display:flex;align-items:center;justify-content:space-between;gap:14px;margin:14px 0 20px;flex-wrap:wrap}
+.scam-row small{color:#b6acd6;font-size:13px}
+.result{background:#fff;color:var(--ink);border-radius:8px;padding:20px 22px;border-top:5px solid var(--red)}
+.result-hd{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px}
+.result-hd b{font-family:var(--slab);font-size:21px;color:var(--red)}
+.result ul{list-style:none;display:grid;gap:9px;font-size:15px}
+.result li{display:flex;gap:10px;align-items:flex-start}
+.result li .ico{color:var(--red);width:18px;height:18px;margin-top:3px}
+.result .todo{margin-top:14px;padding-top:12px;border-top:1px solid var(--line);font-size:14.5px;color:var(--muted)}
+.result .todo b{color:var(--ink)}
+.guides h3{font-size:24px;color:var(--indigo);margin-bottom:6px}
+.guides > p{color:var(--muted);margin-bottom:16px}
+.guide{display:flex;align-items:center;gap:16px;padding:16px 0;border-top:1px solid var(--line);font-weight:600;color:var(--indigo)}
+.guide:last-of-type{border-bottom:1px solid var(--line)}
+.guide .gi{width:44px;height:44px;border-radius:50%;background:#fff;display:grid;place-items:center;color:var(--green);flex:none;box-shadow:inset 0 0 0 1.5px var(--line)}
+.guide span{flex:1}
+.guide span small{display:block;font-weight:400;font-size:13.5px;color:var(--muted)}
+.guide > .ico{color:var(--muted)}
+.emerg{margin-top:22px;background:#fff;border-left:5px solid var(--red);border-radius:0 8px 8px 0;padding:16px 18px;font-size:14.5px;color:#3b3452}
+.emerg b{display:block;font-family:var(--slab);font-size:18px;color:var(--red);margin-bottom:2px}
+/* band */
+.band{position:relative;height:420px;background:var(--indigo-2);overflow:hidden;color:#fff}
+.band img{width:100%;height:100%;object-fit:cover;object-position:50% 22%}
+.band::after{content:"";position:absolute;inset:0;background:linear-gradient(0deg,rgba(19,8,38,.92) 0%,rgba(19,8,38,.25) 55%,rgba(19,8,38,.1))}
+.band .wrap{position:absolute;left:0;right:0;bottom:48px;z-index:2}
+.band h2{font-size:52px;max-width:720px}
+.band p{color:#ddd6ef;margin-top:10px;font-size:17px}
+/* social */
+.social{background:var(--indigo);color:#fff}
+.social .sec-hd h2{color:#fff}
+.social .sec-hd p{color:#c9c0e4}
+.posts{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
+.post{background:#fff;color:var(--ink);border-radius:10px;overflow:hidden;display:flex;flex-direction:column}
+.post-hd{display:flex;align-items:center;gap:10px;padding:12px 14px}
+.post-hd img{width:34px;height:34px;border-radius:50%;background:var(--indigo)}
+.post-hd div{line-height:1.2;font-size:14px;font-weight:600;flex:1}
+.post-hd small{display:block;font-weight:400;color:var(--muted);font-size:12.5px}
+.plat{font-size:11.5px;font-weight:700;padding:3px 7px;border-radius:4px;background:var(--paper);color:var(--indigo)}
+.post .pimg{aspect-ratio:4/3;background:var(--indigo-2);overflow:hidden}
+.post .pimg img{width:100%;height:100%;object-fit:cover}
+.post .ptxt{padding:12px 14px;font-size:14.5px;flex:1}
+.pthumb{position:relative;background:var(--yellow);color:var(--indigo);display:flex;flex-direction:column;justify-content:flex-end;padding:16px}
+.pthumb span{font-size:12.5px;font-weight:600}
+.pthumb b{font-family:var(--slab);font-size:34px;line-height:1}
+.pthumb i{position:absolute;right:14px;top:14px;width:44px;height:44px;border-radius:50%;background:var(--indigo);color:var(--yellow);display:grid;place-items:center}
+.pthumb i .ico{width:18px;height:18px;margin-left:2px}
+.post .ptxt.big{font-family:var(--slab);font-size:21px;line-height:1.3;color:var(--indigo);background:var(--yellow);padding:22px 18px;flex:none;aspect-ratio:4/3;display:flex;align-items:center}
+.post-ft{display:flex;gap:16px;padding:10px 14px;border-top:1px solid var(--line);font-size:13px;color:var(--muted)}
+.social-cta{text-align:center;margin-top:36px}
+/* footer */
+.ftr{background:var(--indigo-deep);color:#c9c0e4;font-size:14.5px}
+.ftr .cols{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr 1.5fr;gap:40px;padding-top:64px;padding-bottom:48px}
+.ftr h4{font-family:var(--slab);color:#fff;font-size:18px;margin-bottom:14px}
+.ftr ul{list-style:none;display:grid;gap:9px}
+.ftr a:hover{color:#fff}
+.ftr-brand img{width:72px;height:72px;border-radius:50%;margin-bottom:14px}
+.ftr-brand p{max-width:260px}
+.socials{display:flex;gap:8px;margin-top:18px}
+.socials a{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;background:rgba(255,255,255,.08);font-size:11.5px;font-weight:700;color:#fff}
+.signup p{margin-bottom:14px}
+.signup input{width:100%;height:46px;border-radius:6px;border:1.5px solid rgba(255,255,255,.18);background:rgba(255,255,255,.05);padding:0 14px;color:#fff;margin-bottom:10px}
+.signup .btn{width:100%;justify-content:center}
+.ftr-bottom{border-top:1px solid var(--line-dark);padding:18px 0;font-size:13.5px}
+.ftr-bottom .wrap{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
+.ftr-bottom nav{display:flex;gap:20px;flex-wrap:wrap}
+.ftr-bottom b{color:#fff;font-weight:600}
+
+/* ---------- mobile ---------- */
+@media (max-width:760px){
+  .wrap{padding:0 20px}
+  .alert .wrap{min-height:0;padding-top:9px;padding-bottom:9px}
+  .alert-side{display:none}
+  .alert-msg{font-size:13px;align-items:flex-start}
+  .alert-msg a{display:none}
+  .hdr .wrap{height:68px;gap:10px}
+  .brand img{width:44px;height:44px}
+  .brand-txt small{font-size:10px}
+  .brand-txt strong{font-size:17px}
+  .nav,.hdr-act .search{display:none}
+  .hdr-act{margin-left:auto}
+  .menu-btn{display:grid}
+  .hdr .btn-red{height:38px;padding:0 12px;font-size:13.5px}
+  .latest .wrap{height:40px}
+  .latest-items span:not(:first-child){display:none}
+  .latest-items{font-size:13px}
+  .hero .wrap{min-height:0;padding-top:300px;padding-bottom:28px}
+  .hero-img{left:0;bottom:auto;height:380px}
+  .hero-img img{object-position:50% 12%}
+  .hero::after{background:linear-gradient(0deg,rgba(28,13,55,1) 0%,rgba(28,13,55,1) 52%,rgba(28,13,55,.2) 72%,rgba(28,13,55,.05) 100%)}
+  .hero h1{font-size:60px;margin:14px 0 16px}
+  .hero p{font-size:16px;margin-bottom:22px}
+  .hero-ctas .btn{flex:1;justify-content:center;padding:0 12px}
+  .lower3{position:relative;right:auto;bottom:auto;width:auto;margin:0 20px 96px}
+  .l3-title h3{font-size:24px}
+  .hero.hero-live .wrap{grid-template-columns:1fr;gap:28px;min-height:0;padding-top:36px;padding-bottom:100px}
+  .hero-live h1{font-size:60px}
+  .screen .play{width:56px;height:56px}
+  .screen .g b{font-size:12.5px;padding:5px 8px}
+  .screen .g span{font-size:13px;padding:5px 8px}
+  .screen .bug{width:32px;height:32px}
+  .lower3.static{margin:12px 0 0}
+  .lower3.static .l3-title h3{font-size:22px}
+  .hero-photo .hero-img img{object-position:56% 22%}
+  .hero.hero-emblem .wrap{padding-top:330px;padding-bottom:110px}
+  .hero-emblem .hero-img{left:50%;right:auto;top:10px;width:400px;height:300px;transform:translateX(-50%)}
+  .quick .wrap{grid-template-columns:repeat(3,1fr);row-gap:22px}
+  .q{font-size:13px;gap:8px}
+  .q-ic{width:72px;height:72px;box-shadow:0 0 0 5px var(--paper),0 8px 18px rgba(28,13,55,.22)}
+  .q-ic .ico{width:28px;height:28px}
+  .sec{padding:56px 0}
+  h2{font-size:28px}
+  .sec-hd{flex-direction:column;align-items:flex-start;margin-bottom:22px}
+  .lm-panel{grid-template-columns:1fr;padding:16px;gap:16px}
+  .onair{flex-wrap:wrap;gap:6px 10px;margin-top:20px}
+  .onair .tag,.onair b{white-space:nowrap}
+  .dir .wrap{grid-template-columns:1fr;gap:32px}
+  .dir-txt{order:-1}
+  .dir-txt h2{font-size:32px;margin-bottom:14px}
+  .dir-txt p{font-size:16px}
+  .nu .wrap{grid-template-columns:1fr;gap:48px}
+  .story{grid-template-columns:1fr;gap:12px}
+  .story h3{font-size:20px}
+  .progs{grid-auto-columns:168px;gap:14px;margin-right:-20px;padding-right:20px}
+  .scam textarea{min-height:124px}
+  .result-hd{flex-direction:column;align-items:flex-start;gap:6px}
+  .dir-fig .ph{aspect-ratio:16/10}
+  .prog .art h3{font-size:24px}
+  .ps .wrap{grid-template-columns:1fr}
+  .scam{padding:24px 20px}
+  .scam h2{font-size:27px}
+  .band{height:340px}
+  .band h2{font-size:32px}
+  .band .wrap{bottom:28px}
+  .posts{grid-template-columns:repeat(4,78%);overflow-x:auto;margin-right:-20px;padding-bottom:6px}
+  .ftr .cols{grid-template-columns:1fr 1fr;gap:28px;padding-top:44px;padding-bottom:32px}
+  .ftr-brand,.signup{grid-column:1/-1}
+}
+</style>
+
+<div class="proto"><b>Prototype with demo data.</b> Stories, figures and names are fictional and not official NPF information.</div>
+
+<div class="alert"><div class="wrap">
+  <div class="alert-msg"><svg class="ico"><use href="#i-shield"/></svg><span><b>Public safety alert:</b> Police officers will never ask for your BVN, PIN or one-time password.</span> <a href="#">How to spot a scam</a></div>
+  <div class="alert-side"><span class="live-dot"></span> Broadcasting live from Abuja, 19:12 WAT</div>
+</div></div>
+
+<header class="hdr"><div class="wrap">
+  <a class="brand" href="#"><img src="https://npftv.net/brand/npftv-logo.png" alt="NPFTV emblem"><span class="brand-txt"><small>Nigeria Police Force</small><strong>Television Network</strong></span></a>
+  <nav class="nav"><a class="on" href="#">News</a><a href="#">Watch</a><a href="#">Programmes</a><a href="#">Public safety</a><a href="#">State commands</a><a href="#">About</a></nav>
+  <div class="hdr-act">
+    <button class="icon-btn search" aria-label="Search"><svg class="ico"><use href="#i-search"/></svg></button>
+    <a class="btn btn-red btn-sm" href="#"><span class="live-dot"></span> Watch live</a>
+    <button class="icon-btn menu-btn" aria-label="Menu"><svg class="ico"><use href="#i-menu"/></svg></button>
+  </div>
+</div></header>
+
+<div class="latest"><div class="wrap">
+  <span class="latest-lbl">Latest</span>
+  <div class="latest-items">
+    <span><i>19:05</i> Festive season: commands step up night patrols on major highways</span>
+    <span><i>17:40</i> Road safety: night-time travel advice for the festive season</span>
+    <span><i>15:10</i> Cyber Sense at 7:30 pm: how to spot fake loan apps</span>
+  </div>
+</div></div>
+
+<!--HERO: insert hero_emblem.html here (the chosen hero). hero_live.html and hero_photo.html are the options not chosen.-->
+
+<div class="quick"><div class="wrap">
+  <a class="q" href="#"><span class="q-ic"><svg class="ico fill"><use href="#i-play"/></svg></span>Watch live</a>
+  <a class="q" href="#"><span class="q-ic"><svg class="ico"><use href="#i-calendar"/></svg></span>Programme guide</a>
+  <a class="q" href="#"><span class="q-ic"><svg class="ico"><use href="#i-shield"/></svg><span class="tag tag-ai">AI</span></span>Scam checker</a>
+  <a class="q" href="#"><span class="q-ic"><svg class="ico"><use href="#i-phone"/></svg></span>Report a crime</a>
+  <a class="q" href="#"><span class="q-ic"><svg class="ico"><use href="#i-map"/></svg></span>State commands</a>
+  <a class="q" href="#"><span class="q-ic"><svg class="ico"><use href="#i-image"/></svg></span>Media centre</a>
+</div></div>
+
+
+<section class="sec live-mod"><div class="wrap">
+  <div class="sec-hd"><div><h2>Live on NPFTV Stream</h2><p>Watch here, or open NPFTV Stream for the full guide, catch-up and every programme on demand.</p></div><a class="link" href="#">Open NPFTV Stream <svg class="ico"><use href="#i-arrow"/></svg></a></div>
+  <div class="lm-panel">
+    <a class="screen" href="#" aria-label="Watch The Beat live">
+      <img class="still" src="https://npftv.net/media/npf-peacekeeping-parade.webp" alt="Live broadcast: officers on parade">
+      <span class="shade"></span>
+      <span class="s-live"><span class="tag tag-live"><span class="live-dot"></span> LIVE</span></span>
+      <img class="bug" src="https://npftv.net/brand/npftv-logo.png" alt="">
+      <span class="play"><svg class="ico fill"><use href="#i-play"/></svg></span>
+      <span class="g"><b>THE BEAT</b><span>Festive season: commands step up highway patrols</span></span>
+    </a>
+    <div class="lm-side">
+      <div class="lower3 static">
+        <div class="l3-top"><span class="tag tag-live"><span class="live-dot"></span> On air now</span><span>12,480 watching</span></div>
+        <div class="l3-title"><h3>The Beat</h3><span>National news at seven</span></div>
+        <div class="l3-bar"><i></i></div>
+        <div class="l3-meta"><span>19:00</span><span>18 min left</span><span>19:30</span></div>
+      </div>
+      <ul class="lm-next">
+        <li><b>19:30</b><span>Cyber Sense<small>Spotting fake loan apps</small></span></li>
+        <li><b>20:00</b><span>Community Watch<small>Repeat of Sunday's edition</small></span></li>
+        <li><b>20:30</b><span>In Conversation<small>Policing the festive season</small></span></li>
+      </ul>
+      <div class="lm-cta"><a class="btn btn-yellow" href="#"><svg class="ico fill"><use href="#i-play"/></svg> Open NPFTV Stream</a><small>Also at stream.npftv.net</small></div>
+    </div>
+  </div>
+</div></section>
+
+<section class="sec dir"><div class="wrap">
+  <figure class="dir-fig">
+    <div class="ph"><img src="https://npftv.net/media/npftv-emblem-plate.webp" alt="NPFTV emblem"></div>
+    <figcaption>Network Director<small>Nigeria Police Force Television</small></figcaption>
+  </figure>
+  <div class="dir-txt">
+    <h2>A message from the Network Director</h2>
+    <p>NPFTV exists so that every Nigerian can see, hear and understand the work of their police. We report what is verified, we explain what it means for your safety, and we give you a clear way to talk back.</p>
+    <p>Watch us live, catch up on any programme, and use our public safety tools whenever you need them. Thank you for watching.</p>
+    <div class="sig">The Network Director, NPFTV</div>
+    <a class="btn btn-line" href="#">About NPFTV <svg class="ico"><use href="#i-arrow"/></svg></a>
+  </div>
+</div></section>
+
+<section class="sec nu"><div class="wrap">
+  <div>
+    <div class="sec-hd"><h2>News and press releases</h2><a class="link" href="#">All news <svg class="ico"><use href="#i-arrow"/></svg></a></div>
+    <article class="story">
+      <div class="th"><img src="https://npftv.net/media/npf-eod-unit.webp" alt="Bomb disposal officers in protective suits"></div>
+      <div><div class="meta"><span class="cat">Operations</span><span>21 November 2026</span></div>
+        <h3>Bomb disposal unit completes advanced field certification</h3>
+        <p>Officers finished a six-week course covering detection, safe handling and community evacuation drills.</p>
+        <a class="link" href="#">Read story</a></div>
+    </article>
+    <article class="story">
+      <div class="th"><img src="https://npftv.net/media/npf-peacekeeping-parade.webp" alt="Officers in blue helmets on parade"></div>
+      <div><div class="meta"><span class="cat">International</span><span>19 November 2026</span></div>
+        <h3>Formed police unit prepares for peacekeeping posting</h3>
+        <p>The contingent completed pre-deployment training in Abuja ahead of an international peacekeeping mission.</p>
+        <a class="link" href="#">Read story</a></div>
+    </article>
+    <article class="story">
+      <div class="th"><div class="th-graphic"><svg class="ico"><use href="#i-message"/></svg></div></div>
+      <div><div class="meta"><span class="cat">Public safety</span><span>18 November 2026</span></div>
+        <h3>Five signs a text message is a scam</h3>
+        <p>Urgency, a link you didn't expect and a request for your PIN or OTP are the commonest warning signs.</p>
+        <a class="link" href="#">Read story</a></div>
+    </article>
+  </div>
+  <div>
+    <div class="sec-hd"><h2>Upcoming broadcasts</h2><a class="link" href="#">Full schedule <svg class="ico"><use href="#i-arrow"/></svg></a></div>
+    <div class="up">
+      <div class="date"><small>Nov</small><b>26</b></div>
+      <div><span class="tag tag-feat">Live event</span>
+        <h4>Press briefing from Force Headquarters</h4>
+        <ul><li><svg class="ico"><use href="#i-clock"/></svg>Thursday, 11:00 to 12:00 WAT</li><li><svg class="ico"><use href="#i-pin"/></svg>Force Headquarters, Abuja</li></ul>
+        <div class="up-tags"><a class="btn btn-indigo btn-sm" href="#"><svg class="ico"><use href="#i-bell"/></svg>Remind me</a></div></div>
+    </div>
+    <div class="up">
+      <div class="date"><small>Nov</small><b>28</b></div>
+      <div><span class="tag tag-soft">Safe Nigeria</span>
+        <h4>Travelling safely this festive season</h4>
+        <ul><li><svg class="ico"><use href="#i-clock"/></svg>Saturday, 17:00 WAT</li><li><svg class="ico"><use href="#i-pin"/></svg>Studio A, Abuja</li></ul>
+        <div class="up-tags"><a class="btn btn-line btn-sm" href="#"><svg class="ico"><use href="#i-bell"/></svg>Remind me</a></div></div>
+    </div>
+    <div class="up">
+      <div class="date"><small>Dec</small><b>01</b></div>
+      <div><span class="tag tag-soft">Premiere</span>
+        <h4>The Force in Focus: inside the Air Wing</h4>
+        <ul><li><svg class="ico"><use href="#i-clock"/></svg>Tuesday, 20:00 WAT</li><li><svg class="ico"><use href="#i-film"/></svg>Documentary, 48 minutes</li></ul>
+        <div class="up-tags"><a class="btn btn-line btn-sm" href="#"><svg class="ico"><use href="#i-bell"/></svg>Remind me</a></div></div>
+    </div>
+  </div>
+</div></section>
+
+<section class="sec"><div class="wrap">
+  <div class="sec-hd"><div><h2>Programmes</h2><p>Every NPFTV show, with full episodes on demand.</p></div><a class="link" href="#">All programmes <svg class="ico"><use href="#i-arrow"/></svg></a></div>
+  <div class="progs">
+    <a class="prog" href="#"><div class="art a1"><small>National news</small><span class="mk"></span><h3>The Beat</h3></div><p>The Beat<span>Weeknights, 7:00 pm</span></p></a>
+    <a class="prog" href="#"><div class="art a2"><small>Citizen education</small><span class="mk"></span><h3>Safe Nigeria</h3></div><p>Safe Nigeria<span>Saturdays, 5:00 pm</span></p></a>
+    <a class="prog" href="#"><div class="art a3"><small>Community policing</small><span class="mk"></span><h3>Community Watch</h3></div><p>Community Watch<span>Sundays, 4:00 pm</span></p></a>
+    <a class="prog" href="#"><div class="art a4"><img src="https://npftv.net/media/npf-eod-unit.webp" alt=""><small>Documentary</small><h3>The Force in Focus</h3></div><p>The Force in Focus<span>Monthly premiere</span></p></a>
+    <a class="prog" href="#"><div class="art a5"><span class="mk"></span><small>Digital safety</small><h3>Cyber Sense</h3></div><p>Cyber Sense<span>Mondays and Wednesdays, 7:30 pm</span></p></a>
+    <a class="prog" href="#"><div class="art a6"><small>Interviews</small><span class="mk"></span><h3>In Conversation</h3></div><p>In Conversation<span>Mondays and Fridays, 8:30 pm</span></p></a>
+  </div>
+</div></section>
+
+<section class="sec ps" style="padding-top:0"><div class="wrap">
+  <div class="scam">
+    <span class="tag tag-ai"><svg class="ico" style="width:14px;height:14px"><use href="#i-spark"/></svg> AI scam checker</span>
+    <h2>Is this message a scam?</h2>
+    <p>Paste a text, WhatsApp or email message. We'll point out the warning signs in plain language. Nothing you paste is stored.</p>
+    <textarea aria-label="Message to check">URGENT: Your BVN has been blocked. Verify now at bvn-update-ng.co or your account will be closed in 24hrs. Send the OTP you receive to confirm.</textarea>
+    <div class="scam-row"><button class="btn btn-yellow"><svg class="ico"><use href="#i-shield"/></svg> Check message</button><small>AI can make mistakes. If in doubt, call your bank on the number on your card.</small></div>
+    <div class="result">
+      <div class="result-hd"><b>Very likely a scam</b><span class="tag" style="background:#fde3e5;color:var(--red)">3 warning signs</span></div>
+      <ul>
+        <li><svg class="ico"><use href="#i-alert"/></svg>It rushes you with a 24-hour deadline.</li>
+        <li><svg class="ico"><use href="#i-alert"/></svg>The link doesn't belong to your bank or the Central Bank.</li>
+        <li><svg class="ico"><use href="#i-alert"/></svg>It asks for your OTP. No bank or police officer will ever ask for it.</li>
+      </ul>
+      <p class="todo"><b>What to do:</b> don't reply or click the link. Delete the message and tell your bank.</p>
+    </div>
+  </div>
+  <div class="guides">
+    <h3>Public safety guides</h3>
+    <p>Practical advice, checked by the Force.</p>
+    <a class="guide" href="#"><span class="gi"><svg class="ico"><use href="#i-home"/></svg></span><span>Protecting your home<small>Locks, lighting and neighbourhood watch</small></span><svg class="ico"><use href="#i-chev"/></svg></a>
+    <a class="guide" href="#"><span class="gi"><svg class="ico"><use href="#i-shield"/></svg></span><span>Keeping your OTP safe<small>Who can ask for it (nobody)</small></span><svg class="ico"><use href="#i-chev"/></svg></a>
+    <a class="guide" href="#"><span class="gi"><svg class="ico"><use href="#i-truck"/></svg></span><span>Night-time road travel<small>Plan, share your route, avoid stops</small></span><svg class="ico"><use href="#i-chev"/></svg></a>
+    <a class="guide" href="#"><span class="gi"><svg class="ico"><use href="#i-phone"/></svg></span><span>How to report a crime<small>Your nearest station and what to bring</small></span><svg class="ico"><use href="#i-chev"/></svg></a>
+    <div class="emerg"><b>This website is not an emergency line</b>If you or someone else is in danger now, call 112.</div>
+  </div>
+</div></section>
+
+<section class="band">
+  <img src="https://npftv.net/media/npf-peacekeeping-parade.webp" alt="Police officers on parade">
+  <div class="wrap"><h2>Telling the police story, from every state</h2><p>Reporting from the 36 states and the Federal Capital Territory.</p></div>
+</section>
+
+<section class="sec social"><div class="wrap">
+  <div class="sec-hd"><div><h2>From our channels</h2><p>Highlights from NPFTV on YouTube, X, Instagram and Facebook.</p></div></div>
+  <div class="posts">
+    <article class="post"><div class="post-hd"><img src="https://npftv.net/brand/npftv-logo.png" alt=""><div>NPF Television<small>2 hours ago</small></div><span class="plat">YouTube</span></div>
+      <div class="pimg pthumb"><span>Behind the scenes</span><b>The Beat</b><i><svg class="ico fill"><use href="#i-play"/></svg></i></div>
+      <p class="ptxt">Behind the scenes: how The Beat gets on air every weeknight.</p>
+      <div class="post-ft"><span>3.2K views</span><span>146 likes</span></div></article>
+    <article class="post"><div class="post-hd"><img src="https://npftv.net/brand/npftv-logo.png" alt=""><div>NPF Television<small>4 hours ago</small></div><span class="plat">X</span></div>
+      <p class="ptxt big">Police officers will never ask for your OTP. If someone does, end the call.</p>
+      <p class="ptxt">Share this with someone who needs it.</p>
+      <div class="post-ft"><span>1.8K reposts</span><span>412 replies</span></div></article>
+    <article class="post"><div class="post-hd"><img src="https://npftv.net/brand/npftv-logo.png" alt=""><div>NPF Television<small>Yesterday</small></div><span class="plat">Instagram</span></div>
+      <div class="pimg"><img src="https://npftv.net/media/npf-eod-unit.webp" alt=""></div>
+      <p class="ptxt">Precision, patience and 35 kg of protective gear. Meet the bomb disposal unit.</p>
+      <div class="post-ft"><span>5.6K likes</span><span>230 comments</span></div></article>
+    <article class="post"><div class="post-hd"><img src="https://npftv.net/brand/npftv-logo.png" alt=""><div>NPF Television<small>Yesterday</small></div><span class="plat">Facebook</span></div>
+      <div class="pimg"><img src="https://npftv.net/media/npftv-emblem-plate.webp" alt=""></div>
+      <p class="ptxt">Tonight at 7: The Beat, live from Abuja. Watch on NPFTV Stream.</p>
+      <div class="post-ft"><span>980 reactions</span><span>64 shares</span></div></article>
+  </div>
+  <div class="social-cta"><a class="btn btn-yellow" href="#">See all channels</a></div>
+</div></section>
+
+<footer class="ftr">
+  <div class="flag-stripe"></div>
+  <div class="wrap cols">
+    <div class="ftr-brand"><img src="https://npftv.net/brand/npftv-logo.png" alt="NPFTV emblem"><p>Nigeria Police Force Television Network. Inform. Educate. Inspire.</p>
+      <div class="socials"><a href="#" aria-label="YouTube">YT</a><a href="#" aria-label="X">X</a><a href="#" aria-label="Instagram">IG</a><a href="#" aria-label="Facebook">FB</a><a href="#" aria-label="TikTok">TT</a></div></div>
+    <div><h4>Watch</h4><ul><li><a href="#">Live TV</a></li><li><a href="#">Programme guide</a></li><li><a href="#">On demand</a></li><li><a href="#">Podcasts</a></li></ul></div>
+    <div><h4>News</h4><ul><li><a href="#">Latest</a></li><li><a href="#">State commands</a></li><li><a href="#">Press releases</a></li><li><a href="#">Media centre</a></li></ul></div>
+    <div><h4>Public safety</h4><ul><li><a href="#">Scam checker</a></li><li><a href="#">Safety guides</a></li><li><a href="#">Alerts</a></li><li><a href="#">Report a crime</a></li></ul></div>
+    <div class="signup"><h4>Stay informed</h4><p>Get public safety alerts and programme reminders by email.</p><input type="email" placeholder="Your email address" aria-label="Email address"><button class="btn btn-yellow">Subscribe</button></div>
+  </div>
+  <div class="ftr-bottom"><div class="wrap"><span>© 2026 Nigeria Police Force Television. <b>Not an emergency service: call 112.</b></span><nav><a href="#">Privacy</a><a href="#">Terms</a><a href="#">Editorial standards</a><a href="#">npf.gov.ng</a></nav></div></div>
+</footer>

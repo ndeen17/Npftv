@@ -1,0 +1,12 @@
+node_modules/
+.next/
+.env.local
+.env*.local
+.vercel/
+*.log
+.DS_Store
+next-env.d.ts
+*.tsbuildinfo
+
+# Original starter-kit archive (kept locally as a backup)
+*.zip

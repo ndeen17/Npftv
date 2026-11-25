@@ -1,0 +1,201 @@
+<style>
+body{background:#0f0720;color:#ece8f7}
+.s-top{display:flex;align-items:center;gap:28px;height:72px;padding:0 32px;border-bottom:1px solid var(--line-dark);background:#130826}
+.s-brand{display:flex;align-items:center;gap:10px;font-family:var(--slab);font-weight:700;font-size:21px;color:#fff}
+.s-brand img{width:40px;height:40px;border-radius:50%;background:var(--indigo)}
+.s-brand span{color:var(--yellow)}
+.s-nav{display:flex;gap:6px;font-weight:500;font-size:15px}
+.s-nav a{padding:8px 14px;border-radius:20px;color:#bdb3da}
+.s-nav a.on{background:rgba(255,255,255,.1);color:#fff}
+.s-nav a.on .live-dot{color:var(--red);margin-right:6px}
+.s-right{margin-left:auto;display:flex;align-items:center;gap:14px;font-size:14px;color:#bdb3da}
+.s-search{display:flex;align-items:center;gap:8px;height:40px;width:260px;white-space:nowrap;border-radius:20px;background:rgba(255,255,255,.07);padding:0 14px;color:#8f86ad}
+.s-search .ico{width:18px;height:18px}
+.s-main{display:grid;grid-template-columns:1fr 344px;gap:24px;padding:24px 32px}
+.player{position:relative;aspect-ratio:16/9;border-radius:10px;overflow:hidden;background:#000}
+.player > img.still{width:100%;height:100%;object-fit:cover;object-position:50% 40%}
+.p-shade{position:absolute;inset:0;background:linear-gradient(0deg,rgba(0,0,0,.75) 0%,rgba(0,0,0,0) 30%),linear-gradient(180deg,rgba(0,0,0,.45) 0%,rgba(0,0,0,0) 18%)}
+.p-live{position:absolute;left:18px;top:16px;display:flex;gap:8px;align-items:center}
+.p-live .tag{font-size:12.5px}
+.p-live span.cnt{font-size:13px;color:#fff;background:rgba(0,0,0,.45);padding:3px 8px;border-radius:4px}
+.p-bug{position:absolute;right:18px;top:14px;width:52px;height:52px;border-radius:50%;opacity:.9;background:var(--indigo)}
+/* on-screen TV graphic */
+.tvg{position:absolute;left:40px;bottom:132px;display:flex;align-items:stretch;box-shadow:0 6px 18px rgba(0,0,0,.35)}
+.tvg-tag{background:var(--yellow);color:var(--indigo);font-family:var(--slab);font-weight:700;font-size:20px;padding:10px 14px;display:flex;align-items:center}
+.tvg-txt{background:var(--indigo);color:#fff;padding:8px 18px;max-width:560px}
+.tvg-txt b{display:block;font-family:var(--slab);font-size:21px;line-height:1.2}
+.tvg-txt small{font-size:13px;color:#c9c0e4}
+.cap{position:absolute;left:50%;transform:translateX(-50%);bottom:74px;background:rgba(0,0,0,.78);color:#fff;font-size:18px;padding:6px 12px;border-radius:3px;white-space:nowrap}
+.ctrl{position:absolute;left:0;right:0;bottom:0;display:flex;align-items:center;gap:16px;padding:14px 18px;color:#fff;font-size:14px}
+.ctrl .ico{width:22px;height:22px}
+.ctrl .grow{flex:1;height:4px;border-radius:2px;background:rgba(255,255,255,.25);position:relative}
+.ctrl .grow i{position:absolute;inset:0;background:var(--red);border-radius:2px}
+.ctrl .lv{display:flex;align-items:center;gap:6px;font-weight:700;color:#fff}
+.ctrl .lv .live-dot{color:var(--red)}
+.ctrl .on{color:var(--yellow)}
+.ctrl .q{font-size:13px;padding:3px 8px;border:1px solid rgba(255,255,255,.35);border-radius:4px}
+.p-below{display:flex;align-items:flex-start;justify-content:space-between;gap:24px;padding:20px 4px 0}
+.p-below h1{font-size:34px;color:#fff}
+.p-below p{color:#bdb3da;margin-top:6px;max-width:620px}
+.p-acts{display:flex;gap:10px;flex:none}
+.chap{margin-top:22px}
+.chap h3{font-size:17px;color:#fff;display:flex;gap:8px;align-items:center;margin-bottom:10px}
+.chap h3 .ico{width:16px;height:16px;color:var(--yellow)}
+.chap h3 small{font-family:var(--sans);font-weight:400;font-size:13px;color:#8f86ad;margin-left:6px}
+.chaps{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.chaps a{background:#1a0e33;border:1px solid var(--line-dark);border-radius:8px;padding:12px;font-size:14px;color:#e4def5;line-height:1.35}
+.chaps a b{display:block;font-stretch:75%;color:var(--yellow);font-size:13px;margin-bottom:4px}
+.chaps a.cur{border-color:var(--yellow)}
+.chaps a.cur b::after{content:" now";color:var(--red)}
+.btn-dark{background:rgba(255,255,255,.08);color:#fff}
+/* side */
+.side{display:flex;flex-direction:column;gap:16px}
+.card{background:#1a0e33;border:1px solid var(--line-dark);border-radius:10px;padding:18px}
+.card h3{font-size:18px;color:#fff;display:flex;align-items:center;gap:8px}
+.card h3 .ico{color:var(--yellow);width:18px;height:18px}
+.now-t{display:flex;justify-content:space-between;font-size:13px;color:#a79dc7;margin-top:12px}
+.bar{height:4px;background:rgba(255,255,255,.12);border-radius:2px;margin:8px 0 4px;overflow:hidden}
+.bar i{display:block;height:100%;width:42%;background:var(--yellow)}
+.ai-card{background:linear-gradient(180deg,#2a1752,#1a0e33);border-color:rgba(245,197,24,.35)}
+.ai-card p.sub{font-size:13.5px;color:#a79dc7;margin:4px 0 12px}
+.ai-card ul{list-style:none;display:grid;gap:10px;font-size:14.5px;color:#e4def5}
+.ai-card li{display:grid;grid-template-columns:44px 1fr;gap:8px}
+.ai-card li span{font-stretch:75%;color:var(--yellow);font-weight:600;font-size:13px;padding-top:2px}
+.ai-card .foot{margin-top:14px;font-size:12px;color:#8f86ad;display:flex;gap:6px;align-items:center}
+.next{list-style:none;margin-top:10px}
+.next li{display:grid;grid-template-columns:52px 1fr auto;gap:10px;align-items:center;padding:10px 0;border-top:1px solid var(--line-dark);font-size:14.5px}
+.next li:first-child{border-top:0}
+.next li b{font-stretch:75%;font-size:14px;color:#a79dc7;font-weight:600}
+.next li small{display:block;color:#8f86ad;font-size:12.5px}
+.next .icon-b{width:32px;height:32px;border-radius:50%;display:grid;place-items:center;background:rgba(255,255,255,.07);color:#cfc6ea}
+.next .icon-b .ico{width:16px;height:16px}
+/* EPG */
+.epg{padding:8px 32px 0}
+.epg-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.epg-hd h2{font-size:24px;color:#fff}
+.days{display:flex;gap:6px}
+.days a{padding:7px 14px;border-radius:18px;font-size:14px;color:#bdb3da;background:rgba(255,255,255,.05)}
+.days a.on{background:var(--yellow);color:var(--indigo);font-weight:600}
+.tl{position:relative;border-radius:10px;background:#1a0e33;border:1px solid var(--line-dark);padding:0 0 14px;overflow:hidden}
+.tl-times{display:grid;grid-template-columns:repeat(10,1fr);font-size:12.5px;color:#8f86ad;font-stretch:80%;border-bottom:1px solid var(--line-dark)}
+.tl-times span{padding:8px 10px;border-left:1px solid var(--line-dark)}
+.tl-times span:first-child{border-left:0}
+.tl-row{display:grid;grid-template-columns:repeat(20,1fr);gap:4px;padding:12px 10px 0}
+.slot{border-radius:6px;padding:10px 10px;background:#24153f;font-size:13.5px;min-height:64px;line-height:1.3}
+.slot b{display:block;color:#fff;font-size:14px}
+.slot small{color:#a79dc7;font-size:12px}
+.slot.past{opacity:.55}
+.slot.now{background:var(--yellow);color:var(--indigo)}
+.slot.now b,.slot.now small{color:var(--indigo)}
+.slot.ev{box-shadow:inset 0 0 0 1.5px var(--green-2)}
+.nowline{position:absolute;top:0;bottom:0;left:24%;width:2px;background:var(--red)}
+.nowline::before{content:"Now 19:12";position:absolute;top:6px;left:6px;font-size:11.5px;font-weight:700;background:var(--red);color:#fff;padding:1px 6px;border-radius:3px;white-space:nowrap}
+/* rail */
+.rail{padding:28px 32px 40px}
+.rail h2{font-size:24px;color:#fff;margin-bottom:14px}
+.eps{display:grid;grid-template-columns:repeat(5,1fr);gap:16px}
+.ep .th{aspect-ratio:16/9;border-radius:8px;overflow:hidden;position:relative;display:flex;align-items:flex-end;padding:12px}
+.ep .th img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.7}
+.ep .th h4{position:relative;font-size:20px;line-height:1.05}
+.ep .dur{position:absolute;right:8px;bottom:8px;font-size:12px;background:rgba(0,0,0,.65);color:#fff;padding:1px 6px;border-radius:3px;font-stretch:80%}
+.ep p{font-size:14.5px;margin-top:8px;color:#fff;font-weight:500;line-height:1.35}
+.ep p small{display:block;color:#8f86ad;font-size:12.5px;font-weight:400;margin-top:2px}
+.ep .prog-bar{position:absolute;left:0;right:0;bottom:0;height:3px;background:var(--yellow)}
+.t1{background:var(--yellow);color:var(--indigo)}.t2{background:var(--green);color:#fff}.t3{background:var(--indigo-3);color:#fff}.t4{background:#000;color:#fff}.t5{background:#2a1752;color:#fff}
+</style>
+
+<div class="proto"><b>Prototype with demo data.</b> Programmes, figures and captions are fictional.</div>
+<header class="s-top">
+  <a class="s-brand" href="#"><img src="https://npftv.net/brand/npftv-logo.png" alt="">NPFTV <span>Stream</span></a>
+  <nav class="s-nav"><a class="on" href="#"><span class="live-dot"></span>Live</a><a href="#">Guide</a><a href="#">On demand</a><a href="#">Programmes</a><a href="#">Podcasts</a></nav>
+  <div class="s-right"><div class="s-search"><svg class="ico"><use href="#i-search"/></svg>Search programmes</div><a href="#">npftv.net</a></div>
+</header>
+
+<div class="s-main">
+  <div>
+    <div class="player">
+      <img class="still" src="https://npftv.net/media/npf-peacekeeping-parade.webp" alt="Live broadcast still">
+      <div class="p-shade"></div>
+      <div class="p-live"><span class="tag tag-live"><span class="live-dot"></span> LIVE</span><span class="cnt">12,480 watching</span></div>
+      <img class="p-bug" src="https://npftv.net/brand/npftv-logo.png" alt="">
+      <div class="tvg"><div class="tvg-tag">THE BEAT</div><div class="tvg-txt"><b>Festive season: commands step up highway patrols</b><small>Reporting from Abuja</small></div></div>
+      <div class="cap">…patrols will increase on major highways from next week, especially at night.</div>
+      <div class="ctrl">
+        <svg class="ico fill"><use href="#i-pause"/></svg>
+        <svg class="ico"><use href="#i-volume"/></svg>
+        <span class="lv"><span class="live-dot"></span>LIVE</span>
+        <span class="grow"><i></i></span>
+        <svg class="ico on"><use href="#i-cc"/></svg>
+        <span class="q">Auto 720p</span>
+        <svg class="ico"><use href="#i-expand"/></svg>
+      </div>
+    </div>
+    <div class="p-below">
+      <div><h1>The Beat</h1><p>National news at seven. Tonight: festive travel safety, night-time road advice, and a warning about fake loan apps.</p></div>
+      <div class="p-acts"><a class="btn btn-dark btn-sm" href="#"><svg class="ico"><use href="#i-list"/></svg>Programme page</a><a class="btn btn-dark btn-sm" href="#"><svg class="ico"><use href="#i-send"/></svg>Share</a></div>
+    </div>
+    <div class="chap"><h3><svg class="ico"><use href="#i-spark"/></svg>Tonight's stories<small>Chapters added by AI as the programme airs</small></h3>
+      <div class="chaps">
+        <a href="#"><b>19:01</b>Festive season highway patrols</a>
+        <a href="#"><b>19:05</b>Road safety: night-time travel advice</a>
+        <a href="#"><b>19:09</b>Warning: fake loan apps</a>
+        <a class="cur" href="#"><b>19:11</b>Bomb disposal unit certified</a>
+      </div></div>
+  </div>
+
+  <aside class="side">
+    <div class="card">
+      <h3>On now</h3>
+      <div style="font-family:var(--slab);font-size:22px;color:#fff;margin-top:8px">The Beat</div>
+      <div class="bar"><i></i></div>
+      <div class="now-t" style="margin-top:0"><span>19:00</span><span>18 min left</span><span>19:30</span></div>
+    </div>
+    <div class="card ai-card">
+      <h3><svg class="ico"><use href="#i-spark"/></svg>Catch me up</h3>
+      <p class="sub">Joined late? Here's what you missed in the first 12 minutes.</p>
+      <ul>
+        <li><span>19:01</span>Commands will increase night patrols on major highways through the festive season.</li>
+        <li><span>19:05</span>Night-time travel advice for the festive season: plan your route and avoid unofficial stops.</li>
+        <li><span>19:09</span>Viewers warned about loan apps that demand access to phone contacts.</li>
+      </ul>
+      <div class="foot"><svg class="ico" style="width:14px;height:14px"><use href="#i-spark"/></svg>Written by AI from the live captions. Check the full report for details.</div>
+    </div>
+    <div class="card">
+      <h3>Up next</h3>
+      <ul class="next">
+        <li><b>19:30</b><span>Cyber Sense<small>Spotting fake loan apps</small></span><a class="icon-b" href="#" aria-label="Remind me"><svg class="ico"><use href="#i-bell"/></svg></a></li>
+        <li><b>20:00</b><span>Community Watch<small>Repeat: Sunday's edition</small></span><a class="icon-b" href="#" aria-label="Remind me"><svg class="ico"><use href="#i-bell"/></svg></a></li>
+        <li><b>20:30</b><span>In Conversation<small>Policing the festive season</small></span><a class="icon-b" href="#" aria-label="Remind me"><svg class="ico"><use href="#i-bell"/></svg></a></li>
+      </ul>
+    </div>
+  </aside>
+</div>
+
+<section class="epg">
+  <div class="epg-hd"><h2>Programme guide</h2><div class="days"><a class="on" href="#">Today, Mon 23</a><a href="#">Tue 24</a><a href="#">Wed 25</a><a href="#">Thu 26</a><a href="#">Fri 27</a><a href="#">Sat 28</a><a href="#">Sun 29</a></div></div>
+  <div class="tl">
+    <div class="tl-times"><span>18:00</span><span>18:30</span><span>19:00</span><span>19:30</span><span>20:00</span><span>20:30</span><span>21:00</span><span>21:30</span><span>22:00</span><span>22:30</span></div>
+    <div class="tl-row">
+      
+      <div class="slot past" style="grid-column:span 4"><b>The Force in Focus</b><small>Policing history, part 2</small></div>
+      <div class="slot now" style="grid-column:span 2"><b>The Beat</b><small>Live</small></div>
+      <div class="slot" style="grid-column:span 2"><b>Cyber Sense</b><small>Fake loan apps</small></div>
+      <div class="slot" style="grid-column:span 2"><b>Community Watch</b><small>Repeat</small></div>
+      <div class="slot" style="grid-column:span 2"><b>In Conversation</b><small>Festive policing</small></div>
+      <div class="slot" style="grid-column:span 4"><b>The Beat: late edition</b><small>News and the day in review</small></div>
+      <div class="slot" style="grid-column:span 4"><b>Overnight replay</b><small>Today's best</small></div>
+    </div>
+    <div class="nowline"></div>
+  </div>
+</section>
+
+<section class="rail">
+  <h2>Latest on demand</h2>
+  <div class="eps">
+    <a class="ep" href="#"><div class="th t4"><img src="https://npftv.net/media/npf-eod-unit.webp" alt=""><h4>The Force in Focus</h4><span class="dur">48:10</span><span class="prog-bar" style="right:35%"></span></div><p>Inside the bomb disposal unit<small>Documentary, 16 Nov</small></p></a>
+    <a class="ep" href="#"><div class="th t1"><h4>The Beat</h4><span class="dur">29:40</span></div><p>Sunday 22 November<small>National news</small></p></a>
+    <a class="ep" href="#"><div class="th t2"><h4>Safe Nigeria</h4><span class="dur">26:05</span></div><p>Fire safety in markets<small>Citizen education, 21 Nov</small></p></a>
+    <a class="ep" href="#"><div class="th t3"><h4>Community Watch</h4><span class="dur">27:30</span></div><p>Neighbourhood watch groups in Enugu<small>Community policing, 22 Nov</small></p></a>
+    <a class="ep" href="#"><div class="th t5"><h4>The Insight Podcast</h4><span class="dur">41:12</span></div><p>Police and the people<small>Podcast, 20 Nov</small></p></a>
+  </div>
+</section>
