@@ -32,6 +32,7 @@ function SearchInner() {
       ...episodes.map((e) => ({ id: e.id, kind: "episode" as const, title: `${programmeById(e.programmeId)?.title}: ${e.title}`, text: e.summary, href: `/stream/episode/${e.id}` })),
       ...rightsTopics.map((t) => ({ id: t.id, kind: "rights" as const, title: t.title, text: `${t.situation}. ${t.inShort.join(" ")} ${t.keywords.join(" ")}`, href: `/rights/${t.id}` })),
       { id: "investigations", kind: "rights" as const, title: "How investigations work", text: "report crime statement investigating police officer IPO CID case file court follow up", href: "/rights/investigations" },
+      { id: "scam-assistant", kind: "guide" as const, title: "Scam assistant: is this a scam?", text: "scam fraud romance lover online money customs parcel fake police EFCC arrest job visa loan app investment double money crypto OTP BVN PIN call message", href: "/safety/scam-check" },
       { id: "send-a-report", kind: "guide" as const, title: "Send a report to NPFTV", text: "report flood fire crash road accident building collapse power line unrest community event happening near me tell the newsroom public awareness", href: "/safety/report" },
       { id: "track-a-report", kind: "guide" as const, title: "Track a report", text: "track my report reference number status newsroom", href: "/track" },
       { id: "complaints", kind: "rights" as const, title: "Complaints about officers", text: "complain complaint officer bribe extortion brutality Complaint Response Unit CRU NHRC Police Service Commission", href: "/rights/complaints" },

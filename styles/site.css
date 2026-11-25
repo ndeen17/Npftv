@@ -2181,6 +2181,332 @@
       margin: 0 0 14px;
     }
 
+    /* ---------- scam assistant chat (v2) ---------- */
+    .scam-chat {
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      min-height: 560px;
+      box-shadow: 0 16px 40px rgba(28, 13, 55, 0.06);
+    }
+    .sc-hd {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 18px;
+      background: var(--indigo);
+      color: #fff;
+    }
+    .sc-hd > div {
+      flex: 1;
+      line-height: 1.2;
+    }
+    .sc-hd b {
+      font-family: var(--slab);
+      font-size: 19px;
+    }
+    .sc-hd small {
+      display: flex;
+      gap: 5px;
+      align-items: center;
+      color: #c9c0e4;
+      font-size: 12.5px;
+      margin-top: 2px;
+    }
+    .sc-hd .mini {
+      background: rgba(255, 255, 255, 0.12);
+      color: #fff;
+      border-color: transparent;
+    }
+    .sc-hd .mini:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+    .sc-av {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: var(--yellow);
+      color: var(--indigo);
+      display: grid;
+      place-items: center;
+      flex: none;
+    }
+    .sc-emerg {
+      margin: 12px 16px 0;
+    }
+    .sc-log {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      padding: 18px;
+      background: linear-gradient(180deg, #faf9fc, #fff 120px);
+    }
+    .bubble {
+      max-width: 86%;
+      padding: 11px 14px;
+      font-size: 15.5px;
+      line-height: 1.5;
+      border-radius: 14px;
+      white-space: pre-line;
+    }
+    .bubble.assistant {
+      align-self: flex-start;
+      background: var(--paper);
+      color: var(--ink);
+      border-bottom-left-radius: 4px;
+    }
+    .bubble.user {
+      align-self: flex-end;
+      background: var(--indigo);
+      color: #fff;
+      border-bottom-right-radius: 4px;
+    }
+    .bubble.typing {
+      display: flex;
+      gap: 5px;
+      padding: 14px 16px;
+    }
+    .bubble.typing span {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #a79dc7;
+      animation: blink 1.2s infinite ease-in-out;
+    }
+    .bubble.typing span:nth-child(2) {
+      animation-delay: 0.2s;
+    }
+    .bubble.typing span:nth-child(3) {
+      animation-delay: 0.4s;
+    }
+    .sc-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .sc-chips .chip {
+      height: auto;
+      min-height: 38px;
+      padding: 8px 14px;
+      white-space: normal;
+      text-align: left;
+      line-height: 1.3;
+    }
+    .sc-chips .chip:hover {
+      box-shadow: inset 0 0 0 1.5px var(--indigo);
+    }
+    .sc-input {
+      border-top: 1px solid var(--line);
+      padding: 12px 14px;
+      background: #fff;
+    }
+    .sc-row {
+      display: flex;
+      gap: 8px;
+      align-items: flex-end;
+    }
+    .sc-row textarea {
+      flex: 1;
+      min-height: 48px;
+      max-height: 140px;
+      border: 1.5px solid var(--line);
+      border-radius: 10px;
+      padding: 12px 14px;
+      font-size: 15.5px;
+      line-height: 1.4;
+      resize: vertical;
+    }
+    .sc-row textarea:focus {
+      border-color: var(--indigo);
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(245, 197, 24, 0.45);
+    }
+    .sc-row .btn {
+      width: 48px;
+      padding: 0;
+      justify-content: center;
+    }
+    .sc-warn {
+      display: flex;
+      gap: 8px;
+      align-items: flex-start;
+      font-size: 13.5px;
+      color: #8a1a24;
+      background: #fff5f6;
+      border: 1px solid #f3c4c8;
+      border-radius: 8px;
+      padding: 8px 10px;
+      margin-bottom: 8px;
+    }
+    .sc-warn .ico {
+      width: 16px;
+      height: 16px;
+      margin-top: 2px;
+      color: var(--red);
+    }
+    .sc-progress {
+      display: block;
+      margin-top: 6px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+    .risk-card {
+      border: 1px solid var(--line);
+      border-top: 6px solid var(--yellow-deep);
+      border-radius: 12px;
+      background: #fff;
+      padding: 18px;
+      display: grid;
+      gap: 14px;
+      margin-top: 4px;
+    }
+    .risk-card.high {
+      border-top-color: var(--red);
+    }
+    .risk-card.low {
+      border-top-color: var(--green);
+    }
+    .rc-hd {
+      display: grid;
+      gap: 6px;
+    }
+    .rc-hd h3 {
+      color: var(--indigo);
+      font-size: 22px;
+    }
+    .rc-pill {
+      justify-self: start;
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+      padding: 3px 9px;
+      border-radius: 4px;
+    }
+    .rc-pill.high {
+      background: var(--red);
+      color: #fff;
+    }
+    .rc-pill.medium {
+      background: var(--yellow);
+      color: var(--indigo);
+    }
+    .rc-pill.low {
+      background: #dff3e7;
+      color: var(--green);
+    }
+    .rc-sec h4,
+    .rc-paid h4 {
+      font-family: var(--sans);
+      font-size: 13.5px;
+      font-weight: 800;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+    .rc-signs {
+      list-style: none;
+      display: grid;
+      gap: 8px;
+    }
+    .rc-signs li {
+      display: flex;
+      gap: 10px;
+      font-size: 15px;
+    }
+    .rc-signs .ico {
+      color: var(--red);
+      width: 17px;
+      height: 17px;
+      margin-top: 3px;
+    }
+    .rc-steps {
+      list-style: none;
+      display: grid;
+      gap: 8px;
+    }
+    .rc-steps li {
+      display: grid;
+      grid-template-columns: 26px 1fr;
+      gap: 10px;
+      font-size: 15px;
+    }
+    .rc-steps li span {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      background: var(--indigo);
+      color: var(--yellow);
+      display: grid;
+      place-items: center;
+      font-weight: 800;
+      font-size: 13px;
+    }
+    .rc-paid {
+      background: #faf9fc;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 12px 14px;
+    }
+    .rc-paid.urgent {
+      background: #fff5f6;
+      border-color: #f3c4c8;
+    }
+    .rc-paid.urgent h4 {
+      color: var(--red);
+    }
+    .rc-paid ol {
+      padding-left: 20px;
+      display: grid;
+      gap: 6px;
+      font-size: 14.5px;
+      list-style: decimal;
+    }
+    .rc-talk {
+      display: flex;
+      gap: 10px;
+      background: #f0faf4;
+      border: 1px solid #bfe3cd;
+      border-radius: 10px;
+      padding: 12px 14px;
+      font-size: 14.5px;
+      color: #0b5a2e;
+    }
+    .rc-talk .ico {
+      color: var(--green);
+      flex: none;
+      margin-top: 2px;
+    }
+    .rc-report {
+      font-size: 14px;
+      color: #3b3452;
+    }
+    .rc-acts {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    @media (max-width: 760px) {
+      .scam-chat {
+        min-height: 0;
+        border-radius: 12px;
+      }
+      .sc-log {
+        padding: 14px 12px;
+        max-height: none;
+      }
+      .bubble {
+        max-width: 92%;
+        font-size: 15px;
+      }
+      .risk-card {
+        padding: 14px;
+      }
+    }
+
     /* ---------- send a report + track (v2) ---------- */
     .report-cta {
       background: var(--indigo);

@@ -12,7 +12,8 @@ import { useDemo } from "@/lib/store";
 export default function PublicSafetyPage() {
   const { state, now } = useDemo();
   const missing = state.notices.filter((n) => n.kind === "missing" && n.status === "published").sort((a, b) => (a.issuedOn < b.issuedOn ? 1 : -1)).slice(0, 4);
-  const alerts = [...state.activeAlerts, state.alertBar].filter((a, i, arr) => arr.findIndex((x) => x.id === a.id) === i);
+  // Only real, published alerts. The standing "never share your BVN, PIN or OTP" advice lives in the alert bar, not here.
+  const alerts = [...state.activeAlerts, state.alertBar].filter((a, i, arr) => a.id !== "alert-otp" && arr.findIndex((x) => x.id === a.id) === i);
 
   return (
     <>
@@ -23,6 +24,7 @@ export default function PublicSafetyPage() {
           <div className="sec-hd">
             <h2>Active alerts</h2>
           </div>
+          {alerts.length === 0 && <p style={{ color: "var(--muted)" }}>There are no active alerts right now.</p>}
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
             {alerts.map((a) => (
               <div key={a.id} className="card-w" style={{ padding: 20, borderTop: `5px solid ${a.level === "urgent" ? "var(--red)" : "var(--yellow)"}` }}>

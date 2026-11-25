@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useState } from "react";
 import { DEMO_SCAM_SMS, scamCheck, type ScamResult } from "@/lib/ai";
 import { aiOpts, askAI } from "@/lib/ai-client";
@@ -12,7 +13,7 @@ const VERDICT = {
   no_obvious_signs: { label: "No obvious warning signs", cls: "ok" },
 } as const;
 
-export function ScamChecker({ id }: { id?: string }) {
+export function ScamChecker({ id, chatLink = true }: { id?: string; chatLink?: boolean }) {
   const { state } = useDemo();
   const [text, setText] = useState(DEMO_SCAM_SMS);
   const [busy, setBusy] = useState(false);
@@ -37,7 +38,17 @@ export function ScamChecker({ id }: { id?: string }) {
         <Icon name="spark" style={{ width: 14, height: 14 }} /> AI scam checker
       </span>
       <h2>Is this message a scam?</h2>
-      <p>Paste a text, WhatsApp or email message. We&apos;ll point out the warning signs in plain language. Nothing you paste is stored.</p>
+      <p>
+        Paste a text, WhatsApp or email message. We&apos;ll point out the warning signs in plain language. Nothing you paste is stored.
+        {chatLink && (
+          <>
+            {" "}
+            <Link href="/safety/scam-check" style={{ color: "var(--yellow)", fontWeight: 600, textDecoration: "underline", textUnderlineOffset: 3 }}>
+              Not a message? Talk it through with the scam assistant
+            </Link>
+          </>
+        )}
+      </p>
       <textarea aria-label="Message to check" value={text} maxLength={1000} onChange={(e) => setText(e.target.value)} placeholder="Paste the message here" />
       <div className="scam-row">
         <button className="btn btn-yellow" onClick={check} disabled={busy || !text.trim()}>
@@ -78,7 +89,7 @@ export function ScamChecker({ id }: { id?: string }) {
               <b>What to do:</b> {res.whatToDo}
             </p>
             <p className="todo" style={{ fontSize: 13 }}>
-              If someone is threatening you or you are in danger now, call <b>112</b>. NPFTV is not an emergency service.
+              If someone is threatening you or you are in danger now, call <b>112</b>.
             </p>
           </div>
         )}

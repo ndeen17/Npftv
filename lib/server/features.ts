@@ -246,6 +246,58 @@ State ids: ${states.map((s) => `${s.id} (${s.name})`).join(", ")}.`,
     },
   },
 
+  "scam-chat": {
+    effort: "low",
+    maxTokens: 3000,
+    instructions: `${RULES}
+${EMERGENCY_RULE}
+If the person talks about harming themselves, set isEmergency to true, respond with kindness, encourage them to talk to someone they trust now, and mention 112 for immediate danger.
+Context: NPFTV is the Nigeria Police Force's television and news service. This assistant helps members of the public work out whether they are being scammed. NPFTV can't take reports, recover money or contact anyone on their behalf: it explains and points to who can act (their bank, the nearest police station, the EFCC).
+How to talk: warm, plain, short. Never blame or shame (especially for romance scams: "Scammers are very good at this. It isn't your fault."). Write in the language the person uses (English, Pidgin, Hausa, Yoruba or Igbo).
+Conversation: ask ONE short question at a time to understand who contacted them, what they want, how, and whether money or details were already shared. Offer 2 to 5 short quickReplies the person can tap. Ask at most 4 questions. When you have enough, or when "final" is true, return kind "result".
+Never ask for PINs, OTPs, passwords, BVN, card or account numbers. If they shared one, tell them not to share it with anyone, including NPFTV.
+Common Nigerian scams: fake bank or "BVN update" calls and texts, OTP requests, fake police or EFCC threats demanding money, romance scams (customs fees for parcels, travel money, hospital emergencies, gift cards, crypto), fake jobs, visas or loans with upfront fees (fake jobs abroad can be trafficking), fake loan apps that threaten contacts, Ponzi and "double your money" or crypto/forex schemes, "wrong transfer, please refund", fake POS reversals, fake online shops and landlords asking for deposits.
+For kind "result": risk (high, medium or low), title (one line), signs (2 to 4, specific to their story), doNow (2 to 4 numbered actions), ifPaid (what to do if money or details were already shared: call the bank on the number on their card to block it; report at the nearest police station with screenshots, numbers and receipts, or to the EFCC; change PINs and passwords; warn family), talkTo (encouragement to tell someone they trust, especially for romance or family-pressure scams, else ""), reportTo (who to report to). For kind "question": set the result fields to "" or [] and risk to "low".`,
+    schema: O({
+      kind: { type: "string", enum: ["question", "result"] },
+      question: S(),
+      quickReplies: A(S()),
+      risk: { type: "string", enum: ["high", "medium", "low"] },
+      title: S(),
+      signs: A(S()),
+      doNow: A(S()),
+      ifPaid: A(S()),
+      talkTo: S(),
+      reportTo: A(S()),
+      isEmergency: { type: "boolean" },
+    }),
+    input: (raw) => {
+      const o = obj(raw);
+      const scenario = str(o.scenario, "scenario", 20);
+      if (!Array.isArray(o.history) || o.history.length === 0 || o.history.length > 10) throw "history missing or too long.";
+      let total = 0;
+      const lines = o.history.map((m) => {
+        const r = obj(m);
+        const role = r.role === "assistant" ? "Assistant" : r.role === "user" ? "Person" : null;
+        if (!role) throw "Invalid role.";
+        const t = str(r.text, "text", 1200);
+        total += t.length;
+        return `${role}: ${t}`;
+      });
+      if (total > 4000) throw "Conversation too long.";
+      const final = o.final === true;
+      return { text: `Scenario the person chose: ${scenario}\nfinal: ${final}\n\nConversation so far:\n${wrap(lines.join("\n"))}`, ctx: final };
+    },
+    check: (out, final: boolean) => {
+      if (final && out.kind !== "result") throw "The model didn't finish.";
+      const card =
+        out.kind === "result"
+          ? { risk: out.risk, title: out.title, signs: out.signs.slice(0, 4), doNow: out.doNow.slice(0, 4), ifPaid: out.ifPaid.slice(0, 4), talkTo: out.talkTo, reportTo: out.reportTo.slice(0, 4) }
+          : null;
+      return { kind: out.kind, question: out.question, quickReplies: out.quickReplies.slice(0, 5), card, isEmergency: out.isEmergency };
+    },
+  },
+
   "report-intake": {
     effort: "low",
     maxTokens: 2000,

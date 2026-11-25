@@ -13,7 +13,7 @@ import { useDemo } from "@/lib/store";
 
 const QUICK: { href: string; label: string; icon: IconName; fill?: boolean; ai?: boolean }[] = [
   { href: "/stream/live", label: "Watch live", icon: "play", fill: true },
-  { href: "/safety#scam-checker", label: "Scam checker", icon: "shield", ai: true },
+  { href: "/safety/scam-check", label: "Scam check", icon: "shield", ai: true },
   { href: "/safety/report", label: "Send a report", icon: "send" },
   { href: "/safety/missing", label: "Missing & wanted", icon: "users" },
   { href: "/rights", label: "Know your rights", icon: "scale" },
