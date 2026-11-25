@@ -22,7 +22,7 @@ export default function GuidePage() {
       <div className="epg-hd">
         <div>
           <h1 style={{ fontSize: 34 }}>Programme guide</h1>
-          <p style={{ color: "#a79dc7", marginTop: 4 }}>All times WAT. The channel broadcasts from 06:00 to 23:00.</p>
+          <p className="s-lead" style={{ marginBottom: 0 }}>All times WAT. The channel broadcasts from 06:00 to 23:00.</p>
         </div>
         <div className="filters" style={{ margin: 0 }}>
           <button className={view === "list" ? "on" : ""} onClick={() => setView("list")}>
@@ -71,7 +71,7 @@ export default function GuidePage() {
                       </span>
                     )}
                     {s.event && (
-                      <span className="tag" style={{ marginLeft: 6, background: "rgba(19,163,86,.18)", color: "#7fe0a8" }}>
+                      <span className="tag tag-green" style={{ marginLeft: 6 }}>
                         {s.title.startsWith("Premiere") ? "Premiere" : "Live event"}
                       </span>
                     )}

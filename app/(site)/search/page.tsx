@@ -27,7 +27,7 @@ function SearchInner() {
     () => [
       ...state.articles.filter((a) => a.status === "published").map((a) => ({ id: a.id, kind: "story" as const, title: a.title, text: `${a.summary} ${a.body.join(" ")}`, href: `/news/${a.slug}` })),
       ...programmes.map((p) => ({ id: p.id, kind: "programme" as const, title: p.title, text: `${p.strand} ${p.description}`, href: `/programmes/${p.id}` })),
-      ...guides.map((g) => ({ id: g.id, kind: "guide" as const, title: g.title, text: `${g.short} ${g.steps.join(" ")} ${g.keywords.join(" ")}`, href: `/public-safety/${g.id}` })),
+      ...guides.map((g) => ({ id: g.id, kind: "guide" as const, title: g.title, text: `${g.short} ${g.steps.join(" ")} ${g.keywords.join(" ")}`, href: `/safety/guides/${g.id}` })),
       ...episodes.map((e) => ({ id: e.id, kind: "episode" as const, title: `${programmeById(e.programmeId)?.title}: ${e.title}`, text: e.summary, href: `/stream/episode/${e.id}` })),
       ...states.map((s) => ({ id: s.id, kind: "state" as const, title: `${s.name} State Command`, text: `${s.capital} ${s.zone}`, href: `/state-commands/${stateSlug(s)}` })),
     ],

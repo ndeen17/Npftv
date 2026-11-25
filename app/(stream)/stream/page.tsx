@@ -20,6 +20,7 @@ export default function StreamHome() {
 
   return (
     <>
+      <div className="theatre">
       <div className="s-main">
         <div>
           <LivePlayer />
@@ -46,6 +47,7 @@ export default function StreamHome() {
           <CatchMeUpCard />
           <UpNextCard />
         </aside>
+      </div>
       </div>
 
       {continueWatching.length > 0 && (
@@ -85,17 +87,17 @@ export default function StreamHome() {
               <div key={s.id} className="card" style={{ display: "grid", gridTemplateColumns: "64px 1fr", gap: 14, borderColor: s.id === "evt-press-briefing" ? "var(--green-2)" : undefined }}>
                 <div style={{ textAlign: "center", borderRight: "2px solid var(--yellow)", paddingRight: 10 }}>
                   <small style={{ display: "block", color: "var(--green-2)", fontWeight: 600 }}>{fmt.monShort(s.date)}</small>
-                  <b style={{ fontFamily: "var(--slab)", fontSize: 34, color: "#fff", lineHeight: 1 }}>{fmt.dayNum(s.date)}</b>
+                  <b style={{ fontFamily: "var(--slab)", fontSize: 34, color: "var(--indigo)", lineHeight: 1 }}>{fmt.dayNum(s.date)}</b>
                 </div>
                 <div>
-                  <span className="tag" style={{ background: "rgba(19,163,86,.18)", color: "#7fe0a8" }}>
+                  <span className="tag tag-green">
                     {s.title.startsWith("Premiere") ? "Premiere" : "Live event"}
                   </span>
                   <h3 style={{ fontSize: 18, margin: "8px 0 4px" }}>{s.title.startsWith("Premiere") ? "The Force in Focus: inside the Air Wing" : s.title}</h3>
-                  <p style={{ color: "#a79dc7", fontSize: 13.5 }}>
+                  <p style={{ color: "var(--muted)", fontSize: 13.5 }}>
                     {fmt.weekday(s.date)}, {s.start} to {s.end} WAT{s.location ? ` · ${s.location}` : ""}
                   </p>
-                  <button className={`btn btn-sm ${on ? "btn-yellow" : "btn-dark"}`} style={{ marginTop: 10 }} onClick={() => act.toggleReminder(s.id)} aria-pressed={on}>
+                  <button className={`btn btn-sm ${on ? "btn-yellow" : "btn-line"}`} style={{ marginTop: 10 }} onClick={() => act.toggleReminder(s.id)} aria-pressed={on}>
                     <Icon name={on ? "check" : "bell"} /> {on ? "Reminder set" : "Remind me"}
                   </button>
                 </div>

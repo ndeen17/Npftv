@@ -27,6 +27,7 @@ export default function LivePage() {
 
   return (
     <>
+      <div className="theatre">
       <div className="s-main">
         <div>
           <LivePlayer />
@@ -84,6 +85,7 @@ export default function LivePage() {
           <UpNextCard />
         </aside>
       </div>
+      </div>
 
       <section className="epg">
         <div className="epg-hd">
@@ -92,7 +94,7 @@ export default function LivePage() {
         </div>
         <EpgTimeline date={day} from={from} to={to} slots={state.schedule} nowHHMM={air.nowHHMM} nowDate={air.date} />
         <p style={{ marginTop: 10, fontSize: 13.5 }}>
-          <Link href="/stream/guide" style={{ color: "var(--yellow)", fontWeight: 600 }}>
+          <Link href="/stream/guide" className="link">
             Full guide for the week →
           </Link>
         </p>

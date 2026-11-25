@@ -33,6 +33,7 @@ export default function EpisodePage() {
 
   return (
     <>
+      <div className="theatre">
       <div className="s-main">
         <div>
           <VodPlayer title={e.title} prog={p.title} thumb={e.thumb} duration={e.duration} seek={e.progress ?? 0} />
@@ -107,6 +108,7 @@ export default function EpisodePage() {
             <p style={{ color: "#a79dc7", fontSize: 13, marginTop: 8 }}>{p.scheduleText}</p>
           </div>
         </aside>
+      </div>
       </div>
       <section className="rail">
         <h2>More to watch</h2>

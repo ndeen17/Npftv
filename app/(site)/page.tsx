@@ -6,15 +6,15 @@ import { guides, socialPosts } from "@/data/public";
 import { Icon, type IconName } from "@/components/Icon";
 import { LiveModule } from "@/components/site/LiveModule";
 import { ScamChecker } from "@/components/site/ScamChecker";
-import { EmergencyNote, Poster, StoryRow, UpcomingItem } from "@/components/site/bits";
-import { onAir, upcomingEvents } from "@/lib/broadcast";
+import { EmergencyNote, LeadStory, Poster, StoryRow } from "@/components/site/bits";
+import { onAir } from "@/lib/broadcast";
 import { useDemo } from "@/lib/store";
 
 const QUICK: { href: string; label: string; icon: IconName; fill?: boolean; ai?: boolean }[] = [
   { href: "/stream/live", label: "Watch live", icon: "play", fill: true },
   { href: "/stream/guide", label: "Programme guide", icon: "calendar" },
-  { href: "/public-safety#scam-checker", label: "Scam checker", icon: "shield", ai: true },
-  { href: "/public-safety/how-to-report-a-crime", label: "Report a crime", icon: "phone" },
+  { href: "/safety#scam-checker", label: "Scam checker", icon: "shield", ai: true },
+  { href: "/safety/guides/how-to-report-a-crime", label: "Report a crime", icon: "phone" },
   { href: "/state-commands", label: "State commands", icon: "map" },
   { href: "/media-centre", label: "Media centre", icon: "image" },
 ];
@@ -23,7 +23,12 @@ export default function HomePage() {
   const { state, now } = useDemo();
   const air = onAir(state.schedule, now, state.live, 1);
   const stories = state.featuredIds.map((id) => state.articles.find((a) => a.id === id)).filter((a): a is NonNullable<typeof a> => !!a && a.status === "published");
-  const upcoming = upcomingEvents(state.schedule, now).slice(0, 3);
+  const [lead, ...rest] = stories;
+  // Three more recent headlines that aren't already featured.
+  const more = state.articles
+    .filter((a) => a.status === "published" && !state.featuredIds.includes(a.id))
+    .sort((x, y) => (x.date < y.date ? 1 : -1))
+    .slice(0, 3);
   const nextUp = air.next[0];
 
   return (
@@ -119,28 +124,35 @@ export default function HomePage() {
       </section>
 
       <section className="sec nu">
-        <div className="wrap">
-          <div>
-            <div className="sec-hd">
+        <div className="wrap" style={{ display: "block" }}>
+          <div className="sec-hd">
+            <div>
               <h2>News and press releases</h2>
-              <Link className="link" href="/news">
-                All news <Icon name="arrow" />
-              </Link>
+              <p>Verified news from Force Headquarters and the 36 state commands and the FCT.</p>
             </div>
-            {stories.map((a) => (
-              <StoryRow key={a.id} a={a} fresh={a.author === "Musa Ibrahim"} />
-            ))}
+            <Link className="link" href="/news">
+              All news <Icon name="arrow" />
+            </Link>
           </div>
-          <div>
-            <div className="sec-hd">
-              <h2>Upcoming broadcasts</h2>
-              <Link className="link" href="/stream/guide">
-                Full schedule <Icon name="arrow" />
-              </Link>
+          <div className="news-grid">
+            {lead && <LeadStory a={lead} fresh={lead.author === "Musa Ibrahim"} />}
+            <div className="news-side">
+              {rest.map((a) => (
+                <StoryRow key={a.id} a={a} fresh={a.author === "Musa Ibrahim"} compact />
+              ))}
+              {more.length > 0 && (
+                <div className="news-more">
+                  <h4>More from the newsroom</h4>
+                  <ul>
+                    {more.map((a) => (
+                      <li key={a.id}>
+                        <Link href={`/news/${a.slug}`}>{a.title}</Link>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
             </div>
-            {upcoming.map((s, i) => (
-              <UpcomingItem key={s.id} s={s} primary={i === 0} />
-            ))}
           </div>
         </div>
       </section>
@@ -173,7 +185,7 @@ export default function HomePage() {
             <h3>Public safety guides</h3>
             <p>Practical advice, checked by the Force.</p>
             {guides.map((g) => (
-              <Link key={g.id} className="guide" href={`/public-safety/${g.id}`}>
+              <Link key={g.id} className="guide" href={`/safety/guides/${g.id}`}>
                 <span className="gi">
                   <Icon name={g.icon as IconName} />
                 </span>

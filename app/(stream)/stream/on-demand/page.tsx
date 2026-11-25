@@ -31,7 +31,7 @@ function Library() {
   return (
     <section className="s-pad">
       <h1 style={{ fontSize: 34, marginBottom: 6 }}>On demand</h1>
-      <p style={{ color: "#a79dc7", marginBottom: 20 }}>{q ? `Results for “${params.get("q")}”.` : "Every episode, free to watch. Filter by programme, topic or date."}</p>
+      <p className="s-lead">{q ? `Results for “${params.get("q")}”.` : "Every episode, free to watch. Filter by programme, topic or date."}</p>
       <div className="filters">
         <select value={programme} onChange={(e) => setProgramme(e.target.value)} aria-label="Programme">
           <option value="all">All programmes</option>
@@ -61,7 +61,7 @@ function Library() {
           ))}
         </div>
       ) : (
-        <p style={{ color: "#a79dc7" }}>No episodes match. Try another filter.</p>
+        <p style={{ color: "var(--muted)" }}>No episodes match. Try another filter.</p>
       )}
     </section>
   );

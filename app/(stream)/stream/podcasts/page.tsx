@@ -18,7 +18,7 @@ export default function PodcastsPage() {
         </div>
         <div>
           <h1 style={{ fontSize: 34 }}>{p.title}</h1>
-          <p style={{ color: "#bdb3da", marginTop: 8, maxWidth: 640 }}>{p.description}</p>
+          <p className="s-lead">{p.description}</p>
           <div className="card" style={{ marginTop: 24, padding: 0 }}>
             <ul className="epg-list">
               {eps.map((e) => (

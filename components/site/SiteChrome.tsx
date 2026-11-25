@@ -12,7 +12,7 @@ const NAV = [
   { href: "/news", label: "News" },
   { href: "/stream", label: "Watch" },
   { href: "/programmes", label: "Programmes" },
-  { href: "/public-safety", label: "Public safety" },
+  { href: "/safety", label: "Safety" },
   { href: "/state-commands", label: "State commands" },
   { href: "/about", label: "About" },
 ];
@@ -49,7 +49,7 @@ export function SiteHeader() {
             <span>
               <b>{a.level === "urgent" ? `${a.title}:` : "Public safety alert:"}</b> {a.body}
             </span>{" "}
-            <Link href={a.level === "urgent" ? "/public-safety#alerts" : "/public-safety#scam-checker"}>{a.level === "urgent" ? "Read the alert" : "How to spot a scam"}</Link>
+            <Link href={a.level === "urgent" ? "/safety#alerts" : "/safety#scam-checker"}>{a.level === "urgent" ? "Read the alert" : "How to spot a scam"}</Link>
           </div>
           <div className={`alert-side${air.state === "live" ? "" : " off"}`}>
             <span className="live-dot" />
@@ -157,7 +157,10 @@ export function SiteFooter() {
       <div className="wrap cols">
         <div className="ftr-brand">
           <img src="/images/logo.webp" alt="NPFTV emblem" />
-          <p>Nigeria Police Force Television Network. Inform. Educate. Inspire.</p>
+          <p>Nigeria Police Force Television Network: live TV, verified news and public safety guidance.</p>
+          <p className="tagline">
+            Inform<em>.</em> Educate<em>.</em> Inspire<em>.</em>
+          </p>
           <div className="socials">
             {["YT", "X", "IG", "FB", "TT"].map((s) => (
               <a key={s} href="#" aria-label={s} onClick={(e) => e.preventDefault()}>
@@ -201,19 +204,19 @@ export function SiteFooter() {
           </ul>
         </div>
         <div>
-          <h4>Public safety</h4>
+          <h4>Safety</h4>
           <ul>
             <li>
-              <Link href="/public-safety#scam-checker">Scam checker</Link>
+              <Link href="/safety#scam-checker">Scam checker</Link>
             </li>
             <li>
-              <Link href="/public-safety#guides">Safety guides</Link>
+              <Link href="/safety#guides">Safety guides</Link>
             </li>
             <li>
-              <Link href="/public-safety#alerts">Alerts</Link>
+              <Link href="/safety#alerts">Alerts</Link>
             </li>
             <li>
-              <Link href="/public-safety/how-to-report-a-crime">Report a crime</Link>
+              <Link href="/safety/guides/how-to-report-a-crime">Report a crime</Link>
             </li>
           </ul>
         </div>
@@ -228,14 +231,15 @@ export function SiteFooter() {
           <h4>Stay informed</h4>
           <p>Get public safety alerts and programme reminders by email.</p>
           <input type="email" required value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Your email address" aria-label="Email address" />
-          <button className="btn btn-yellow">Subscribe</button>
+          <button className="btn btn-indigo">Subscribe</button>
         </form>
       </div>
       <div className="ftr-bottom">
         <div className="wrap">
-          <span>
-            © 2026 Nigeria Police Force Television. <b>Not an emergency service: call 112.</b>
-          </span>
+          <span>© 2026 Nigeria Police Force Television</span>
+          <a className="ftr-112" href="tel:112">
+            <Icon name="phone" /> Not an emergency service. In an emergency, call 112
+          </a>
           <nav>
             <Link href="/about#standards">Editorial standards</Link>
             <Link href="/contact">Contact</Link>

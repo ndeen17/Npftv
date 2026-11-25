@@ -19,10 +19,36 @@ export function ArticleThumb({ a }: { a: Article }) {
   );
 }
 
-export function StoryRow({ a, fresh }: { a: Article; fresh?: boolean }) {
+/** The homepage's lead story: large picture on top, slab headline below. */
+export function LeadStory({ a, fresh }: { a: Article; fresh?: boolean }) {
   const cat = categoryById(a.category);
   return (
-    <article className={`story${fresh ? " new" : ""}`}>
+    <article className={`story lead${fresh ? " new" : ""}`}>
+      <Link href={`/news/${a.slug}`} className="th" tabIndex={-1} aria-hidden>
+        <ArticleThumb a={a} />
+      </Link>
+      <div>
+        <div className="meta">
+          <span className="cat">{cat?.short ?? cat?.name}</span>
+          <span>{fmt.dayMonthYear(isoDate(a.date))}</span>
+          {fresh && <span className="tag tag-feat">Just published</span>}
+        </div>
+        <h3>
+          <Link href={`/news/${a.slug}`}>{a.title}</Link>
+        </h3>
+        <p>{a.summary}</p>
+        <Link className="link" href={`/news/${a.slug}`}>
+          Read story <Icon name="arrow" />
+        </Link>
+      </div>
+    </article>
+  );
+}
+
+export function StoryRow({ a, fresh, compact }: { a: Article; fresh?: boolean; compact?: boolean }) {
+  const cat = categoryById(a.category);
+  return (
+    <article className={`story${fresh ? " new" : ""}${compact ? " compact" : ""}`}>
       <Link href={`/news/${a.slug}`} className="th" tabIndex={-1} aria-hidden>
         <ArticleThumb a={a} />
       </Link>

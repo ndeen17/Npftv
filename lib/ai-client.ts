@@ -24,6 +24,11 @@ export async function askAI<T>(
   if (opts.scripted || opts.forceScripted) {
     return { data: await runAI(fallback, opts.instant), source: "scripted" };
   }
+  // No key on this deployment: go straight to the scripted answer (no failed request in the console).
+  const status = await aiStatus();
+  if (status && !status.configured) {
+    return { data: await runAI(fallback, opts.instant), source: "scripted" };
+  }
   const ctrl = new AbortController();
   const timer = setTimeout(() => ctrl.abort(), TIMEOUT_MS);
   try {

@@ -37,10 +37,10 @@ export default function SchedulePage() {
         </div>
 
         <div className="grid grid-cols-1 items-start gap-5 xl:grid-cols-[minmax(0,1fr)_380px]">
-          <div className="pnl" style={{ padding: 18, background: "#0f0720", borderColor: "#0f0720" }}>
+          <div className="pnl" style={{ padding: 18 }}>
             <div className="strm" style={{ minHeight: 0, background: "transparent" }}>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 12, marginBottom: 12, flexWrap: "wrap" }}>
-                <h2 style={{ fontSize: 20, color: "#fff" }}>{fmt.long(day)}</h2>
+                <h2 style={{ fontSize: 20 }}>{fmt.long(day)}</h2>
               </div>
               <div style={{ marginBottom: 12 }}>
                 <DayTabs value={day} onChange={setDay} />

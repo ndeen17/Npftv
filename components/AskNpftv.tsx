@@ -62,7 +62,7 @@ export function AskNpftv({ dark }: { dark?: boolean }) {
                   {t.a.sources.map((s, j) => (
                     <span key={s}>
                       {j > 0 && ", "}
-                      <Link href={`/public-safety/${s}`} style={{ textDecoration: "underline", color: dark ? "var(--yellow)" : "var(--indigo)" }}>
+                      <Link href={`/safety/guides/${s}`} style={{ textDecoration: "underline", color: dark ? "var(--yellow)" : "var(--indigo)" }}>
                         {guideById(s)?.title}
                       </Link>
                     </span>

@@ -73,9 +73,10 @@ export function StreamFoot() {
       <span>
         <b>NPFTV Stream</b> · stream.npftv.net · Part of Nigeria Police Force Television.
       </span>
-      <span>
-        <Link href="/">Back to npftv.net</Link> · <b>Not an emergency service: call 112.</b>
-      </span>
+      <a className="ftr-112" href="tel:112" style={{ display: "inline-flex", alignItems: "center", gap: 8, fontWeight: 600 }}>
+        <Icon name="phone" style={{ width: 16, height: 16 }} /> Not an emergency service. In an emergency, call 112
+      </a>
+      <Link href="/">Back to npftv.net</Link>
     </footer>
   );
 }

@@ -13,7 +13,7 @@ import { useToast } from "./Toast";
 const SCRIPT = [
   { n: 1, t: "Citizen on the homepage", href: "/" },
   { n: 2, t: "Open NPFTV Stream, Catch me up", href: "/stream/live" },
-  { n: 3, t: "Scam checker (BVN SMS)", href: "/public-safety#scam-checker" },
+  { n: 3, t: "Scam checker (BVN SMS)", href: "/safety#scam-checker" },
   { n: 4, t: "Reporter submits the Kano story", href: "/control?as=reporter" },
   { n: 5, t: "Editor-in-Chief: AI copy desk, approve", href: "/control?as=editor-in-chief" },
   { n: 6, t: "Broadcast Manager schedules the briefing", href: "/control?as=broadcast-manager" },

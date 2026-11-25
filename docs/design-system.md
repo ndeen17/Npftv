@@ -27,7 +27,7 @@ The approved look is in `design/npftv-design-v3.html` (open it in a browser). Th
 
 **Signature detail:** the green / yellow / green **flag stripe** (4px) on top of the footer and as a short bar before the hero kicker.
 
-Stream (dark theme): page `#0f0720`, top bar `#130826`, cards `#1a0e33`, guide slots `#24153f`, secondary text `#a79dc7` / `#bdb3da`.
+Stream (v2, 25 Nov 2026: light pages with a dark theatre band): page `paper`, white top bar with indigo nav (active pill indigo), cards white with `line` border. Only the `.theatre` band around the player, its side cards and the chapters is dark (deep indigo gradient; cards `rgba(255,255,255,.06)`, secondary text `#a79dc7` / `#c9c0e4`). Guide slots are paper with a `line` inset; the current slot stays yellow and the now-line red. On phones the TV lower third is hidden so captions never overlap it.
 Control Room: page `#f3f1f8`, sidebar `indigo`, top bar white, panels white with `line` border and 10px radius.
 
 ## Typography
@@ -52,12 +52,12 @@ Control Room: page `#f3f1f8`, sidebar `indigo`, top bar white, panels white with
 6. Quick-access row: six 96px indigo circles with yellow icons, overlapping the hero by 62px, labels below. Scam checker has a small yellow "AI" tag. Mobile: 3 x 2 grid, 72px circles
 7. **Live on NPFTV Stream** module: heading + "Open NPFTV Stream" link; an indigo panel (12px radius, flag stripe on top) with a 16:9 player (parade still, LIVE badge, emblem bug, yellow play button, TV graphic "THE BEAT" + headline) on the left and, on the right, the on-air card, the next three programmes and a yellow "Open NPFTV Stream" button with "Also at stream.npftv.net". Mobile: stacked
 8. Message from the Network Director: framed emblem image left (caption "Network Director"), text right, "About NPFTV" button. **No portrait, no name**
-9. News and press releases (3 story rows: thumbnail, green category, date, slab headline, summary, "Read story") beside Upcoming broadcasts (date blocks with a yellow right border, tags, "Remind me")
+9. News and press releases, full width (v2): a lead story (16:9 picture, 32px slab headline) beside two compact story rows and a "More from the newsroom" list. "Upcoming broadcasts" was removed from the homepage (v2): what is coming up lives in the Live module and on Stream
 10. Programmes: horizontal rail of 3:4 typographic posters that bleeds off the right edge
 11. Public Safety: indigo scam-checker panel (textarea, "Check message", result card with red top border) beside guides list and the "not an emergency line, call 112" note
 12. Photo band (parade photo, 420px, gradient, "Telling the police story, from every state")
 13. Social feed on indigo: four post cards (YouTube, X, Instagram, Facebook)
-14. Footer (indigo-deep, flag stripe on top): brand + socials, Watch, News, Public safety, Stay informed sign-up; bottom row with "Not an emergency service: call 112"
+14. Footer (v2: white, flag stripe on top): brand, tagline, socials, Watch, News, Safety, Stay informed sign-up on a paper card (indigo Subscribe button); paper bottom row with a red "Not an emergency service. In an emergency, call 112" link (tel:112)
 
 ### Hero (chosen: the NPFTV emblem)
 - Plain indigo with a soft violet radial glow behind the emblem. No photo.

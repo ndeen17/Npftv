@@ -14,7 +14,7 @@ export default function PublicSafetyPage() {
 
   return (
     <>
-      <PageHead title="Public safety" intro="Practical advice checked by the Force, tools to spot scams, and current alerts. This website is not an emergency line: in an emergency, call 112." crumbs={[{ label: "Public safety" }]} />
+      <PageHead title="Safety" intro="Practical advice checked by the Force, tools to spot scams, and current alerts. This website is not an emergency line: in an emergency, call 112." crumbs={[{ label: "Safety" }]} />
 
       <section className="sec" id="alerts" style={{ paddingTop: 48, paddingBottom: 0 }}>
         <div className="wrap">
@@ -45,7 +45,7 @@ export default function PublicSafetyPage() {
             <h3>Public safety guides</h3>
             <p>Practical advice, checked by the Force.</p>
             {guides.map((g) => (
-              <Link key={g.id} className="guide" href={`/public-safety/${g.id}`}>
+              <Link key={g.id} className="guide" href={`/safety/guides/${g.id}`}>
                 <span className="gi">
                   <Icon name={g.icon as IconName} />
                 </span>
@@ -67,7 +67,7 @@ export default function PublicSafetyPage() {
           <div>
             <h3 style={{ color: "var(--indigo)", fontSize: 24, marginBottom: 8 }}>How to report a crime</h3>
             <p style={{ color: "var(--muted)", marginBottom: 16 }}>Reporting is free. Go to your nearest divisional police station, or call 112 if anyone is in danger now.</p>
-            <Link className="btn btn-indigo" href="/public-safety/how-to-report-a-crime">
+            <Link className="btn btn-indigo" href="/safety/guides/how-to-report-a-crime">
               Read the guide <Icon name="arrow" />
             </Link>
             <h3 style={{ color: "var(--indigo)", fontSize: 24, margin: "36px 0 8px" }}>Find your state command</h3>

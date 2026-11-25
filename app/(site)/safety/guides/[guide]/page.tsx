@@ -14,7 +14,7 @@ export default function GuidePage() {
       <section className="sec">
         <div className="wrap">
           <h1 style={{ color: "var(--indigo)" }}>Guide not found</h1>
-          <Link className="link" href="/public-safety">
+          <Link className="link" href="/safety">
             Public safety
           </Link>
         </div>
@@ -23,7 +23,7 @@ export default function GuidePage() {
   }
   return (
     <>
-      <PageHead title={g.title} intro={g.short} crumbs={[{ href: "/public-safety", label: "Public safety" }, { label: g.title }]} />
+      <PageHead title={g.title} intro={g.short} crumbs={[{ href: "/safety", label: "Safety" }, { label: g.title }]} />
       <section className="sec" style={{ paddingTop: 48 }}>
         <div className="wrap grid grid-cols-1 gap-12 lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]">
           <div>
@@ -43,7 +43,7 @@ export default function GuidePage() {
             {guides
               .filter((x) => x.id !== g.id)
               .map((x) => (
-                <Link key={x.id} className="guide" href={`/public-safety/${x.id}`}>
+                <Link key={x.id} className="guide" href={`/safety/guides/${x.id}`}>
                   <span className="gi">
                     <Icon name={x.icon as IconName} />
                   </span>

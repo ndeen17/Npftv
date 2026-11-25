@@ -68,7 +68,7 @@ export default function AlertsPage() {
             <div className="pnl">
               <div className="p-hd">
                 <h3>Live now</h3>
-                <Link href="/public-safety#alerts" target="_blank">
+                <Link href="/safety#alerts" target="_blank">
                   View on npftv.net
                 </Link>
               </div>
