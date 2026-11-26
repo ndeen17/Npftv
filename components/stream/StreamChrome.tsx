@@ -45,10 +45,6 @@ export function StreamTop() {
             <Icon name="search" />
             <input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Search programmes" aria-label="Search programmes" />
           </form>
-          <Link href="/stream/ask" title="Ask NPFTV" style={{ display: "flex", alignItems: "center", gap: 6 }}>
-            <Icon name="spark" style={{ color: "var(--yellow)", width: 18, height: 18 }} />
-            <span className="hidden lg:inline">Ask</span>
-          </Link>
           <Link href="/">npftv.net</Link>
         </div>
       </header>
@@ -59,9 +55,6 @@ export function StreamTop() {
             {n.label}
           </Link>
         ))}
-        <Link href="/stream/ask" className={isOn("/stream/ask") ? "on" : ""}>
-          Ask NPFTV
-        </Link>
       </nav>
     </>
   );

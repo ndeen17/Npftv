@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { guides } from "@/data/public";
-import { AskNpftv } from "@/components/AskNpftv";
+import { AskCard } from "@/components/site/HelpStrip";
 import { Icon, type IconName } from "@/components/Icon";
 import { ScamChecker } from "@/components/site/ScamChecker";
 import { EmergencyNote, PageHead } from "@/components/site/bits";
@@ -113,7 +113,7 @@ export default function PublicSafetyPage() {
 
       <section className="sec" style={{ paddingTop: 0 }}>
         <div className="wrap grid grid-cols-1 gap-10 lg:grid-cols-[minmax(0,1.35fr)_minmax(0,1fr)]">
-          <AskNpftv />
+          <AskCard compact />
           <div>
             <h3 style={{ color: "var(--indigo)", fontSize: 24, marginBottom: 8 }}>How to report a crime</h3>
             <p style={{ color: "var(--muted)", marginBottom: 16 }}>Reporting is free. Go to your nearest divisional police station, or call 112 if anyone is in danger now.</p>

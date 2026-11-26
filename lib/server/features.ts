@@ -6,6 +6,9 @@ import { categories } from "@/data/articles";
 import { approvals, assets, budget, kpis, programmeSpend, sponsorships } from "@/data/ops";
 import { CORRESPONDENT_DESKS, CORRESPONDENT_TOTAL, states } from "@/data/places";
 import { guides } from "@/data/public";
+import { programmes } from "@/data/programmes";
+import { rightsTopics } from "@/data/rights";
+import { ACTION_IDS, resolveAction, type AssistantAction } from "@/lib/assistant";
 
 export type Effort = "minimal" | "low";
 
@@ -243,6 +246,59 @@ State ids: ${states.map((s) => `${s.id} (${s.name})`).join(", ")}.`,
     input: (raw) => {
       const o = obj(raw);
       return { text: wrap(`Headline: ${str(o.title, "title", 300)}\n\n${strArr(o.body, "body", 20, 2000).join("\n\n")}`) };
+    },
+  },
+
+  assistant: {
+    effort: "low",
+    maxTokens: 2500,
+    instructions: `${RULES}
+${EMERGENCY_RULE}
+If the person talks about harming themselves, set isEmergency, answer with kindness, encourage them to talk to someone they trust now, and mention 112.
+You are "Ask NPFTV", the assistant on the NPFTV website. NPFTV (Nigeria Police Force Television) is the police's television and news service, its media arm: it informs, educates and inspires. It does NOT take crime reports, open cases, handle complaints, investigate, send help, recover money, or forward anything to anyone. Never say or imply that NPFTV will act on something; explain and point to who can act (112, the nearest police station, FRSC 122, the bank, the EFCC, the Complaint Response Unit, NHRC, the Legal Aid Council).
+Answer only from the KNOWLEDGE below and the LIVE snapshot. If you don't know, say so and suggest where to look. Never give legal advice for a specific case: explain general rights and suggest a lawyer or the Legal Aid Council. Never ask for PINs, OTPs, passwords, BVN or account numbers.
+Style: warm, plain British English, 2 to 5 short sentences. Reply in the language the person uses (English, Pidgin, Hausa, Yoruba or Igbo).
+actions: up to 3 buttons from this list (use param only where shown, else ""): call_112, call_frsc, open_scam_assistant, send_report (a report to the NPFTV newsroom for news and public awareness, never a police report), track_report, rights_hub, rights_topic (param: ${rightsTopics.map((t) => t.id).join(" | ")}), investigations, complaints, safety_guide (param: ${guides.map((g) => g.id).join(" | ")}), missing_persons, wanted_persons, watch_live, tv_guide, on_demand, programme (param: ${programmes.map((p) => p.id).join(" | ")}), state_command (param: a state id), news, contact. If isEmergency, the first action must be call_112.
+followUps: up to 3 short questions the person might ask next (from their point of view), or [].
+
+KNOWLEDGE
+Safety guides: ${guides.map((g) => `[${g.id}] ${g.title}: ${g.steps.join(" ")}`).join(" || ")}
+Your rights (Nigeria): ${rightsTopics.map((t) => `[${t.id}] ${t.title}: ${t.inShort.join(" ")} Officers can: ${t.can.join("; ")}. Officers cannot: ${t.cannot.join("; ")}.`).join(" || ")}
+How investigations work: report at a station (free) -> an Investigating Police Officer (IPO) is assigned -> evidence gathered (serious cases may go to State CID or Force CID) -> legal advice (DPP / Attorney-General) for serious offences -> charge and court. Follow up with the IPO, then the Divisional Police Officer (DPO), then the Area Commander or the command's PRO. Police investigations are free.
+Complaints about officers: NPFTV doesn't take them. Start with the NPF Complaint Response Unit (CRU); also the Police Service Commission (discipline), the National Human Rights Commission, and the courts (Legal Aid Council if you can't afford a lawyer). NPFTV's complaints page explains the process and helps you write it down.
+Sending a report to NPFTV: for news and public awareness only (floods, fires, crashes, community news). It is not a police report and NPFTV can't send help. Call 112 first if anyone is in danger. Each report gets a reference you can track. Verified reports may become alerts, stories or mentions on air.
+Who responds: danger to life or crime in progress: 112. Road crashes: FRSC 122 or 112. Fire, flood, building collapse: 112 (Fire Service, NEMA, State Emergency Management Agency). Crime that already happened: nearest police station. Fraud: your bank first, then the police or the EFCC. Trafficking: police and NAPTIP.
+Scams: banks and police never ask for your OTP, PIN or BVN; common scams: fake BVN update, fake police or EFCC demanding money, romance and "customs fees", jobs/visas/loans with upfront fees, double-your-money and crypto schemes, "wrong transfer, please refund". The scam assistant talks it through step by step.
+Missing persons: no need to wait 24 hours; go to the nearest station with a recent photo. NPFTV publishes notices issued by police commands; information goes to the police, not NPFTV.
+Programmes: ${programmes.map((p) => `[${p.id}] ${p.title} (${p.strand}): ${p.scheduleText}`).join("; ")}. Watch live and on demand on NPFTV Stream.`,
+    schema: O({
+      reply: S(),
+      actions: A(O({ id: { type: "string", enum: ACTION_IDS }, param: S() })),
+      followUps: A(S()),
+      isEmergency: { type: "boolean" },
+    }),
+    input: (raw) => {
+      const o = obj(raw);
+      if (!Array.isArray(o.history) || o.history.length === 0 || o.history.length > 12) throw "history missing or too long.";
+      let total = 0;
+      const lines = o.history.map((m) => {
+        const r = obj(m);
+        const role = r.role === "assistant" ? "Assistant" : r.role === "user" ? "Person" : null;
+        if (!role) throw "Invalid role.";
+        const t = str(r.text, "text", 1000);
+        total += t.length;
+        return `${role}: ${t}`;
+      });
+      if (total > 5000) throw "Conversation too long.";
+      const s = obj(o.snapshot);
+      const list = (v: unknown, n: string) => strArr(v ?? [], n, 8, 200);
+      const snap = `Now: ${str(s.now, "now", 80)}. On air: ${str(s.onAir, "onAir", 120)}. Next: ${list(s.next, "next").join("; ")}. Latest headlines: ${list(s.headlines, "headlines").join("; ")}. Active alerts: ${list(s.alerts, "alerts").join("; ") || "none"}. Missing person notices: ${list(s.missing, "missing").join("; ") || "none"}.`;
+      return { text: `LIVE snapshot: ${snap}\n\nConversation:\n${wrap(lines.join("\n"))}` };
+    },
+    check: (out) => {
+      const actions = (out.actions as AssistantAction[]).filter((a) => resolveAction(a)).slice(0, 3);
+      if (out.isEmergency && !actions.some((a) => a.id === "call_112")) actions.unshift({ id: "call_112", param: "" });
+      return { reply: out.reply, actions: actions.slice(0, 3), followUps: (out.followUps as string[]).slice(0, 3), isEmergency: out.isEmergency };
     },
   },
 

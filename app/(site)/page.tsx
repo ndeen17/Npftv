@@ -4,6 +4,7 @@ import Link from "next/link";
 import { programmes } from "@/data/programmes";
 import { guides, socialPosts } from "@/data/public";
 import { Icon, type IconName } from "@/components/Icon";
+import { HelpStrip } from "@/components/site/HelpStrip";
 import { LiveModule } from "@/components/site/LiveModule";
 import { ScamChecker } from "@/components/site/ScamChecker";
 import { EmergencyNote, LeadStory, Poster, StoryRow } from "@/components/site/bits";
@@ -99,6 +100,8 @@ export default function HomePage() {
       </div>
 
       <LiveModule />
+
+      <HelpStrip />
 
       <section className="sec dir">
         <div className="wrap">

@@ -43,6 +43,13 @@ function limited(ip: string): string | null {
   return null;
 }
 
+/** For multi-turn features, only the person's latest message counts (not the assistant's own earlier replies). */
+function latestUserText(input: unknown): string {
+  const o = (input ?? {}) as { history?: { role?: string; text?: string }[] };
+  if (Array.isArray(o.history)) return [...o.history].reverse().find((m) => m?.role === "user")?.text ?? "";
+  return JSON.stringify(input ?? "");
+}
+
 const json = (body: unknown, status = 200) => Response.json(body, { status, headers: { "Cache-Control": "no-store" } });
 
 /** Health check used by the presenter panel. Never reveals the key. */
@@ -95,7 +102,10 @@ export async function POST(req: Request) {
     let data = JSON.parse(res.output_text);
     if (feature.check) data = feature.check(data, prepared.ctx);
     // Guardrail: never rely on the model alone to spot an emergency.
-    if (["ask-npftv", "scam-check", "complaint-helper", "report-intake", "scam-chat"].includes(String(body.feature)) && EMERGENCY_RE.test(JSON.stringify(body.input))) data.isEmergency = true;
+    if (["ask-npftv", "scam-check", "complaint-helper", "report-intake", "scam-chat", "assistant"].includes(String(body.feature)) && EMERGENCY_RE.test(latestUserText(body.input))) {
+      data.isEmergency = true;
+      if (body.feature === "assistant" && !data.actions.some((a: { id: string }) => a.id === "call_112")) data.actions = [{ id: "call_112", param: "" }, ...data.actions].slice(0, 3);
+    }
     if (data.isEmergency && body.feature === "ask-npftv" && !/112/.test(data.answer)) {
       data.answer = `If you or someone else is in danger now, call 112 straight away. It's free on every network. ${data.answer}`;
     }

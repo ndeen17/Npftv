@@ -7,6 +7,8 @@ const nextConfig: NextConfig = {
     return [
       { source: "/public-safety", destination: "/safety", permanent: true },
       { source: "/public-safety/:guide", destination: "/safety/guides/:guide", permanent: true },
+      // Ask NPFTV is on the main website only (not Stream).
+      { source: "/stream/ask", destination: "/", permanent: false },
     ];
   },
   // The demo must never be indexed: it carries fictional stories.

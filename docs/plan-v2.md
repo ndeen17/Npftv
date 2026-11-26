@@ -1,6 +1,6 @@
 # NPFTV demo, version 2: citizen services and a lighter look
 
-Plan written 25 November 2026. Status: **approved. Phases 1 to 5 done (25 Nov); Phase 6 next.**
+Plan written 25 November 2026. Status: **approved. Phases 1 to 6 done (25 Nov); Phase 7 next.**
 
 **Decisions (25 Nov 2026):**
 - **Stream:** a dark "theatre" band for the player only, with light pages around it.
@@ -28,7 +28,7 @@ Version 1 is strong on broadcasting (news, Stream, the Control Room). Version 2 
 | 7 | Wanted persons and missing persons | Phase 3 |
 | 8 | How investigations are handled | Phase 2 |
 | 9 | How complaints about officers are handled | Phase 2 |
-| 10 | A general chatbot, available everywhere, with actionable answers about everything on the platform | Phase 6 |
+| 10 | A general chatbot with actionable answers about everything on the platform (main website only, not NPFTV Stream or the Control Room) | Phase 6 |
 | 11 | Everything grounded in Nigeria | Section 3, applies to every phase |
 | 12 | Proper UI/UX, even for a demo | Section 4, applies to every phase |
 
@@ -286,7 +286,9 @@ Each phase ends with: type check, production build, the full demo-script test, t
 
 **Acceptance:** each starter chip reaches a risk card in 4 turns or fewer, live and scripted. Romance replies pass a tone review (no blame). The PIN warning triggers. Demo step 3 is unchanged.
 
-### Phase 6: The NPFTV Assistant: one chatbot, everywhere (size: L)
+### Phase 6: The NPFTV Assistant: one chatbot on the main website (size: L)
+
+> Built 25 Nov. Decision: the assistant appears on the main website only (floating "Ask NPFTV" button, homepage "How can we help?" strip, Ask card on Safety). NPFTV Stream has no assistant; `/stream/ask` redirects to `/`.
 
 **What it is:** a single assistant, "Ask NPFTV", that replaces the current Ask NPFTV box and is reachable from every public page (website and Stream) through a floating button, bottom right ("Ask NPFTV" pill on desktop, round button on mobile). It opens as a side sheet on desktop and a full-screen sheet on mobile. The conversation persists across pages within the session.
 
